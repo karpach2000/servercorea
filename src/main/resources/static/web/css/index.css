@@ -1,0 +1,55 @@
+.rightMenu{
+    color: #747474;
+    background-color: #E4E4E4;
+    border:1px solid #323232; /*рамка(размерб тип цвет)*/
+    font-size:20px;/*размер текста*/
+    margin: 10px;/*внешние отступы*/
+    margin-bottom: 30px;/*внешние отступы снизу*/
+    padding: 10px;/*внутренние отступы*/
+    opacity: 0.5;/*видимость*/
+    float: right;
+    width: 20%;
+}
+.logOut{
+    text-decoration: none; /*убираем подчеркивание текста ссылок*/
+    float: right;
+}
+.leftMenu{
+    color: #747474;
+    background-color: #E4E4E4;
+    border:1px solid #323232; /*рамка(размерб тип цвет)*/
+    font-size:15px;/*размер текста*/
+    margin: 18px;/*внешние отступы*/
+    margin-bottom: 30px;/*внешние отступы снизу*/
+    padding: 10px;/*внутренние отступы*/
+    opacity: 0.5;/*видимость*/
+    float: left;
+    width: 20%;
+}
+.topMenu{
+    color: #747474;
+    background-color: #E4E4E4;
+    font-size:20px;/*размер текста*/
+    margin-bottom: 30px;/*внешние отступы снизу*/
+    padding: 10px;/*внутренние отступы*/
+    opacity: 0.5;/*видимость*/
+}
+.topMenuUl {
+    list-style: none; /*убираем маркеры списка*/
+    margin: 5px; /*убираем отступы*/
+    padding-left: 0; /*убираем отступы*/
+}
+.topMenuA {
+    text-decoration: none; /*убираем подчеркивание текста ссылок*/
+}
+.topMenuLi {
+    float:left; /*Размещаем список горизонтально для реализации меню*/
+    margin-right:5px; /*Добавляем отступ у пунктов меню*/
+}
+
+.bodyDiv{
+
+    margin-right: 25%;/*внешние отступы*/
+    margin-left: 25%;/*внешние отступы*/
+}
+

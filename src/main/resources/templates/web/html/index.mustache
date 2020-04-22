@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Парсел</title>
+    <link href="web/css/index.css" rel="stylesheet" tipe="text/css">
+    <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.0/css/bootstrap-combined.min.css" rel="stylesheet">
+</head>
+<body>
+<header>
+    <div class="header-panel">
+
+    </div>
+
+
+    <div id="mainMenu"  class="topMenu">
+        <ul id="mainMenuItems" class="topMenuUl">
+            {{#page.mainMenu.items}}<li class="topMenuLi"><a href="{{link}}" class="topMenuA">{{name}}</a></li> {{/page.mainMenu.items}}
+        </ul>
+        <br>
+    </div>
+
+</header>
+<p>{{ page.pageBody.mainText}}</p>
+<br>
+<p>{{ page.pageBody.contacts}}</p>
+
+</body>
+</html>

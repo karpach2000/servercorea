@@ -1,0 +1,14 @@
+.textboxWithLinck
+{
+    margin-left: 0px;/*внешние отступы*/
+}
+.countingTextBoxes
+{
+    float: left;
+    margin-left: 15px;
+}
+.countingLabels
+{
+    float:  left;
+    margin-left: 15px;
+}
