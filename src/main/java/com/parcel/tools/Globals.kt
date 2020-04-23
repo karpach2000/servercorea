@@ -1,7 +1,7 @@
 package com.parcel.tools
 
 import com.parcel.tools.constructor.database.users.UserManager
-import com.parcel.tools.spy.database.SpyLocationManager
+import com.parcel.tools.games.spy.database.SpyLocationManager
 
 object Globals {
 

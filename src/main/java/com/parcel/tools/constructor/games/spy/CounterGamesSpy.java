@@ -1,7 +1,7 @@
 package com.parcel.tools.constructor.games.spy;
 
-import com.parcel.tools.spy.SpySessionManager;
-import com.parcel.tools.spy.database.SpyLocation;
+import com.parcel.tools.games.spy.SpySessionManager;
+import com.parcel.tools.games.spy.database.SpyLocation;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,4 +1,4 @@
-package com.parcel.tools.spy
+package com.parcel.tools.games.spy
 
 import com.google.gson.GsonBuilder
 
@@ -7,7 +7,7 @@ import com.google.gson.GsonBuilder
  */
 class UserInformation() {
 
-    constructor(user: User, location:String, usersCount: Int, allUsers: String)
+    constructor(user: SpyUser, location:String, usersCount: Int, allUsers: String)
             :this()
     {
         name=user.name

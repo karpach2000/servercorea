@@ -1,7 +1,7 @@
 package com.parcel.tools.web.websockets
 
-import com.parcel.tools.spy.SpyEvent
-import com.parcel.tools.spy.SpySessionManager
+import com.parcel.tools.games.spy.SpyEvent
+import com.parcel.tools.games.spy.SpySessionManager
 import org.springframework.stereotype.Component
 import org.springframework.web.socket.CloseStatus
 import org.springframework.web.socket.TextMessage
@@ -83,7 +83,7 @@ class SpyWebSocketController : TextWebSocketHandler()  {
             val pas = items[1].toLong()
             val name = items[2]
             logger.info("Web socket connection subscribe. id: $id, pas: $pas name: $name")
-            SpySessionManager.subscribeSpySessionEvent(id, pas, SpyEventHandler(session,name))
+            SpySessionManager.subscribeGameSessionEvent(id, pas, SpyEventHandler(session,name))
         }
         else if(command == "ping")
         {
