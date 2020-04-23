@@ -178,7 +178,7 @@ $$;
 ALTER FUNCTION public.delete_spy_location(_location text, login text) OWNER TO karpach2000;
 
 --
--- Name: delete_user(text); Type: FUNCTION; Schema: public; Owner: karpach2000
+-- Name: delete_user(text); Type: FUNCTION; Schema: public; Owner: developer
 --
 
 CREATE FUNCTION public.delete_user(_login text) RETURNS text
@@ -191,7 +191,10 @@ BEGIN
         SELECT id FROM users WHERE login = _login
         LOOP
             DELETE FROM roles_to_users where users_id=userid;
-    END LOOP;
+            DELETE FROM spy_locations where users_id=userid;
+            DELETE FROM messages_u_2_u where users_id_from=userid or users_id_to=userid;
+
+        END LOOP;
     DELETE FROM users WHERE login = _login;
     RETURN 'OK';
 
@@ -199,7 +202,7 @@ END
 $$;
 
 
-ALTER FUNCTION public.delete_user(_login text) OWNER TO karpach2000;
+ALTER FUNCTION public.delete_user(_login text) OWNER TO developer;
 
 --
 -- Name: get_spy_location_login(text); Type: FUNCTION; Schema: public; Owner: karpach2000
@@ -568,7 +571,6 @@ ALTER TABLE ONLY public.users ALTER COLUMN id SET DEFAULT nextval('public.users_
 --
 
 COPY public.messages_u_2_u (id, users_id_from, users_id_to, message) FROM stdin;
-1	1	1	Hay
 \.
 
 
@@ -589,7 +591,6 @@ COPY public.roles (id, user_role, description) FROM stdin;
 COPY public.roles_to_users (id, users_id, roles_id) FROM stdin;
 6	2	1
 7	2	2
-8	1	2
 13	14	1
 14	15	2
 15	16	1
@@ -617,7 +618,6 @@ COPY public.spy_locations (id, location, users_id) FROM stdin;
 --
 
 COPY public.users (id, login, password, active) FROM stdin;
-1	afiskon	123456	t
 2	karpach2000	256	t
 7	Petr	1234	t
 14	user	user	t
@@ -782,13 +782,6 @@ GRANT ALL ON FUNCTION public.add_user(_login text, _password text, _role text) T
 --
 
 GRANT ALL ON FUNCTION public.delete_spy_location(_location text, login text) TO developer;
-
-
---
--- Name: FUNCTION delete_user(_login text); Type: ACL; Schema: public; Owner: karpach2000
---
-
-GRANT ALL ON FUNCTION public.delete_user(_login text) TO developer;
 
 
 --
