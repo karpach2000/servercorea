@@ -30,20 +30,23 @@
 <!--SPY-->
 <div id="spy" class="bodyDiv">
     <div id="user" class="spy">
-            <label for="userName">Имя пользователя</label>
+            {{page.pageBody.counterGamesSpy.gameDescription}}
+            <br>
+            <label for="userName"><h5>Имя пользователя</h5></label>
             <input type="text"   id="userName" size="10" onkeyup="this.value = this.value.replace(/[^A-Za-zА-Яа-яЁё0-9]/,'');"
                    class="textboxWithLinck"  required><br>
             <!--label for="userPas" hidden>Пароль пользователя</label -->
             <!--input type="number"   id="userPas"  class="textboxWithLinck" min="0" max="999999" required hidden><br-->
-            <label for="sessionId">ID сессии (до 6 цифр)</label>
+        <label for="sessionId"><h5>ID сессии (до 6 цифр)</h5></label>
             <input type="number"   id="sessionId"  class="textboxWithLinck" min="0" max="999999" required><br>
-            <label for="sessionPas">Пароль сессии (до 6 цифр)</label>
+        <label for="sessionPas"><h5>Пароль сессии (до 6 цифр)</h5></label>
             <input type="number"   id="sessionPas" class="textboxWithLinck" min="0" max="999999" required><br>
             <input type="button" onclick="addUser()" name="addUser" value="Добавить себя">
     </div>
 
     <div id="beforGame" class="beforGame" hidden>
-        <label for="startGame">!!!Дождитесь пока зайдут все пользователи!!!</label>
+        {{page.pageBody.counterGamesSpy.tooltipWhenAddingUsers}}
+        <label for="startGame"><h5>!!!Дождитесь пока зайдут все пользователи!!!</h5></label>
         <input type="button" onclick="startGame()" id = "startGame" name="startGame" value="Начать игру">
         <br><br>
         <textarea id="users"  rows="17">
@@ -52,6 +55,8 @@
 
 
     <div id="game" class="game" hidden>
+        {{page.pageBody.counterGamesSpy.tooltipDuringTheGame}}
+        <br>
         <textarea id="gamerInformation"  rows="17">
         </textarea>
         <input type="button" onclick="showSpy()" name="showSpy" value="Показать шпиона">
@@ -68,12 +73,12 @@
                 </tr>
                 </thead>
                 <tbody>
-                {{# page.pageBody.locations}}
+                {{# page.pageBody.counterGamesSpy.locations}}
                     <tr   class='table-data'>
                         <td>{{locationName}}</td>
                         <td>{{authorLogin}}</td>
                     </tr>
-                {{/ page.pageBody.locations}}
+                {{/ page.pageBody.counterGamesSpy.locations}}
                 </tbody>
             </table>
         </ul>
