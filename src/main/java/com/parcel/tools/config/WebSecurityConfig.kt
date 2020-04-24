@@ -35,8 +35,7 @@ open class WebSecurityConfig : WebSecurityConfigurerAdapter() {
                 .antMatchers("/", "/utils", "/etools",
                         "/games", "/games/*").permitAll()
                 .antMatchers("/admin").hasAuthority("ADMIN")
-                .antMatchers("/games_settings", "/games_settings/*").hasAuthority("ADMIN")
-                .antMatchers("/games_settings", "/games_settings/*").hasAuthority("USER")
+                .antMatchers("/games_settings", "/games_settings/*").hasAnyAuthority("ADMIN", "USER")
                 .anyRequest().authenticated()
                 .and()
                 .formLogin()
