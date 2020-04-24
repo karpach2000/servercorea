@@ -3,26 +3,38 @@
 <head>
     <title>Парсел</title>
     <link href="web/css/index.css" rel="stylesheet" tipe="text/css">
-    <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.0/css/bootstrap-combined.min.css" rel="stylesheet">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
 </head>
 <body>
 <header>
-    <div class="header-panel">
+    <div class="container">
+        <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
+            <div id="mainMenu"  class="topMenu">
+                <ul id="mainMenuItems" class="topMenuUl">
+                    {{#page.mainMenu.items}}
+                        <li class="topMenuLi">
+                            <a href="{{link}}" class="topMenuA">{{name}}</a></li>
+                    {{/page.mainMenu.items}}
+                </ul>
+                <br>
+            </div>
+        </nav>
 
+        <div class="header-panel">
+        </div>
+        <img class="img-fluid" src="images/map.jpeg" width="460" height="345">
     </div>
-
-
-    <div id="mainMenu"  class="topMenu">
-        <ul id="mainMenuItems" class="topMenuUl">
-            {{#page.mainMenu.items}}<li class="topMenuLi"><a href="{{link}}" class="topMenuA">{{name}}</a></li> {{/page.mainMenu.items}}
-        </ul>
-        <br>
-    </div>
-
 </header>
-<p>{{ page.pageBody.mainText}}</p>
-<br>
-<p>{{ page.pageBody.contacts}}</p>
 
+<div class="jumbotron text-center" style="margin-bottom:0">
+    <p>{{ page.pageBody.mainText}}</p>
+    <br>
+    <p>{{ page.pageBody.contacts}}</p>
+</div>
 </body>
 </html>
