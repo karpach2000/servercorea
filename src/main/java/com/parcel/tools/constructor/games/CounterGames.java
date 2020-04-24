@@ -1,5 +1,6 @@
 package com.parcel.tools.constructor.games;
 
+import com.parcel.tools.constructor.games.mafia.CounterGamesMafia;
 import com.parcel.tools.constructor.games.spy.CounterGamesSpy;
 
 /**
@@ -9,10 +10,12 @@ public class CounterGames {
     public CounterMenuGames counterMenu= new CounterMenuGames();
     public String descriptionText="Игры.";
     public CounterGamesSpy counterGamesSpy =new CounterGamesSpy();
+    public CounterGamesMafia counterGamesMafia =new CounterGamesMafia();
 
     public CounterGames()
     {
-        counterMenu.addItem("Шпион.","ropeSlack");
+        counterMenu.addItem("Шпион.","spy");
+        counterMenu.addItem("Мафия.","mafia");
 
     }
 }

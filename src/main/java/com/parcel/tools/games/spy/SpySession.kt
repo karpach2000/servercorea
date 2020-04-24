@@ -1,6 +1,7 @@
 package com.parcel.tools.games.spy
 
 import com.parcel.tools.Globals
+import com.parcel.tools.games.GamesSession
 import com.parcel.tools.games.GlobalRandomiser
 import java.lang.Exception
 
@@ -14,6 +15,9 @@ class SpySession(sessionId: Long, sessionPas: Long) : GamesSession<SpyUser, SpyE
     private val locations = ArrayList<String>()
 
     private var currentLocation = ""
+
+
+
 
     init {
 
@@ -80,14 +84,7 @@ class SpySession(sessionId: Long, sessionPas: Long) : GamesSession<SpyUser, SpyE
 
     }
 
-    private fun getUser(name: String): SpyUser
-    {
-        users.forEach {
-            if(it.name == name)
-                return it
-        }
-        throw SpySessionManagerException("Can`t finde user: $name")
-    }
+
 
 
 

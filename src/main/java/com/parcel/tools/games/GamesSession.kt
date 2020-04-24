@@ -1,7 +1,8 @@
-package com.parcel.tools.games.spy
+package com.parcel.tools.games
 
-import com.parcel.tools.games.GameEvent
-import com.parcel.tools.games.GameUser
+import com.parcel.tools.games.spy.SpySessionException
+import com.parcel.tools.games.spy.SpySessionManagerException
+import com.parcel.tools.games.spy.SpyUser
 
 abstract class  GamesSession<U : GameUser, E:GameEvent>(val sessionId: Long, val sessionPas: Long) {
 
@@ -21,6 +22,7 @@ abstract class  GamesSession<U : GameUser, E:GameEvent>(val sessionId: Long, val
     init {
         startTime = System.currentTimeMillis()
     }
+
 
 
 
@@ -87,6 +89,15 @@ abstract class  GamesSession<U : GameUser, E:GameEvent>(val sessionId: Long, val
                 return true
         }
         return false
+    }
+
+    protected fun getUser(name: String): U
+    {
+        users.forEach {
+            if(it.name == name)
+                return it
+        }
+        throw GameSessionManagerException("Can`t finde user: $name")
     }
 
     fun usersInGameCount() =
