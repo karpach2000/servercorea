@@ -16,7 +16,7 @@ class MafiaMafiaVoteInformation(private val  users: ArrayList<MafiaUser>) {
     fun toHtml(): String
     {
         putDataToTable()
-        var ans = "<ul id=\"mafia_mafiaVoteTable\" >\n" +
+        var ans = "<ul >\n" +
                 "            <table border=\"1\">\n" +
                 "                <thead>\n" +
                 "                <tr>\n" +

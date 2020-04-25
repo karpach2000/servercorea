@@ -127,6 +127,7 @@ class MafiaSession(sessionId: Long, sessionPas: Long) :  GamesSession<MafiaUser,
         return MafiaCitizenVoteInformation(getUser(userName), users).toHtml()
     }
 
+    /*
     fun mafiaVote(userName: String, voteName: String):Boolean
     {
         logger.info("mafiaVote($userName, $voteName)")
@@ -154,8 +155,8 @@ class MafiaSession(sessionId: Long, sessionPas: Long) :  GamesSession<MafiaUser,
         }
         return vote(userName, voteName)
     }
-
-    private fun vote(userName: String, voteName: String) :Boolean
+    */
+   fun vote(userName: String, voteName: String) :Boolean
     {
         logger.info("vote($userName, $voteName)")
         getUser(userName).voteName = voteName
@@ -167,6 +168,10 @@ class MafiaSession(sessionId: Long, sessionPas: Long) :  GamesSession<MafiaUser,
                 getUser(voteName).votedCount ++
             }
         }
+        //обновляем таблицы голосования
+        updateVoteTableEvent(
+                MafiaCitizenVoteInformation(getUser(userName), users).toHtml()
+        )
         return true
     }
 
@@ -181,7 +186,7 @@ class MafiaSession(sessionId: Long, sessionPas: Long) :  GamesSession<MafiaUser,
         logger.info("voteResult: $result")
         getUser(result).isAlife = false
         this.mafiaSessionState = MafiaSessionState.CITIZEN_VOTE
-        openMafiaVoteEvent()
+        openСitizensVoteEvent()
         return result
     }
 
@@ -248,9 +253,9 @@ class MafiaSession(sessionId: Long, sessionPas: Long) :  GamesSession<MafiaUser,
 
 
     /*******EVENTS*******/
-    fun startMafiaVoteEvent()
+    fun updateVoteTableEvent(table: String)
     {
-        gameEvent.forEach { it.openMafiaVote() }
+        gameEvent.forEach { it.updateVoteTable(table) }
     }
 
     fun openMafiaVoteEvent()

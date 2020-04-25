@@ -51,6 +51,11 @@ function mafia_onConnectionMessage(evt) {
         mafiaWebsocketConnection.send("ok")
         document.getElementById("mafia_leader").textContent ="Ведущий: " +   data
     }
+    else if(command=="updateVoteTable") {
+        mafiaWebsocketConnection.send("ok")
+        document.getElementById("mafia_userVoteTable").innerHTML = data
+    }
+
 }
 
 /*****POSITIONS*****/
@@ -69,14 +74,14 @@ function mafia_gamePositionUserVote() {
     document.getElementById("mafia_user").hidden = true
     document.getElementById("mafia_beforGame").hidden = true
     document.getElementById("mafia_game").hidden = false
-    document.getElementById("mafia_userVote").hidden = false
+    document.getElementById("mafia_citizenVote").hidden = false
     document.getElementById("mafia_mafiaVote").hidden = true
 }
 function mafia_gamePositionMafiaVote() {
     document.getElementById("mafia_user").hidden = true
     document.getElementById("mafia_beforGame").hidden = true
     document.getElementById("mafia_game").hidden = false
-    document.getElementById("mafia_userVote").hidden = true
+    document.getElementById("mafia_citizenVote").hidden = true
     document.getElementById("mafia_mafiaVote").hidden = false
 }
 /******GAME******/
@@ -226,12 +231,13 @@ function mafia_getRole()
     //если пользователь не лидер убираем кнопку голосования
     if( xmlHttp.responseText=="LEADING")
     {
-        document.getElementById("mafia_voteVote").hidden = false
+        document.getElementById("mafia_voteVote_c").hidden = false
+        document.getElementById("mafia_voteVariants").hidden = true
 
     }
     else
     {
-        document.getElementById("mafia_voteVote").hidden = true
+        document.getElementById("mafia_voteVote_c").hidden = true
     }
 
 }
@@ -266,7 +272,20 @@ function mafia_getLeader()
     document.getElementById("mafia_leader").textContent = "Ведущий: " +  xmlHttp.responseText
 }
 
+/**
+ * Отдать голоса
+ */
 function mafia_voteVote() {
+
+    var xmlHttp = new XMLHttpRequest();
+    var userName = document.getElementById("mafia_userName").value
+    var sessionId = document.getElementById("mafia_sessionId").value
+    var sessionPas = document.getElementById("mafia_sessionPas").value
+    var vote = document.getElementById("mafia_voteVariants").value
+    xmlHttp.open("GET", "/games/mafia_voteVote?userName="+userName+"&sessionId="+sessionId+
+        "&sessionPas="+sessionPas+"&vote="+vote, false); // false for synchronous request
+    xmlHttp.send(null);
+
 
 }
 

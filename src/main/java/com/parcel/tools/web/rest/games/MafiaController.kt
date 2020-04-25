@@ -133,7 +133,7 @@ class MafiaController {
                           @RequestParam("userName") userName: String = "",
                           @RequestParam("sessionId") sessionId: String = "",
                           @RequestParam("sessionPas") sessionPas: String = ""): String {
-        logger.info("getUsers($userName, $sessionId, $sessionPas)")
+        logger.info("getRole($userName, $sessionId, $sessionPas)")
         return MafiaSessionManager.getRole(sessionId.toLong(), sessionPas.toLong(), userName)
     }
 
@@ -144,7 +144,7 @@ class MafiaController {
                          @RequestParam("userName") userName: String = "",
                          @RequestParam("sessionId") sessionId: String = "",
                          @RequestParam("sessionPas") sessionPas: String = ""): String {
-        logger.info("getUsers($userName, $sessionId, $sessionPas)")
+        logger.info("getCitizenVoteVariants($userName, $sessionId, $sessionPas)")
         return MafiaSessionManager.getCitizenVoteVariants(sessionId.toLong(), sessionPas.toLong(), userName)
     }
 
@@ -155,8 +155,21 @@ class MafiaController {
                                         @RequestParam("userName") userName: String = "",
                                         @RequestParam("sessionId") sessionId: String = "",
                                         @RequestParam("sessionPas") sessionPas: String = ""): String {
-        logger.info("getUsers($userName, $sessionId, $sessionPas)")
+        logger.info("getMafiaVoteVariants($userName, $sessionId, $sessionPas)")
         return MafiaSessionManager.getMafiaVoteVariants(sessionId.toLong(), sessionPas.toLong(), userName)
+    }
+
+    @RequestMapping("/games/mafia_voteVote")///games/spy_get_users
+    @ResponseBody
+    @Throws(IOException::class)
+    internal fun vote(model: Model,
+                                      @RequestParam("userName") userName: String = "",
+                                      @RequestParam("sessionId") sessionId: String = "",
+                                      @RequestParam("sessionPas") sessionPas: String = "",
+                                      @RequestParam("vote") voteName: String = ""
+    ): String {
+        logger.info("vote($userName, $sessionId, $sessionPas)")
+        return MafiaSessionManager.vote(sessionId.toLong(), sessionPas.toLong(), userName, voteName).toString()
     }
 
 }

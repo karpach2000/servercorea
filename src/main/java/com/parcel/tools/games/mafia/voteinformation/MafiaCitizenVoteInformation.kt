@@ -21,7 +21,7 @@ class MafiaCitizenVoteInformation(private val user: MafiaUser, private val  user
     fun toHtml(): String
     {
         putDataToTable()
-        var ans = "<ul id=\"mafia_users\" >\n" +
+        var ans = "<ul  >\n" +
                 "            <table border=\"1\">\n" +
                 "                <thead>\n" +
                 "                <tr>\n" +

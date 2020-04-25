@@ -44,17 +44,12 @@ object MafiaSessionManager :
 
     /*******VOTE*******/
 
-    fun mafiaVote(sessionId: Long, sessionPas: Long, userName: String, voteName: String): Boolean
+    fun vote(sessionId: Long, sessionPas: Long, userName: String, voteName: String): Boolean
     {
         logger.info("mafiaVote($sessionId, $sessionPas, $userName)")
-        return getSession(sessionId, sessionPas).mafiaVote(userName, voteName)
+        return getSession(sessionId, sessionPas).vote(userName, voteName)
     }
 
-    fun citizenVote(sessionId: Long, sessionPas: Long, userName: String, voteName: String): Boolean
-    {
-        logger.info("citizenVote($sessionId, $sessionPas, $userName)")
-        return getSession(sessionId, sessionPas).citizenVote(userName, voteName)
-    }
 
     fun mafiaVoteResult(sessionId: Long, sessionPas: Long, userName: String): String
     {

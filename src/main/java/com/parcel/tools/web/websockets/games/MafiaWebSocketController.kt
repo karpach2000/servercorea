@@ -32,13 +32,11 @@ class MafiaWebSocketController: TextWebSocketHandler()  {
             }
         }
 
-        override fun updateVoteTableForСitizens(votetTable: String) {
-            sendMessage("updateVoteTableForСitizens$SEPORATOR$votetTable")
+        override fun updateVoteTable(votetTable: String) {
+            sendMessage("updateVoteTable$SEPORATOR$votetTable")
         }
 
-        override fun updateVoteTableForMafia(votetTable: String) {
-            sendMessage("updateVoteTableForMafia$SEPORATOR$votetTable")
-        }
+
 
         override fun openMafiaVote() {
             sendMessage("openMafiaVote")
