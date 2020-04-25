@@ -59,7 +59,7 @@ class MafiaCitizenVoteInformation(private val user: MafiaUser, private val  user
             tr.voteCount = it.votedCount.toString()
             if (user.role == MafiaUserRoles.CITIZEN) {
                 if(it.isAlife)
-                    tr.role = "Информация скрыты"
+                    tr.role = "Информация скрыта"
                 else
                     tr.role = it.role.toString()
 
@@ -70,7 +70,7 @@ class MafiaCitizenVoteInformation(private val user: MafiaUser, private val  user
                 tr.role = it.role.toString()
             }
             table.add(tr)
-            throw MafiaCitizenVoteInformationException("User role not correct!")
+            //throw MafiaCitizenVoteInformationException("User role not correct!")
         }
     }
 }

@@ -77,7 +77,7 @@ abstract class GamesSessionManager<U : GameUser, E:GameEvent, GS: GamesSession<U
     protected fun addSession(gamesSession: GS): Boolean
     {
         logger.info("addSession(${gamesSession.sessionId}, ${gamesSession.sessionPas})")
-        if(!SpySessionManager.isSessionExists(gamesSession.sessionId))
+        if(!isSessionExists(gamesSession.sessionId))
         {
             gameSessions.add(gamesSession)
             return true
@@ -118,13 +118,13 @@ abstract class GamesSessionManager<U : GameUser, E:GameEvent, GS: GamesSession<U
     @Synchronized
     fun subscribeGameSessionEvent(sessionId: Long, sessionPas: Long, event: E)
     {
-        getSession(sessionId, sessionPas).subscribeSpyEvents(event)
+        getSession(sessionId, sessionPas).subscribeGameEvents(event)
     }
 
     fun deSubscribeGameSessionEvent(sessionId: Long, sessionPas: Long, event: E)
     {
         if(SpySessionManager.isSessionExists(sessionId))
-            getSession(sessionId, sessionPas).deSubscribeSpyEvents(event)
+            getSession(sessionId, sessionPas).deSubscribeGameEvents(event)
     }
 
 

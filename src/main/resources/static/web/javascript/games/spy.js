@@ -2,27 +2,27 @@
 /**********WEB SOCKETS*******/
 
 var SEPORATOR = "_"
-var wsConnectionUri = "ws://" + document.location.host +"/games/spy";
-var websocketConnection = new WebSocket(wsConnectionUri);
-websocketConnection.onerror = function(evt) { onConnectionError(evt) };
-websocketConnection.onopen = function(evt) { onConnectionOpen(evt) };
-websocketConnection.onmessage = function(evt) { onConnectionMessage(evt) };
-websocketConnection.onclose = function(evt) { onclose(evt) };
+var spyWsConnectionUri = "ws://" + document.location.host +"/games/spy";
+var spyWebsocketConnection = new WebSocket(spyWsConnectionUri);
+spyWebsocketConnection.onerror = function(evt) { onConnectionError(evt) };
+spyWebsocketConnection.onopen = function(evt) { onConnectionOpen(evt) };
+spyWebsocketConnection.onmessage = function(evt) { onConnectionMessage(evt) };
+spyWebsocketConnection.onclose = function(evt) { onclose(evt) };
 
 function onConnectionError(evt) {
 alert("Ошибка соединения с сервером, перезагрузите страницу!")
 }
 
 function onConnectionOpen() {
-    websocketConnection.send("ping")
+    spyWebsocketConnection.send("ping")
 }
 function onclose() {
     //websocketConnection.close()
-    websocketConnection = new WebSocket(wsConnectionUri);
-    websocketConnection.onerror = function(evt) { onConnectionError(evt) };
-    websocketConnection.onopen = function(evt) { onConnectionOpen(evt) };
-    websocketConnection.onmessage = function(evt) { onConnectionMessage(evt) };
-    websocketConnection.onclose = function(evt) { onclose(evt) };
+    spyWebsocketConnection = new WebSocket(spyWsConnectionUri);
+    spyWebsocketConnection.onerror = function(evt) { onConnectionError(evt) };
+    spyWebsocketConnection.onopen = function(evt) { onConnectionOpen(evt) };
+    spyWebsocketConnection.onmessage = function(evt) { onConnectionMessage(evt) };
+    spyWebsocketConnection.onclose = function(evt) { onclose(evt) };
 }
 
 function onConnectionMessage(evt) {
@@ -30,22 +30,22 @@ function onConnectionMessage(evt) {
     var command = evt.data.split(SEPORATOR )[0]
     var data = evt.data.split(SEPORATOR )[1]
     if(command=="addUserEvent") {
-        websocketConnection.send("ok_"+document.getElementById("userName").value)
+        spyWebsocketConnection.send("ok_"+document.getElementById("userName").value)
         document.getElementById("users").textContent = data
 
     }
     else if(command=="startGameEvent") {
-        websocketConnection.send("ok")
+        spyWebsocketConnection.send("ok")
         startGame()
     }
     else if(command=="stopGameEvent") {
-        websocketConnection.send("ok")
+        spyWebsocketConnection.send("ok")
         alert("Игра закончена! Шпион " + data)
         stopGamePosition()
 
     }
     else if(command=="spyIsNotSecretEvent") {
-        websocketConnection.send("ok")
+        spyWebsocketConnection.send("ok")
         document.getElementById("gamerInformation").textContent =
             "!!!Шпион: "+data + "!!!\n" + document.getElementById("gamerInformation").textContent
         alert("Шпион " + data)
@@ -102,21 +102,19 @@ function addUser() {
         "&sessionPas="+sessionPas, false); // false for synchronous request
     xmlHttp.send(null);
     if(xmlHttp.responseText=="true") {
-        websocketConnection.send("init"+SEPORATOR+sessionId +" "+sessionPas+" "+userName)
+        spyWebsocketConnection.send("init"+SEPORATOR+sessionId +" "+sessionPas+" "+userName)
         //lert("Игра создана.")
     }
     else if(xmlHttp.responseText=="false")
     {
-        websocketConnection.send("init"+SEPORATOR+sessionId +" "+sessionPas+" "+userName)
+        spyWebsocketConnection.send("init"+SEPORATOR+sessionId +" "+sessionPas+" "+userName)
         //alert("Ничего не делаем.")
     }
     else
     {
-
         alert(xmlHttp.responseText)
         return
     }
-
 
     //Add user
     xmlHttp.open("GET", "/games/spy_addUser?userName="+userName+"&sessionId="+sessionId+
@@ -131,12 +129,8 @@ function addUser() {
     }
     else
     {
-
         alert(xmlHttp.responseText)
     }
-
-
-
 }
 
 

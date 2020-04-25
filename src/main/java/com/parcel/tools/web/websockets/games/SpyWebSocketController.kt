@@ -1,4 +1,4 @@
-package com.parcel.tools.web.websockets
+package com.parcel.tools.web.websockets.games
 
 import com.parcel.tools.games.spy.SpyEvent
 import com.parcel.tools.games.spy.SpySessionManager
@@ -15,8 +15,6 @@ private val SEPORATOR = "_"
 class SpyWebSocketController : TextWebSocketHandler()  {
 
 
-
-    private val spyEventHandlers = ArrayList<SpyEventHandler>()
 
 
 
@@ -83,7 +81,7 @@ class SpyWebSocketController : TextWebSocketHandler()  {
             val pas = items[1].toLong()
             val name = items[2]
             logger.info("Web socket connection subscribe. id: $id, pas: $pas name: $name")
-            SpySessionManager.subscribeGameSessionEvent(id, pas, SpyEventHandler(session,name))
+            SpySessionManager.subscribeGameSessionEvent(id, pas, SpyEventHandler(session, name))
         }
         else if(command == "ping")
         {

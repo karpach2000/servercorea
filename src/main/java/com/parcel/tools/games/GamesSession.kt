@@ -4,6 +4,8 @@ import com.parcel.tools.games.spy.SpySessionException
 import com.parcel.tools.games.spy.SpySessionManagerException
 import com.parcel.tools.games.spy.SpyUser
 
+class GameSessionException(message: String): Exception(message )
+
 abstract class  GamesSession<U : GameUser, E:GameEvent>(val sessionId: Long, val sessionPas: Long) {
 
     private val logger = org.apache.log4j.Logger.getLogger(GamesSession::class.java!!)
@@ -42,12 +44,12 @@ abstract class  GamesSession<U : GameUser, E:GameEvent>(val sessionId: Long, val
 
     protected fun addUser(user: U): Boolean
     {
-        logger.info("addUser($user)...")
+        logger.info("addUser(${user.name})...")
         val userExist = isUserExist(user.name)
         if(started && !userExist)
         {
             logger.warn("Game  started.")
-            throw SpySessionException("The game is already running.")
+            throw GameSessionException("The game is already running.")
         }
         else if(started && userExist)
         {
@@ -57,12 +59,12 @@ abstract class  GamesSession<U : GameUser, E:GameEvent>(val sessionId: Long, val
         }
         else if(user.name.length<1) {
             logger.warn("To short user name.")
-            throw SpySessionException("To short user name.")
+            throw GameSessionException("To short user name.")
         }
         else if(!started && userExist)
         {
             logger.warn("A user with the same name already exists.")
-            throw SpySessionException("A user with the same name already exists.")
+            throw GameSessionException("A user with the same name already exists.")
         }
         else
         {
@@ -104,12 +106,12 @@ abstract class  GamesSession<U : GameUser, E:GameEvent>(val sessionId: Long, val
             users.count()
 
     /********EVENTS***********/
-    fun subscribeSpyEvents(gameEvent: E)
+    fun subscribeGameEvents(gameEvent: E)
     {
         this.gameEvent.add(gameEvent)
     }
 
-    fun deSubscribeSpyEvents(gameEvent: E)
+    fun deSubscribeGameEvents(gameEvent: E)
     {
         this.gameEvent.remove(gameEvent)
     }

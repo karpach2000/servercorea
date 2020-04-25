@@ -84,13 +84,6 @@ class SpySession(sessionId: Long, sessionPas: Long) : GamesSession<SpyUser, SpyE
 
     }
 
-
-
-
-
-
-
-
     private fun spyIsNotSecretEvent(spyName: String)
     {
         gameEvent.forEach { it.spyIsNotSecretEvent(spyName) }

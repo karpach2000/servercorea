@@ -17,7 +17,7 @@ class MafiaSession(sessionId: Long, sessionPas: Long) :  GamesSession<MafiaUser,
         FIRST_CONE
     }
 
-    private val logger = org.apache.log4j.Logger.getLogger(SpySession::class.java!!)
+    private val logger = org.apache.log4j.Logger.getLogger(MafiaSession::class.java!!)
     private var firstUserAdded = false
 
     private var mafiaSessionState = MafiaSessionState.FIRST_CONE
@@ -26,8 +26,39 @@ class MafiaSession(sessionId: Long, sessionPas: Long) :  GamesSession<MafiaUser,
 
 
 
+    fun getLeader():String
+    {
+        logger.info("getLeader()")
+        users.forEach {
+            if(it.role == MafiaUserRoles.LEADING) {
+                return it.name
+            }
+        }
+        return ""
+    }
 
-
+    fun becomeLeader(name: String):Boolean
+    {
+        logger.info("becomeLeader($name)")
+        if(!started)
+        {
+            users.forEach {
+                if(it.role == MafiaUserRoles.LEADING) {
+                    it.role = MafiaUserRoles.CITIZEN
+                }
+            }
+            getUser(name).role = MafiaUserRoles.LEADING
+            chndgeLeaderEvent(name)
+            return true
+        }
+        throw MafiaSessionException("Can`t change leader. Game started.")
+    }
+    /*******USERS******/
+    fun getRole(userName: String): String
+    {
+        logger.info("getRole($userName)")
+        return getUser(userName).role.toString()
+    }
 
     override fun addUser(name: String) :Boolean {
         val mu = MafiaUser(name)
@@ -40,8 +71,37 @@ class MafiaSession(sessionId: Long, sessionPas: Long) :  GamesSession<MafiaUser,
         return addUser(mu)
     }
 
+    fun getCitizenVoteVariants(userName: String):String
+    {
+        logger.info("getCitizenVoteVariants($userName)")
+        var ans = ""
+        if(getUser(userName).role!=MafiaUserRoles.LEADING) {
+            val SEPORATOR = "_"
+            users.forEach {
+                if (it.isAlife && it.role != MafiaUserRoles.LEADING) {
+                    ans = ans + it.name + SEPORATOR
+                }
+            }
+        }//if
+        return ans
+    }
+    fun getMafiaVoteVariants(userName: String):String
+    {
+        logger.info("getMafiaVoteVariants($userName)")
+        var ans = ""
+        if(getUser(userName).role==MafiaUserRoles.MAFIA) {
+            val SEPORATOR = "_"
+            users.forEach {
+                if (it.isAlife && it.role != MafiaUserRoles.LEADING) {
+                    ans = ans + it.name + SEPORATOR
+                }
+            }
+        }//if
+        return ans
+    }
 
 
+    /*******GAME******/
 
     override fun startGame()
     {
@@ -56,26 +116,18 @@ class MafiaSession(sessionId: Long, sessionPas: Long) :  GamesSession<MafiaUser,
         }
     }
 
-    /**
-     * Получить информацию отображаемую пользователю во время игры.
-     */
-    fun getUserInformation(userName: String): String
-    {
-        logger.info("getUserInformation($userName)")
-        return MafiaCitizenVoteInformation(getUser(userName), users).toHtml()
 
-    }
 
     /*******VOTE*******/
 
-    fun startMafiaVote()
+
+    fun getSitizenVoteTable(userName: String):String
     {
-        logger.info("startMafiaVote()")
-        this.mafiaSessionState = MafiaSessionState.MAFIA_VOTE
-        startMafiaVoteEvent()
+        logger.info("getSitizenVoteTable($userName)")
+        return MafiaCitizenVoteInformation(getUser(userName), users).toHtml()
     }
 
-    fun mafiaVote(userName: String, voteName: String)
+    fun mafiaVote(userName: String, voteName: String):Boolean
     {
         logger.info("mafiaVote($userName, $voteName)")
         if(getUser(userName).role!=MafiaUserRoles.MAFIA)
@@ -89,7 +141,7 @@ class MafiaSession(sessionId: Long, sessionPas: Long) :  GamesSession<MafiaUser,
         return vote(userName, voteName)
     }
 
-    fun citizenVote(userName: String, voteName: String)
+    fun citizenVote(userName: String, voteName: String):Boolean
     {
         logger.info("citizenVote($userName, $voteName)")
         if(getUser(userName).role==MafiaUserRoles.LEADING)
@@ -103,7 +155,7 @@ class MafiaSession(sessionId: Long, sessionPas: Long) :  GamesSession<MafiaUser,
         return vote(userName, voteName)
     }
 
-    private fun vote(userName: String, voteName: String)
+    private fun vote(userName: String, voteName: String) :Boolean
     {
         logger.info("vote($userName, $voteName)")
         getUser(userName).voteName = voteName
@@ -115,6 +167,7 @@ class MafiaSession(sessionId: Long, sessionPas: Long) :  GamesSession<MafiaUser,
                 getUser(voteName).votedCount ++
             }
         }
+        return true
     }
 
     fun mafiaVoteResult(userName: String):String
@@ -169,11 +222,7 @@ class MafiaSession(sessionId: Long, sessionPas: Long) :  GamesSession<MafiaUser,
             throw MafiaSessionException("No one users has votes.")
     }
 
-    fun getRole(userName: String): String
-    {
-        logger.info("getRole($userName)")
-        return getUser(userName).role.toString()
-    }
+
 
 
     private fun generateMafia():ArrayList<String>
@@ -212,6 +261,11 @@ class MafiaSession(sessionId: Long, sessionPas: Long) :  GamesSession<MafiaUser,
     fun openСitizensVoteEvent()
     {
         gameEvent.forEach { it.openСitizensVote()}
+    }
+
+    fun chndgeLeaderEvent(leaderName: String)
+    {
+        gameEvent.forEach { it.leaderChandged(leaderName) }
     }
 
 

@@ -27,6 +27,8 @@ interface MafiaEvent : GameEvent {
      */
     fun openСitizensVote()
 
+    fun leaderChandged(leadername: String)
+
 
 
 }
