@@ -134,6 +134,18 @@ class MafiaController {
         return MafiaSessionManager.getRole(sessionId.toLong(), sessionPas.toLong(), userName)
     }
 
+    @RequestMapping("/games/mafia_getGameState")///games/spy_get_users
+    @ResponseBody
+    @Throws(IOException::class)
+    internal fun getGameState(model: Model,
+                         @RequestParam("userName") userName: String = "",
+                         @RequestParam("sessionId") sessionId: String = "",
+                         @RequestParam("sessionPas") sessionPas: String = ""): String {
+        logger.info("getRole($userName, $sessionId, $sessionPas)")
+        return MafiaSessionManager.getGameState(sessionId.toLong(), sessionPas.toLong(), userName)
+    }
+
+
 
     @RequestMapping("/games/mafia_stopGame")///games/spy_get_users
     @ResponseBody

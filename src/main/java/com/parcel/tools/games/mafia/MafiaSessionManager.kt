@@ -1,5 +1,6 @@
 package com.parcel.tools.games.mafia
 
+import com.parcel.tools.games.GameSessionManagerException
 import com.parcel.tools.games.GamesSessionManager
 
 object MafiaSessionManager :
@@ -26,6 +27,22 @@ object MafiaSessionManager :
         return getSession(sessionId, sessionPas).getRole(userName)
     }
 
+    fun getGameState(sessionId: Long, sessionPas: Long, userName: String):String
+    {
+        logger.info("getGameState($sessionId, $sessionPas, $userName)")
+        try {
+            return getSession(sessionId, sessionPas).getGameState(userName)
+        }
+        catch (ex: GameSessionManagerException)
+        {
+            return ex.message!!
+        }
+
+    }
+
+
+
+    /*******VOTE*******/
 
     /**
      * Получить варианты за кого можно проголосовать когда голосует город.
@@ -46,9 +63,6 @@ object MafiaSessionManager :
         logger.info("getUsersForVoteСitizen($sessionId, $sessionPas, $userName)")
         return getSession(sessionId, sessionPas).getUsersForVoteMafia(userName)
     }
-
-
-    /*******VOTE*******/
 
     fun vote(sessionId: Long, sessionPas: Long, userName: String, voteName: String): Boolean
     {

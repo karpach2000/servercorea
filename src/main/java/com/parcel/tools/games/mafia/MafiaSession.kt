@@ -11,15 +11,15 @@ class MafiaSession(sessionId: Long, sessionPas: Long) :  GamesSession<MafiaUser,
 
     private enum class MafiaSessionState
     {
-        MAFIA_VOTE,
+        ADD_USERS,
         CITIZEN_VOTE,
-        FIRST_CONE
+        MAFIA_VOTE,
     }
 
     private val logger = org.apache.log4j.Logger.getLogger(MafiaSession::class.java!!)
     private var firstUserAdded = false
 
-    private var mafiaSessionState = MafiaSessionState.FIRST_CONE
+    private var mafiaSessionState = MafiaSessionState.ADD_USERS
 
 
 
@@ -116,12 +116,17 @@ class MafiaSession(sessionId: Long, sessionPas: Long) :  GamesSession<MafiaUser,
         if (!started) {
             started = true
             logger.info("startGame()...")
-
+            mafiaSessionState = MafiaSessionState.CITIZEN_VOTE
             val mafiaNames = generateMafia()
             mafiaNames.forEach { this.getUser(it).role = MafiaUserRoles.MAFIA }
             startGameEvent()
-
         }
+    }
+
+    fun getGameState(userName: String):String
+    {
+        logger.info("getGameState($userName)")
+        return this.mafiaSessionState.toString()
     }
 
 
@@ -193,10 +198,10 @@ class MafiaSession(sessionId: Long, sessionPas: Long) :  GamesSession<MafiaUser,
         {
             throw MafiaSessionException("Only leader can end vote.")
         }
+        mafiaSessionState = MafiaSessionState.CITIZEN_VOTE
         val result = getVoteResult()
         logger.info("voteResult: $result")
         getUser(result).isAlife = false
-        this.mafiaSessionState = MafiaSessionState.CITIZEN_VOTE
         openСitizensVoteCountEvent(result)
         //обновляем таблицы голосования
         updateVoteTableEvent()
@@ -213,10 +218,10 @@ class MafiaSession(sessionId: Long, sessionPas: Long) :  GamesSession<MafiaUser,
         {
             throw MafiaSessionException("Only leader can end vote.")
         }
+        mafiaSessionState = MafiaSessionState.MAFIA_VOTE
         val result = getVoteResult()
         logger.info("voteResult: $result")
         getUser(result).isAlife = false
-        this.mafiaSessionState = MafiaSessionState.MAFIA_VOTE
         openMafiaVoteCountEvent(result)
         //обновляем таблицы голосования
         updateVoteTableEvent()
