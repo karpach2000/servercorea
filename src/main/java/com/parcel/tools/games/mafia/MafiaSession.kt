@@ -116,7 +116,7 @@ class MafiaSession(sessionId: Long, sessionPas: Long) :  GamesSession<MafiaUser,
         if (!started) {
             started = true
             logger.info("startGame()...")
-            mafiaSessionState = MafiaSessionState.CITIZEN_VOTE
+            mafiaSessionState = MafiaSessionState.MAFIA_VOTE
             val mafiaNames = generateMafia()
             mafiaNames.forEach { this.getUser(it).role = MafiaUserRoles.MAFIA }
             startGameEvent()

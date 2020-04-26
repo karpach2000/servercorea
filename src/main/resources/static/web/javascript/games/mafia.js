@@ -30,6 +30,7 @@ function mafia_onclose() {
     mafiaWebsocketConnection.onopen = function(evt) { onConnectionOpen(evt) };
     mafiaWebsocketConnection.onmessage = function(evt) { onConnectionMessage(evt) };
     mafiaWebsocketConnection.onclose = function(evt) { onclose(evt) };
+
 }
 
 function mafia_onConnectionMessage(evt) {
@@ -114,15 +115,15 @@ function mafia_startGame(){
     xmlHttp.open("GET", "/games/mafia_count_users?userName="+userName+"&sessionId="+sessionId+
         "&sessionPas="+sessionPas, false); // false for synchronous request
     xmlHttp.send(null);
-    if(xmlHttp.responseText<3)
+    if(xmlHttp.responseText<5)
     {
         alert("Минимальное количество игроков 5!")
         return
     }
-    mafia_gamePositionCitizenVote()
+    mafia_gamePositionMafiaVote()
     mafia_startGameCommand()
     mafia_getRole()
-    mafia_getСitizenVoteVariants()
+    mafia_getMafiaVoteVariants()
     //alert(xmlHttp.responseText)
 
 }
