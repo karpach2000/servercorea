@@ -122,20 +122,24 @@
         <h5 id="mafia_role"></h5>
 
 
-        <input type="button" onclick="mafia_stopGame()" name="stopGame" value="Закончить игру"><br>
 
+
+        <label for="mafia_voteVariants">Выберете против кого голосовать</label>
         <select id="mafia_voteVariants" onchange="mafia_voteVote()">
         </select><br><br>
+
         <div id = "mafia_userVoteTable"></div>
 
         <div id = "mafia_citizenVote">
-
-            <input type="button" id = "mafia_voteVote_c" onclick="mafia_citizenVote()" value="Засчитать голоса">
+            <h3>Голосование горожан.</h3>
+            <input type="button" id = "mafia_voteСitizenButton" onclick="mafia_citizenVote()" value="Засчитать голоса горожан">
         </div>
         <div id = "mafia_mafiaVote" hidden>
-            <input type="button" id = "mafia_voteVote _m"  onclick="mafia_mafiaVote()" value="Засчитать голоса">
+            <h3>Голосование мафии.</h3>
+            <input type="button" id = "mafia_voteMafiaButton"  onclick="mafia_mafiaVote()" value="Засчитать голоса мафии">
         </div>
-
+        <br>
+        <input type="button" onclick="mafia_stopGame()" name="stopGame" value="Закончить игру"><br>
     </div>
 </div>
 

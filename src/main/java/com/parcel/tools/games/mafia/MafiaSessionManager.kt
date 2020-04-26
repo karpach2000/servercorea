@@ -1,10 +1,6 @@
 package com.parcel.tools.games.mafia
 
 import com.parcel.tools.games.GamesSessionManager
-import com.parcel.tools.games.spy.SpyEvent
-import com.parcel.tools.games.spy.SpySession
-import com.parcel.tools.games.spy.SpySessionManager
-import com.parcel.tools.games.spy.SpyUser
 
 object MafiaSessionManager :
         GamesSessionManager<MafiaUser, MafiaEvent, MafiaSession>(){
@@ -30,15 +26,25 @@ object MafiaSessionManager :
         return getSession(sessionId, sessionPas).getRole(userName)
     }
 
-    fun getCitizenVoteVariants(sessionId: Long, sessionPas: Long, userName: String):String
+
+    /**
+     * Получить варианты за кого можно проголосовать когда голосует город.
+     * (список кандидатов)
+     */
+    fun getUsersForVoteСitizen(sessionId: Long, sessionPas: Long, userName: String):String
     {
-        logger.info("getCitizenVoteVariants($sessionId, $sessionPas, $userName)")
-        return getSession(sessionId, sessionPas).getCitizenVoteVariants(userName)
+        logger.info("getUsersForVoteСitizen($sessionId, $sessionPas, $userName)")
+        return getSession(sessionId, sessionPas).getUsersForVoteСitizen(userName)
     }
-    fun getMafiaVoteVariants(sessionId: Long, sessionPas: Long, userName: String):String
+
+    /**
+     * Получить варианты за кого можно проголосовать когда голосует мафия.
+     * (список кандидатов)
+     */
+    fun getUsersForVoteMafia(sessionId: Long, sessionPas: Long, userName: String):String
     {
-        logger.info("getMafiaVoteVariants($sessionId, $sessionPas, $userName)")
-        return getSession(sessionId, sessionPas).getMafiaVoteVariants(userName)
+        logger.info("getUsersForVoteСitizen($sessionId, $sessionPas, $userName)")
+        return getSession(sessionId, sessionPas).getUsersForVoteMafia(userName)
     }
 
 
@@ -50,13 +56,17 @@ object MafiaSessionManager :
         return getSession(sessionId, sessionPas).vote(userName, voteName)
     }
 
-
+    /**
+     * Завершить голосование и применить результаты.
+     */
     fun mafiaVoteResult(sessionId: Long, sessionPas: Long, userName: String): String
     {
         logger.info("mafiaVoteResult($sessionId, $sessionPas, $userName)")
         return getSession(sessionId, sessionPas).mafiaVoteResult(userName)
     }
-
+    /**
+     * Завершить голосование и применить результаты.
+     */
     fun cityzenVoteResult(sessionId: Long, sessionPas: Long, userName: String): String
     {
         logger.info("cityzenVoteResult($sessionId, $sessionPas, $userName)")

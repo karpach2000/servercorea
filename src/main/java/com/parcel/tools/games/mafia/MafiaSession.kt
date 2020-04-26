@@ -3,7 +3,6 @@ package com.parcel.tools.games.mafia
 import com.parcel.tools.games.GamesSession
 import com.parcel.tools.games.GlobalRandomiser
 import com.parcel.tools.games.mafia.voteinformation.MafiaCitizenVoteInformation
-import com.parcel.tools.games.spy.SpySession
 import java.lang.Exception
 
 
@@ -71,28 +70,37 @@ class MafiaSession(sessionId: Long, sessionPas: Long) :  GamesSession<MafiaUser,
         return addUser(mu)
     }
 
-    fun getCitizenVoteVariants(userName: String):String
+
+    /**
+     * Получить варианты за кого можно проголосовать когда голосует город.
+     * (список кандидатов)
+     */
+    fun getUsersForVoteСitizen(userName: String):String
     {
-        logger.info("getCitizenVoteVariants($userName)")
+        logger.info("getUsersForVoteСitizen($userName)")
         var ans = ""
         if(getUser(userName).role!=MafiaUserRoles.LEADING) {
             val SEPORATOR = "_"
             users.forEach {
-                if (it.isAlife && it.role != MafiaUserRoles.LEADING) {
+                if (it.isAlife && it.role!=MafiaUserRoles.LEADING) {
                     ans = ans + it.name + SEPORATOR
                 }
             }
         }//if
         return ans
     }
-    fun getMafiaVoteVariants(userName: String):String
+    /**
+     * Получить варианты за кого можно проголосовать когда голосует мафия.
+     * (список кандидатов)
+     */
+    fun getUsersForVoteMafia(userName: String):String
     {
-        logger.info("getMafiaVoteVariants($userName)")
+        logger.info("getUsersForVoteMafia($userName)")
         var ans = ""
         if(getUser(userName).role==MafiaUserRoles.MAFIA) {
             val SEPORATOR = "_"
             users.forEach {
-                if (it.isAlife && it.role != MafiaUserRoles.LEADING) {
+                if (it.isAlife && it.role!=MafiaUserRoles.LEADING) {
                     ans = ans + it.name + SEPORATOR
                 }
             }
@@ -159,6 +167,8 @@ class MafiaSession(sessionId: Long, sessionPas: Long) :  GamesSession<MafiaUser,
    fun vote(userName: String, voteName: String) :Boolean
     {
         logger.info("vote($userName, $voteName)")
+        if(voteName=="")
+            return false
         getUser(userName).voteName = voteName
         users.forEach { it.votedCount = 0 }
         users.forEach {
@@ -169,12 +179,13 @@ class MafiaSession(sessionId: Long, sessionPas: Long) :  GamesSession<MafiaUser,
             }
         }
         //обновляем таблицы голосования
-        updateVoteTableEvent(
-                MafiaCitizenVoteInformation(getUser(userName), users).toHtml()
-        )
+        updateVoteTableEvent()
         return true
     }
 
+    /**
+     * Завершить голосование и применить результаты.
+     */
     fun mafiaVoteResult(userName: String):String
     {
         logger.info("mafiaVoteResult($userName)")
@@ -186,10 +197,15 @@ class MafiaSession(sessionId: Long, sessionPas: Long) :  GamesSession<MafiaUser,
         logger.info("voteResult: $result")
         getUser(result).isAlife = false
         this.mafiaSessionState = MafiaSessionState.CITIZEN_VOTE
-        openСitizensVoteEvent()
+        openСitizensVoteCountEvent(result)
+        //обновляем таблицы голосования
+        updateVoteTableEvent()
         return result
     }
 
+    /**
+     * Завершить голосование и применить результаты.
+     */
     fun cityzenVoteResult(userName: String):String
     {
         logger.info("cityzenVoteResult($userName)")
@@ -201,7 +217,9 @@ class MafiaSession(sessionId: Long, sessionPas: Long) :  GamesSession<MafiaUser,
         logger.info("voteResult: $result")
         getUser(result).isAlife = false
         this.mafiaSessionState = MafiaSessionState.MAFIA_VOTE
-        openMafiaVoteEvent()
+        openMafiaVoteCountEvent(result)
+        //обновляем таблицы голосования
+        updateVoteTableEvent()
         return result
     }
 
@@ -218,8 +236,8 @@ class MafiaSession(sessionId: Long, sessionPas: Long) :  GamesSession<MafiaUser,
             {
                 votesMax = it.votedCount
                 maxVoteUser = it.name
-                it.clearVote()
             }
+            it.clearVote()
         }
         if(maxVoteUser!="")
             return maxVoteUser
@@ -248,24 +266,27 @@ class MafiaSession(sessionId: Long, sessionPas: Long) :  GamesSession<MafiaUser,
 
     private fun countMafiaGamersIsNecessary(): Int
     {
-        return users.count()/4
+        return users.count()/3
     }
 
 
     /*******EVENTS*******/
-    fun updateVoteTableEvent(table: String)
+    fun updateVoteTableEvent()
     {
-        gameEvent.forEach { it.updateVoteTable(table) }
+        gameEvent.forEach {
+            val table = MafiaCitizenVoteInformation(getUser(it.userName), users).toHtml()
+            it.updateVoteTable(table)
+        }
     }
 
-    fun openMafiaVoteEvent()
+    fun openMafiaVoteCountEvent(deadUser: String)
     {
-        gameEvent.forEach { it.openMafiaVote() }
+        gameEvent.forEach { it.openMafiaVote(deadUser) }
     }
 
-    fun openСitizensVoteEvent()
+    fun openСitizensVoteCountEvent(deadUser: String)
     {
-        gameEvent.forEach { it.openСitizensVote()}
+        gameEvent.forEach { it.openСitizensVote(deadUser)}
     }
 
     fun chndgeLeaderEvent(leaderName: String)

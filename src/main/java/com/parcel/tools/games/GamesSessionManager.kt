@@ -39,12 +39,13 @@ abstract class GamesSessionManager<U : GameUser, E:GameEvent, GS: GamesSession<U
     fun stopGame(sessionId: Long, sessionPas: Long):Boolean
     {
         logger.info("stopGame($sessionId, $sessionPas)")
-        if (SpySessionManager.isSessionExists(sessionId)) {
+        if (isSessionExists(sessionId)) {
             val session = getSession(sessionId, sessionPas)
             session.stopGame()
             gameSessions.remove(session)
             return true
         }
+        logger.warn("Can`t finde game($sessionId, $sessionPas)")
         return false
     }
 

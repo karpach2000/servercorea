@@ -20,6 +20,14 @@ class MafiaWebSocketController: TextWebSocketHandler()  {
 
     class MafiaEventHandler(private var session: WebSocketSession, private var name: String): MafiaEvent
     {
+
+
+        /**
+         * Имя пользователяя которому должен прилететь Event.
+         */
+        override var userName : String = ""
+
+
         private fun sendMessage(message: String)
         {
             try {
@@ -38,13 +46,20 @@ class MafiaWebSocketController: TextWebSocketHandler()  {
 
 
 
-        override fun openMafiaVote() {
-            sendMessage("openMafiaVote")
+        /**
+         * Открыть голосование мафии
+         */
+        override fun openMafiaVote(deadUser: String) {
+            sendMessage("openMafiaVote$SEPORATOR$deadUser")
         }
 
-        override fun openСitizensVote() {
-            sendMessage("openСitizensVote")
+        /**
+         * Открыть голосование горожан
+         */
+        override fun openСitizensVote(deadUser: String) {
+            sendMessage("openСitizensVote$SEPORATOR$deadUser")
         }
+
 
         override fun addUserEvent(userList: String) {
             sendMessage("addUserEvent$SEPORATOR$userList")
@@ -89,7 +104,9 @@ class MafiaWebSocketController: TextWebSocketHandler()  {
             val pas = items[1].toLong()
             val name = items[2]
             logger.info("Web socket connection subscribe. id: $id, pas: $pas name: $name")
-            MafiaSessionManager.subscribeGameSessionEvent(id, pas, MafiaEventHandler(session, name))
+            val mve =  MafiaEventHandler(session, name)
+            mve.userName = name
+            MafiaSessionManager.subscribeGameSessionEvent(id, pas, mve)
         }
         else if(command == "ping")
         {

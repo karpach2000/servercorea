@@ -4,9 +4,6 @@ import com.parcel.tools.games.GameSessionException
 import com.parcel.tools.games.GameSessionManagerException
 import com.parcel.tools.games.mafia.MafiaSessionException
 import com.parcel.tools.games.mafia.MafiaSessionManager
-import com.parcel.tools.games.spy.SpySessionException
-import com.parcel.tools.games.spy.SpySessionManager
-import com.parcel.tools.games.spy.SpySessionManagerException
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.RequestMapping
@@ -137,7 +134,19 @@ class MafiaController {
         return MafiaSessionManager.getRole(sessionId.toLong(), sessionPas.toLong(), userName)
     }
 
-    @RequestMapping("/games/mafia_getCitizenVoteVariants")///games/spy_get_users
+
+    @RequestMapping("/games/mafia_stopGame")///games/spy_get_users
+    @ResponseBody
+    @Throws(IOException::class)
+    internal fun stopGame(model: Model,
+                         @RequestParam("userName") userName: String = "",
+                         @RequestParam("sessionId") sessionId: String = "",
+                         @RequestParam("sessionPas") sessionPas: String = ""): String {
+        logger.info("getRole($userName, $sessionId, $sessionPas)")
+        return MafiaSessionManager.stopGame(sessionId.toLong(), sessionPas.toLong()).toString()
+    }
+
+    @RequestMapping("/games/mafia_getCitizenVoteResult")///games/spy_get_users
     @ResponseBody
     @Throws(IOException::class)
     internal fun getCitizenVoteVariants(model: Model,
@@ -145,10 +154,10 @@ class MafiaController {
                          @RequestParam("sessionId") sessionId: String = "",
                          @RequestParam("sessionPas") sessionPas: String = ""): String {
         logger.info("getCitizenVoteVariants($userName, $sessionId, $sessionPas)")
-        return MafiaSessionManager.getCitizenVoteVariants(sessionId.toLong(), sessionPas.toLong(), userName)
+        return MafiaSessionManager.cityzenVoteResult(sessionId.toLong(), sessionPas.toLong(), userName)
     }
 
-    @RequestMapping("/games/mafia_getMafiaVoteVariants")///games/spy_get_users
+    @RequestMapping("/games/mafia_getMafiaVoteResult")///games/spy_get_users
     @ResponseBody
     @Throws(IOException::class)
     internal fun getMafiaVoteVariants(model: Model,
@@ -156,9 +165,36 @@ class MafiaController {
                                         @RequestParam("sessionId") sessionId: String = "",
                                         @RequestParam("sessionPas") sessionPas: String = ""): String {
         logger.info("getMafiaVoteVariants($userName, $sessionId, $sessionPas)")
-        return MafiaSessionManager.getMafiaVoteVariants(sessionId.toLong(), sessionPas.toLong(), userName)
+        return MafiaSessionManager.mafiaVoteResult(sessionId.toLong(), sessionPas.toLong(), userName)
     }
 
+    @RequestMapping("/games/mafia_getUsersForVoteСitizen")
+    @ResponseBody
+    @Throws(IOException::class)
+    internal fun getUsersForVoteСitizen(model: Model,
+                                      @RequestParam("userName") userName: String = "",
+                                      @RequestParam("sessionId") sessionId: String = "",
+                                      @RequestParam("sessionPas") sessionPas: String = ""): String {
+        logger.info("getUsersForVoteСitizen($userName, $sessionId, $sessionPas)")
+        return MafiaSessionManager.getUsersForVoteСitizen(sessionId.toLong(), sessionPas.toLong(), userName)
+    }
+
+    @RequestMapping("/games/mafia_getUsersForVoteMafia")
+    @ResponseBody
+    @Throws(IOException::class)
+    internal fun getUsersForVoteMafia(model: Model,
+                                        @RequestParam("userName") userName: String = "",
+                                        @RequestParam("sessionId") sessionId: String = "",
+                                        @RequestParam("sessionPas") sessionPas: String = ""): String {
+        logger.info("getUsersForVoteСitizen($userName, $sessionId, $sessionPas)")
+        return MafiaSessionManager.getUsersForVoteMafia(sessionId.toLong(), sessionPas.toLong(), userName)
+    }
+
+
+
+    /**
+     * Отдать голос.
+     */
     @RequestMapping("/games/mafia_voteVote")///games/spy_get_users
     @ResponseBody
     @Throws(IOException::class)
