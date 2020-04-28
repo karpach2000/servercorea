@@ -214,15 +214,15 @@ function mafia_getRole()
     //если пользователь не лидер убираем кнопку голосования
     if( role=="LEADING")
     {
-        document.getElementById("mafia_voteСitizenButton").hidden = false
-        document.getElementById("mafia_voteMafiaButton").hidden = false
-        document.getElementById("mafia_voteVariants").hidden = true
-
+        ws.leaderPosition()
     }
-    else
+    else if(role=="CITIZEN")
     {
-        document.getElementById("mafia_voteСitizenButton").hidden = true
-        document.getElementById("mafia_voteMafiaButton").hidden = true
+        ws.citizenPosition()
+    }
+    else if(role=="MAFIA")
+    {
+        ws.mafiaPosition()
     }
 }
 
