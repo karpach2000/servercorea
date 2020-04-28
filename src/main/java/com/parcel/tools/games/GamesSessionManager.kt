@@ -1,6 +1,6 @@
 package com.parcel.tools.games
 
-import com.parcel.tools.games.spy.*
+import com.parcel.tools.games.cards.CardsSessionManager
 
 open class  GameSessionManagerException(message: String):Exception(message)
 
@@ -124,7 +124,7 @@ abstract class GamesSessionManager<U : GameUser, E:GameEvent, GS: GamesSession<U
 
     fun deSubscribeGameSessionEvent(sessionId: Long, sessionPas: Long, event: E)
     {
-        if(SpySessionManager.isSessionExists(sessionId))
+        if(CardsSessionManager.isSessionExists(sessionId))
             getSession(sessionId, sessionPas).deSubscribeGameEvents(event)
     }
 

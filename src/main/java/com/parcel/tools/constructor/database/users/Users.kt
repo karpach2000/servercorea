@@ -1,8 +1,5 @@
 package com.parcel.tools.constructor.database.users
 
-import javax.persistence.*
-
-
 
 class Users {
 

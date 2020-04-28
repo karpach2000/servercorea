@@ -1,4 +1,4 @@
-package com.parcel.tools.games.spy
+package com.parcel.tools.games.cards
 
 import com.google.gson.GsonBuilder
 
@@ -7,12 +7,11 @@ import com.google.gson.GsonBuilder
  */
 class UserInformation() {
 
-    constructor(user: SpyUser, location:String, usersCount: Int, allUsers: String)
+    constructor(user: CardsUser, usersCount: Int, allUsers: String)
             :this()
     {
         name=user.name
-        spy = user.spy
-        this.location = location
+        userCard = user.userCard
         this.usersCount = usersCount
         this.allUsers = allUsers
 
@@ -25,7 +24,7 @@ class UserInformation() {
     }
 
     /**
-     * Списо игроков.
+     * Список игроков.
      */
     var allUsers = ""
 
@@ -40,9 +39,9 @@ class UserInformation() {
     var name = ""
 
     /**
-     * Является ли данный пользователь шпионом
+     * Карточка текущего игрока
      */
-    var spy = false
+    var userCard = ""
 
     /**
      * Сообщение об ошибке
@@ -52,17 +51,9 @@ class UserInformation() {
     /**
      * Локация либо сообщение о том -чт пользователь шпион
      */
-    var location = ""
-    get() {
-        if(!spy)
-            return field
-        else
-            return "ШПИОН(SPY)"
-    }
 
     override fun toString() =
           "Name: $name\n"+
-           "location: $location\n"+
            "Users in game: $usersCount\n"+
             "Users:\n$allUsers"
 

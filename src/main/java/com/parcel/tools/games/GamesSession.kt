@@ -1,9 +1,5 @@
 package com.parcel.tools.games
 
-import com.parcel.tools.games.spy.SpySessionException
-import com.parcel.tools.games.spy.SpySessionManagerException
-import com.parcel.tools.games.spy.SpyUser
-
 class GameSessionException(message: String): Exception(message )
 
 abstract class  GamesSession<U : GameUser, E:GameEvent>(val sessionId: Long, val sessionPas: Long) {
@@ -79,7 +75,7 @@ abstract class  GamesSession<U : GameUser, E:GameEvent>(val sessionId: Long, val
     {
         var userList =""
         users.forEach {
-            userList = userList+ "    " +it.name + "\n"
+           userList = userList+ "    " +it.name + "000\n"
         }
         return userList
     }

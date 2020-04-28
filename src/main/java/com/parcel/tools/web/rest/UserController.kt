@@ -2,7 +2,6 @@ package com.parcel.tools.web.rest
 
 import com.parcel.tools.constructor.Page
 import com.parcel.tools.constructor.bodies.admin.CounterAdmin
-import org.apache.catalina.Globals
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.RequestMapping
