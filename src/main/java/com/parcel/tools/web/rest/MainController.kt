@@ -19,7 +19,7 @@ class MainController {
 
     @RequestMapping("/")
     @Throws(IOException::class)
-    internal fun index(model: Model, session: HttpSession): String {
+    internal fun home(model: Model, session: HttpSession): String {
         /*
         MustacheFactory mf = new DefaultMustacheFactory();
         Mustache m = mf.compile("index.mustache");
@@ -31,7 +31,7 @@ class MainController {
         val mainPage = MainPage()
         val page = Page(mainPage)
         model.addAttribute("page", page)
-        return "web/html/index"
+        return "web/html/home"
     }
 
 
