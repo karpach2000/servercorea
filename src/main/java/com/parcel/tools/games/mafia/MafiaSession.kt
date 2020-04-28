@@ -120,6 +120,7 @@ class MafiaSession(sessionId: Long, sessionPas: Long) :  GamesSession<MafiaUser,
             val mafiaNames = generateMafia()
             mafiaNames.forEach { this.getUser(it).role = MafiaUserRoles.MAFIA }
             startGameEvent()
+            updateVoteTableEvent()
         }
     }
 
@@ -140,35 +141,7 @@ class MafiaSession(sessionId: Long, sessionPas: Long) :  GamesSession<MafiaUser,
         return MafiaCitizenVoteInformation(getUser(userName), users).toHtml()
     }
 
-    /*
-    fun mafiaVote(userName: String, voteName: String):Boolean
-    {
-        logger.info("mafiaVote($userName, $voteName)")
-        if(getUser(userName).role!=MafiaUserRoles.MAFIA)
-        {
-            throw MafiaSessionException("Only mafia can vote on mafia vote.")
-        }
-        else if(getUser(voteName).role==MafiaUserRoles.LEADING )
-        {
-            throw MafiaSessionException("Mafia can vote leader.")
-        }
-        return vote(userName, voteName)
-    }
 
-    fun citizenVote(userName: String, voteName: String):Boolean
-    {
-        logger.info("citizenVote($userName, $voteName)")
-        if(getUser(userName).role==MafiaUserRoles.LEADING)
-        {
-            throw MafiaSessionException("Leader can't wote.")
-        }
-        else if(getUser(voteName).role==MafiaUserRoles.LEADING )
-        {
-            throw MafiaSessionException("Can vote leader.")
-        }
-        return vote(userName, voteName)
-    }
-    */
    fun vote(userName: String, voteName: String) :Boolean
     {
         logger.info("vote($userName, $voteName)")

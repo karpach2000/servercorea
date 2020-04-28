@@ -6,7 +6,9 @@
     <link href="web/css/games.css" rel="stylesheet" tipe="text/css">
     <script src="web/javascript/games/spy.js"></script>
     <script src="web/javascript/games/games.js"></script>
-    <script src="web/javascript/games/mafia.js"></script>
+    <script src="web/javascript/games/mafia/WindowStates.js"></script>
+    <script src="web/javascript/games/mafia/mafia.js"></script>
+
     <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.0/css/bootstrap-combined.min.css" rel="stylesheet">
 </head>
 <body>
@@ -101,7 +103,7 @@
         <input type="number"   id="mafia_sessionId"  class="textboxWithLinck" min="0" max="999999" required><br>
         <label for="mafia_sessionPas"><h5>Пароль сессии (до 6 цифр)</h5></label>
         <input type="number"   id="mafia_sessionPas" class="textboxWithLinck" min="0" max="999999" required><br>
-        <input type="button" onclick="mafia_addUser()" id="mafia_addUser" name="mafia_addUser" value="Добавить себя мафия">
+        <input type="button" onclick="mafia_login()" id="mafia_addUser" name="mafia_addUser" value="Добавить себя мафия">
     </div>
 
     <div id="mafia_beforGame" class="mafia_beforGame" hidden>
