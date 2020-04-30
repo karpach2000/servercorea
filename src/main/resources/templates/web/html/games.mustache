@@ -2,6 +2,12 @@
 <html lang="ru">
 
 <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8" />
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
     <title>Игры</title>
     <!--    
         отключил твои стили переподключил бутстрап по рекомендациям последней версии
@@ -30,10 +36,10 @@
             </button>
 
             <!-- 
-        здесь и далее добавляю исходные айди и классы на всякий случай, не хочу искать какие используются 
-        в скриптах, а какие нет (там, где нет конфликта). Скорее всего, большинство из них можно будет 
-        потом убрать, и ссылаться на объекты и классы бутстрапа
-        -->
+            здесь и далее добавляю исходные айди и классы на всякий случай, не хочу искать какие используются 
+            в скриптах, а какие нет (там, где нет конфликта). Скорее всего, большинство из них можно будет 
+            потом убрать, и ссылаться на объекты и классы бутстрапа
+            -->
 
             <!-- контейнер, содержимое которого сворачивается в кнопку на мелких экранах -->
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
@@ -63,7 +69,7 @@
             дополнить адаптивность - возможности фреймворка позволяют также отображать на экранах 
             разного размера разные блоки, разное содержимое и так далее, без особых на то заморочек.
             -->
-            <div class="col col-md-4">
+            <div class="col-12 col-md-4">
                 <!--Боковое меню-->
                 <!-- его по-хорошему тоже потом переписать на бутстрапе, просто пока не готов до конца
                 осознать как лучше это сделать. Вообще, у них есть подходящий под это инструмент 
@@ -81,42 +87,38 @@
             </div>
 
             <!--SPY-->
-            <div id="spy" class="bodyDiv col col-md-8">
+            <div id="spy" class="bodyDiv col-12 col-md-8" >
                 <h2>
                     Шпион
                 </h2>
 
                 <div id="user" class="spy">
                     <p>{{page.pageBody.counterGamesSpy.gameDescription}}</p>
-
-                    <label for="userName">
-                        <h5>
-                            Имя пользователя
-                        </h5>
-                    </label>
-                    <input type="text" id="userName" size="10"
-                        onkeyup="this.value = this.value.replace(/[^A-Za-zА-Яа-яЁё0-9]/,'');" class="textboxWithLinck"
-                        required />
-                    <br />
-                    <!--label for="userPas" hidden>Пароль пользователя</label -->
-                    <!--input type="number"   id="userPas"  class="textboxWithLinck" min="0" max="999999" required hidden><br-->
-                    <label for="sessionId">
-                        <h5>
-                            ID сессии (до 6 цифр)
-                        </h5>
-                    </label>
-                    <input type="number" id="sessionId" class="textboxWithLinck" min="0" max="999999" required />
-                    <br />
-                    <label for="sessionPas">
-                        <h5>
-                            Пароль сессии (до 6 цифр)
-                        </h5>
-                    </label>
-                    <input type="number" id="sessionPas" class="textboxWithLinck" min="0" max="999999" required />
-                    <br />
-                    <button type="button" class="btn btn-primary" onclick="addUser()" name="addUser" id="addUser">
-                        Добавить себя шпион
-                    </button>
+                    <form>
+                    <div class="form-group row">
+                        <label for="userName" class="col-sm-4 col-form-label">Имя пользователя</label>
+                        <div class="col-sm-6">
+                            <input type="text" id="userName" size="10" class="textboxWithLinck form-control"
+                                onkeyup="this.value = this.value.replace(/[^A-Za-zА-Яа-яЁё0-9]/,'');" 
+                                required />
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="sessionId" class="col-sm-4 col-form-label">ID сессии (до 6 цифр)</label>
+                        <div class="col-sm-6">
+                            <input type="number" id="sessionId" class="textboxWithLinck form-control" min="0" max="999999" required />
+                        </div>
+                    </div>
+                    <div class="form-group row">    
+                        <label for="sessionPas" class="col-sm-4 col-form-label">Пароль сессии (до 6 цифр)</label>
+                        <div class="col-sm-6">
+                            <input type="number" id="sessionPas" class="textboxWithLinck form-control" min="0" max="999999" required />
+                        </div>
+                    </div>
+                        <button type="button" class="btn btn-primary" onclick="addUser()" name="addUser" id="addUser">
+                            Добавить себя шпион
+                        </button>
+                    </form>
                     <!-- <input type="button" onclick="addUser()" name="addUser" id="addUser" value="Добавить себя шпион"> -->
                 </div>
 
@@ -138,7 +140,6 @@
                 </div>
 
                 <div id="game" class="game" hidden>
-
                     <div class="card-group">
                         <div class="card">
                             <div class="card-body">
@@ -152,54 +153,46 @@
                                 <button type="button" class="btn btn-primary" onclick="showSpy()" name="showSpy">
                                     Показать шпиона
                                 </button>
-                                <!-- <input type="button" onclick="showSpy()" name="showSpy" value="Показать шпиона"> -->
-                                <!--input type="button" onclick="isSpyShowen()" name="isSpyShowen" value="Видел ли кто шпиона"-->
                                 <button type="button" class="btn btn-danger" onclick="stopGame()" name="stopGame">
                                     Закончить игру
                                 </button>
-                                <!-- <input type="button" onclick="stopGame()" name="stopGame" value="Закончить игру"> -->
                             </div>
                         </div>
 
                         <div class="card">
                             <div class="card-body">
                                 <h5 class="card-title">Локации в игре</h5>
-                                <!-- Дима, нахера здесь маркированый список?! -->
-                                <ul id="locations">
-                                    <table class="table table table-bordered">
-                                        <thead class="thead-light">
-                                            <tr>
-                                                <th>Локация</th>
-                                                <th>Создатель</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody class="table table-striped">
-                                            {{#
-                                                page.pageBody.counterGamesSpy.locations}}
-                                            <tr class="table-data">
-                                                <td>{{locationName}}</td>
-                                                <td>{{authorLogin}}</td>
-                                            </tr>
-                                            {{/
-                                                page.pageBody.counterGamesSpy.locations}}
-                                        </tbody>
-                                    </table>
-                                </ul>
+                                <table class="table table-bordered table-hover">
+                                    <thead class="thead-light">
+                                        <tr>
+                                            <th>Локация</th>
+                                            <th>Создатель</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="table table-striped">
+                                        {{#page.pageBody.counterGamesSpy.locations}}
+                                        <tr class="table-data">
+                                            <td>{{locationName}}</td>
+                                            <td>{{authorLogin}}</td>
+                                        </tr>
+                                        {{/page.pageBody.counterGamesSpy.locations}}
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
                     </div>
-
                 </div>
             </div>
 
             <!--Mafia-->
-            <div id="mafia" class="bodyDiv col col-md-8" hidden>
+            <div id="mafia" class="bodyDiv col-12 col-md-8">
                 <h2>
                     Мафия
                 </h2>
-                <div id="mafia_user" class="mafia">
-                    {{page.pageBody.counterGamesMafia.gameDescription}}
-                    <br />
+
+                <div id="mafia_user" class="mafia" hidden>
+                    <p>{{page.pageBody.counterGamesMafia.gameDescription}}</p>
+                    
                     <label for="mafia_userName">
                         <h5>Имя пользователя</h5>
                     </label>
@@ -231,40 +224,56 @@
                             !!!Дождитесь пока зайдут все пользователи!!!
                         </h5>
                     </label>
-                    <input type="button" onclick="mafia_startGame()" id="mafia_startGame" name="mafia_startGame"
-                        value="Начать игру" /><br />
-                    <label for="mafia_wanToBeaLeader">
+                    <br />
+                    <button type="button" class="btn btn-primary" onclick="mafia_startGame()" id="mafia_startGame" name="mafia_startGame">Начать игру</button>
+                    
+                    <!-- <label for="mafia_wanToBeaLeader">
                         <h5>Хочу быть ведущим</h5>
-                    </label>
-                    <input type="button" onclick="mafia_wanToBeaLeader()" id="mafia_wanToBeaLeader"
-                        name="mafia_wanToBeaLeader" value="Хочу быть ведущим" /><br />
+                    </label> -->
+                    <button type="button" class="btn btn-warning" onclick="mafia_wanToBeaLeader()" id="mafia_wanToBeaLeader"
+                        name="mafia_wanToBeaLeader">Хочу быть ведущим</button>
+                        <br />
                     <h5 id="mafia_leader"></h5>
                     <br /><br />
                     <textarea id="mafia_users" rows="17"> </textarea>
                 </div>
 
-                <div id="mafia_game" class="mafia_game col col-md-7" hidden>
-                    {{page.pageBody.counterGamesMafia.tooltipDuringTheGame}}
+                <div id="mafia_game" class="mafia_game" hidden>
+                    <p>{{page.pageBody.counterGamesMafia.tooltipDuringTheGame}}</p>
                     <h5 id="mafia_role"></h5>
-
+                    <!-- старая голосовалка -->
                     <label for="mafia_voteVariants">Выберете против кого голосовать</label>
                     <select id="mafia_voteVariants" onchange="mafia_voteVote()">
-                    </select><br /><br />
+                    </select>
+                    <br />
+                    <!-- новая голосовалка - шаблон -->
+                    <form>
+                        <div class="form-group row">
+                            <label for="exampleFormControlSelect"class="col-form-label">Выберете против кого голосовать: </label>
+                            <select class="form-control-sm col-6" id="exampleFormControlSelect">
+                                <option>Choose one</option>
+                                <option>Gamer 1</option>
+                                <option>Gamer 2</option>
+                                <option>Gamer 3</option>
+                                <option>Gamer 4</option>
+                                <option>Gamer 5</option>
+                            </select>
+                        </div>
+                    </form>
+                    <br />
 
                     <div id="mafia_userVoteTable"></div>
 
                     <div id="mafia_citizenVote">
                         <h3>Голосование горожан.</h3>
-                        <input type="button" id="mafia_voteСitizenButton" onclick="mafia_citizenVote()"
-                            value="Засчитать голоса горожан" />
+                        <button type="button" class="btn btn-warning" id="mafia_voteСitizenButton" onclick="mafia_citizenVote()">Засчитать голоса горожан</button>
                     </div>
                     <div id="mafia_mafiaVote" hidden>
                         <h3>Голосование мафии.</h3>
-                        <input type="button" id="mafia_voteMafiaButton" onclick="mafia_mafiaVote()"
-                            value="Засчитать голоса мафии" />
+                        <button type="button" class="btn btn-warning" id="mafia_voteMafiaButton" onclick="mafia_mafiaVote()">Засчитать голоса мафии</button>
                     </div>
                     <br />
-                    <input type="button" onclick="mafia_stopGame()" name="stopGame" value="Закончить игру" /><br />
+                    <button type="button" class="btn btn-danger" onclick="mafia_stopGame()" name="stopGame">Закончить игру</button>
                 </div>
             </div>
         </div>
