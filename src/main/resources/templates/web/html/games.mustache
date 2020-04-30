@@ -19,7 +19,7 @@
 
 <body class="mt-5">
     <!-- новая панель навигации. Прикреплена к верху, сворачивается в кнопку на мелких (медиум) экранах-->
-    <nav class="navbar navbar-expand-md fixed-top navbar-dark bg-dark">
+    <nav class="navbar navbar-expand-lg fixed-top navbar-dark bg-dark">
         <div class="container">
             <!-- логотип-эмблема -->
             <a class="navbar-brand" href="#">НЁХ</a>
@@ -63,7 +63,7 @@
             дополнить адаптивность - возможности фреймворка позволяют также отображать на экранах 
             разного размера разные блоки, разное содержимое и так далее, без особых на то заморочек.
             -->
-            <div class="col col-md-4">
+            <div class="col col-lg-4">
                 <!--Боковое меню-->
                 <!-- его по-хорошему тоже потом переписать на бутстрапе, просто пока не готов до конца
                 осознать как лучше это сделать. Вообще, у них есть подходящий под это инструмент 
@@ -81,7 +81,7 @@
             </div>
 
             <!--SPY-->
-            <div id="spy" class="bodyDiv col col-md-8">
+            <div id="spy" class="bodyDiv col col-lg-8">
                 <h2>
                     Шпион
                 </h2>
@@ -174,14 +174,12 @@
                                             </tr>
                                         </thead>
                                         <tbody class="table table-striped">
-                                            {{#
-                                                page.pageBody.counterGamesSpy.locations}}
+                                            {{#page.pageBody.counterGamesSpy.locations}}
                                             <tr class="table-data">
                                                 <td>{{locationName}}</td>
                                                 <td>{{authorLogin}}</td>
                                             </tr>
-                                            {{/
-                                                page.pageBody.counterGamesSpy.locations}}
+                                            {{/page.pageBody.counterGamesSpy.locations}}
                                         </tbody>
                                     </table>
                                 </ul>
@@ -193,7 +191,7 @@
             </div>
 
             <!--Mafia-->
-            <div id="mafia" class="bodyDiv col col-md-8" hidden>
+            <div id="mafia" class="bodyDiv col col-lg-8" hidden>
                 <h2>
                     Мафия
                 </h2>
@@ -243,7 +241,7 @@
                     <textarea id="mafia_users" rows="17"> </textarea>
                 </div>
 
-                <div id="mafia_game" class="mafia_game col col-md-7" hidden>
+                <div id="mafia_game" class="mafia_game col col-lg-7" hidden>
                     {{page.pageBody.counterGamesMafia.tooltipDuringTheGame}}
                     <h5 id="mafia_role"></h5>
 
