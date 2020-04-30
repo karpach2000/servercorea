@@ -75,7 +75,7 @@ function gamePosition() {
 /***********************************/
 var getUserAction = false
 
-function addUser() {
+function spy_login() {
     var xmlHttp = new XMLHttpRequest();
     var userName = document.getElementById("userName").value
     var sessionId = document.getElementById("sessionId").value
