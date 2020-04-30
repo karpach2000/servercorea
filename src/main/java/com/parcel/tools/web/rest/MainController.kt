@@ -22,18 +22,11 @@ class MainController {
     @RequestMapping("/")
     @Throws(IOException::class)
     internal fun index(model: Model, session: HttpSession): String {
-        /*
-        MustacheFactory mf = new DefaultMustacheFactory();
-        Mustache m = mf.compile("index.mustache");
 
-        StringWriter writer = new StringWriter();
-        m.execute(writer, page).flush();
-        String html = writer.toString();
-        */
         val mainPage = MainPage()
         val page = Page(mainPage)
         model.addAttribute("page", page)
-        return "web/html/index"
+        return "redirect:/games"
     }
 
 

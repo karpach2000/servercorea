@@ -10,7 +10,7 @@ spyWebsocketConnection.onmessage = function(evt) { onConnectionMessage(evt) };
 spyWebsocketConnection.onclose = function(evt) { onclose(evt) };
 
 function onConnectionError(evt) {
-alert("Ошибка соединения с сервером, перезагрузите страницу!")
+    console.log("Connection error.")
 }
 
 function onConnectionOpen() {
