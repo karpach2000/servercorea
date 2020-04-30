@@ -4,26 +4,15 @@
     <title>Bootstrap 4 Website Example</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" type="text/css" href="static.web/css/indexStyle.css">
+    <link rel="stylesheet" type="text/css" href="web/css/index.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css">
     <script src="https://kit.fontawesome.com/b80c2c4f09.js" crossorigin="anonymous"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
-<!--    <style>-->
-<!--  .fakeimg {-->
-<!--      height: 200px;-->
-<!--      background: #aaa;-->
-<!--  }-->
-<!--  </style>-->
 </head>
-<body style="height:1500px">
-<div class="container-fluid">
-    <div class="jumbotron text-center" style="margin-bottom:0">
-        <h1>Test</h1>
-    </div>
-</div>
-<nav class="navbar navbar-expand-sm bg-dark navbar-dark sticky-top">
+<body>
+<nav class="navbar navbar-expand-sm bg-dark navbar-dark fixed-top">
     <a class="navbar-brand" href="#"><i class="fa fa-slack" aria-hidden="true"></i></a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#mainMenu">
         <span class="navbar-toggler-icon"></span>
@@ -40,21 +29,21 @@
 </nav>
 <header class="header ">
     <div class="overlay"></div>
-        <div class="container"><br>
-            <p>Some example text. Some example text. Some example text. Some example text. Some example text.</p>
-            <p>Some example text. Some example text. Some example text. Some example text. Some example text.</p>
-            <p>Some example text. Some example text. Some example text. Some example text. Some example text.</p>
-            <p>Some example text. Some example text. Some example text. Some example text. Some example text.</p>
+        <div class="container">
+            <div class="description ">
+                <h1>
+                </h1>
+            </div>
         </div>
 </header>
+
 <footer>
-    <div class="jumbotron text-center" style="margin-bottom:0">
         <p>{{ page.pageBody.mainText}}</p>
         <br>
         <p>{{ page.pageBody.contacts}}</p>
-    </div>
 </footer>
-<script type="text/javascript" src="static.web/javascript/index.js"></script>
-<script type="text/javascript" src="static.web/javascript/jquery.min.js"></script>
+
+<script type="text/javascript" src="web/javascript/index.js"></script>
+<script type="text/javascript" src="web/javascript/jquery.min.js"></script>
 </body>
 </html>

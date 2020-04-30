@@ -1,0 +1,62 @@
+@import url('https://fonts.googleapis.com/css?family=Raleway');
+
+body{
+margin: 0;
+padding: 0;
+background: #cfc2c2;
+}
+
+html,h1,h2,h3,h4,h5,h6,a{
+	font-family: "Raleway";
+}
+
+.header {
+position: relative;
+	background-image: url('https://expoelectroseti.ru/upload/iblock/8b7/8b76e58b7f60abd179e90235dc782ea1.jpg');
+	background-size: cover;
+	background-position: center;
+}
+.overlay{
+	position: absolute;
+	min-height: 100%;
+	min-width: 100%;
+	left: 0;
+	top: 0;
+	background: rgba(244, 244, 244, 0.45);
+}
+.description{
+    position: absolute;
+    top: 30%;
+    margin: auto;
+    padding: 2em;
+
+}
+.description h1{
+	color: #595957 ;
+}
+
+footer{
+width: 100%;
+height: auto;
+background-image: url('https://images.squarespace-cdn.com/content/v1/562feb40e4b074af2d02c179/1445984729558-6JXRMW9Q1V3P2S5AWJ9K/ke17ZwdGBToddI8pDm48kIIB6g8eAjVUZO-azrWbOQYUqsxRUqqbr1mOJYKfIPR7LoDQ9mXPOjoJoqy81S2I8N_N4V1vUb5AoIIIbLZhVYxCRW4BPu10St3TBAUQYVKcYjRlCiVt2J_GjLYiy8QVM8G79fAo6p6R58d_StS9Ff5a0XSZ7e4Efilfzc6prjEB/spotlight.png?format=1500w');
+margin: 0 auto;
+text-align: center;
+padding-top: 25px;
+}
+/*
+header::before {
+content: '';
+display: block;
+position: absolute;
+left: 0;
+right: 0;
+bottom: 0;
+top: 0;
+z-index: -1;
+transform-origin: center;
+min-right: 100vh;
+background-image: url('https://cache.kwork.ru/files/portfolio/t3/25/7de26b6f0c93c0fc0e86b91c3fd3e033ea7a69bb-1575184125.jpg');
+background-repeat: no repeat;
+background-size: cover;
+}
+*/
