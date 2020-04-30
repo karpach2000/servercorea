@@ -67,6 +67,8 @@ class MafiaSession(sessionId: Long, sessionPas: Long) :  GamesSession<MafiaUser,
             firstUserAdded = true
             mu.role = MafiaUserRoles.LEADING
         }
+        else if(started)
+            updateVoteTableEvent()//что бы при переподключении обновлялись данные
         return addUser(mu)
     }
 

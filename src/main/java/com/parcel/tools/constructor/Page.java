@@ -21,7 +21,7 @@ public class Page {
     private void init()
     {
         //****Основное меню*****//
-        mainMenu.addItem("Главная","/");
+        //mainMenu.addItem("Главная","/");
         mainMenu.addItem("Игры","/games");
         mainMenu.addItem("Настройка игр","/games_settings");
         //mainMenu.addItem("Администрирование","/admin");

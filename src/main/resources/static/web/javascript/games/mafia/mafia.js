@@ -1,5 +1,3 @@
-/********VARS***********/
-var role = ""
 /**
  * Изменяет состояние окна.
  * (приводит его в состояние соответсвующее текущей таблицы состояния)
@@ -17,23 +15,26 @@ mafiaWebsocketConnection.onmessage = function(evt) { mafia_onConnectionMessage(e
 mafiaWebsocketConnection.onclose = function(evt) { mafia_onclose(evt) };
 
 function mafia_onConnectionError(evt) {
-    alert("Ошибка соединения с сервером после востановления соединения !!!перезагрузите!!! страницу и войдите в игру (Шпион) указав " +
-        "свой ID сессии пароль сессии и логин.")
+    //alert("Ошибка соединения с сервером после востановления соединения !!!перезагрузите!!! страницу и войдите в игру (Шпион) указав " +
+    //    "свой ID сессии пароль сессии и логин.")
+    console.log("Connection error.")
 }
 
 function mafia_onConnectionOpen() {
+    console.log("mafia_onConnectionOpen()")
     mafiaWebsocketConnection.send("ping")
-    var userName = document.getElementById("mafia_userName").value
-    if(userName!="")
-        mafia_addUser()
+    //var userName = document.getElementById("mafia_userName").value
+    //if(userName.length>0) {
+    //    mafia_addUser()
+    //}
 }
 function mafia_onclose() {
-    //websocketConnection.close()
+    console.log("mafia_onclose()")
     mafiaWebsocketConnection = new WebSocket(mafiaWsConnectionUri);
-    mafiaWebsocketConnection.onerror = function(evt) { onConnectionError(evt) };
-    mafiaWebsocketConnection.onopen = function(evt) { onConnectionOpen(evt) };
+    mafiaWebsocketConnection.onerror = function(evt) { mafia_onConnectionError(evt) };
+    mafiaWebsocketConnection.onopen = function(evt) { mafia_onConnectionOpen(evt) };
     mafiaWebsocketConnection.onmessage = function(evt) { onConnectionMessage(evt) };
-    mafiaWebsocketConnection.onclose = function(evt) { onclose(evt) };
+    mafiaWebsocketConnection.onclose = function(evt) { mafia_onclose(evt) };
 
 }
 
@@ -76,11 +77,20 @@ function mafia_onConnectionMessage(evt) {
         alert("Игрок:" + data + " мертв!")
         updateWindowByState("CITIZEN_VOTE")
     }
+    else if(command=="pong")
+    {
+        var userName = document.getElementById("mafia_userName").value
+        if(userName.length>0) {
+            mafia_login()
+        }
+    }
 }
 
 
-/******GAME******/
+/******PUBLIC******/
+
 function mafia_startGame(){
+    console.log("mafia_startGame()")
     var count = mafia_request("mafia_count_users")
     if(count<5)
     {
@@ -92,10 +102,11 @@ function mafia_startGame(){
 
 
 function mafia_stopGame(){
+    console.log("mafia_stopGame()")
     mafia_request("mafia_stopGame")
 }
 
-/*******USERS*******/
+
 
 /**
  * Добавить пользователя.
@@ -103,6 +114,7 @@ function mafia_stopGame(){
  * (применяется в том числе для для реконекта)
  */
 function mafia_login(){
+    console.log("mafia_login()")
     var userName = document.getElementById("mafia_userName").value
     var sessionId = document.getElementById("mafia_sessionId").value
     var sessionPas = document.getElementById("mafia_sessionPas").value
@@ -139,6 +151,45 @@ function mafia_login(){
 
 }
 
+function mafia_wanToBeaLeader()
+{
+    console.log("mafia_wanToBeaLeader()")
+    mafia_request("mafia_becomeALeader")
+}
+
+/**
+ * Завершить шолосование горожан
+ */
+function mafia_citizenVote() {
+    console.log("mafia_citizenVote()")
+    mafia_request("mafia_getCitizenVoteResult")
+}
+
+/**
+ * Завершить голосование мафиозе
+ */
+function mafia_mafiaVote() {
+    console.log("mafia_mafiaVote()")
+    mafia_request("mafia_getMafiaVoteResult")
+}
+
+/**
+ * Отдать голос
+ */
+function mafia_voteVote() {
+    console.log("mafia_voteVote()")
+    var xmlHttp = new XMLHttpRequest();
+    var userName = document.getElementById("mafia_userName").value
+    var sessionId = document.getElementById("mafia_sessionId").value
+    var sessionPas = document.getElementById("mafia_sessionPas").value
+    var vote = document.getElementById("mafia_voteVariants").value
+    xmlHttp.open("GET", "/games/mafia_voteVote?userName="+userName+"&sessionId="+sessionId+
+        "&sessionPas="+sessionPas+"&vote="+vote, false); // false for synchronous request
+    xmlHttp.send(null);
+}
+
+/******PRIVATE STATES******/
+
 /**
  * Обновляет окно пользвателя в соответсвии с состоянием.
  * @param gameState
@@ -152,21 +203,58 @@ function updateWindowByState(gameState) {
     {
         ws.gamePositionCitizenVote()
         mafia_getСitizenVoteVariants()
-        mafia_getRole()
-        mafia_startGameCommand()
+        mafia_updateWindowByRole()
+        mafia_startGame()
     }
     else if(gameState == "MAFIA_VOTE")
     {
         ws.gamePositionMafiaVote()
         mafia_getMafiaVoteVariants()
-        mafia_getRole()
-        mafia_startGameCommand()
+        mafia_updateWindowByRole()
+        mafia_startGame()
     }
     else if(gameState = "STOP_GAME")
     {
         ws.stopGamePosition()
     }
 }
+
+/**
+ * Получить состояние в котором сейчас находится игра.
+ * добавление пользователей ADD_USERS
+ * голосование города CITIZEN_VOTE
+ * голосование мафии MAFIA_VOTE
+ */
+function mafia_getGameState() {
+    return mafia_request("mafia_getGameState")
+}
+
+/**
+ * Приводит окно к виду соответсвующему роли данного игрока в игре мафия.
+ * пр. показывает кнопку "Завершить голосование"  лидеру и прячет ее у мафии и горожан.
+ */
+function mafia_updateWindowByRole()
+{
+
+    var role = mafia_request("mafia_getRole")
+    //прописываем роль пользователю
+    document.getElementById("mafia_role").textContent = "Роль: " +  role
+    //если пользователь не лидер убираем кнопку голосования
+    if( role=="LEADING")
+    {
+        ws.leaderPosition()
+    }
+    else if(role=="CITIZEN")
+    {
+        ws.citizenPosition()
+    }
+    else if(role=="MAFIA")
+    {
+        ws.mafiaPosition()
+    }
+}
+
+/******PRIVATE******/
 
 function addUserIfNotExist() {
     return mafia_request("mafia_addUser")
@@ -195,66 +283,10 @@ function createSessionIfNotExists() {
 }
 
 
-/**
- * Получить состояние в котором сейчас находится игра.
- * добавление пользователей ADD_USERS
- * голосование города CITIZEN_VOTE
- * голосование мафии MAFIA_VOTE
- */
-function mafia_getGameState() {
-    return mafia_request("mafia_getGameState")
-}
-
-
-function mafia_getRole()
-{
-    var role = mafia_request("mafia_getRole")
-    //прописываем роль пользователю
-    document.getElementById("mafia_role").textContent = "Роль: " +  role
-    //если пользователь не лидер убираем кнопку голосования
-    if( role=="LEADING")
-    {
-        ws.leaderPosition()
-    }
-    else if(role=="CITIZEN")
-    {
-        ws.citizenPosition()
-    }
-    else if(role=="MAFIA")
-    {
-        ws.mafiaPosition()
-    }
-}
-
-/*********LEADER********/
-
-function mafia_wanToBeaLeader()
-{
-    mafia_request("mafia_becomeALeader")
-}
-
 function mafia_getLeader()
 {
     var ans = mafia_request("mafia_getLeader")
     document.getElementById("mafia_leader").textContent = "Ведущий: " +  ans
-}
-
-
-/*********VOTE***********/
-
-
-/**
- * Завершить шолосование горожан
- */
-function mafia_citizenVote() {
-    mafia_request("mafia_getCitizenVoteResult")
-}
-
-/**
- * Завершить голосование мафиозе
- */
-function mafia_mafiaVote() {
-    mafia_request("mafia_getMafiaVoteResult")
 }
 
 
@@ -289,23 +321,12 @@ function mafia_getСitizenVoteVariants()
                 document.getElementById("mafia_voteVariants").innerHTML + "<option>" + voteVariants[i] + "</option>"
     }
 }
-/**
- * Отдать голоса
- */
-function mafia_voteVote() {
-    var xmlHttp = new XMLHttpRequest();
-    var userName = document.getElementById("mafia_userName").value
-    var sessionId = document.getElementById("mafia_sessionId").value
-    var sessionPas = document.getElementById("mafia_sessionPas").value
-    var vote = document.getElementById("mafia_voteVariants").value
-    xmlHttp.open("GET", "/games/mafia_voteVote?userName="+userName+"&sessionId="+sessionId+
-        "&sessionPas="+sessionPas+"&vote="+vote, false); // false for synchronous request
-    xmlHttp.send(null);
-}
+
 
 
 
 function mafia_request(command) {
+    console.log("GET TX: " + command)
     var xmlHttp = new XMLHttpRequest();
     var userName = document.getElementById("mafia_userName").value
     var sessionId = document.getElementById("mafia_sessionId").value
@@ -313,6 +334,7 @@ function mafia_request(command) {
     xmlHttp.open("GET", "/games/"+command+"?userName="+userName+"&sessionId="+sessionId+
         "&sessionPas="+sessionPas, false); // false for synchronous request
     xmlHttp.send(null);
+    console.log("GET RX: " + xmlHttp.responseText)
     return xmlHttp.responseText
 
 }
