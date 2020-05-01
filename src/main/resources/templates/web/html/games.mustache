@@ -4,17 +4,9 @@
 <head>
     <!-- Required meta tags -->
     <meta charset="utf-8" />
-    <meta
-            name="viewport"
-            content="width=device-width, initial-scale=1, shrink-to-fit=no"
-    />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
     <title>Игры</title>
-    <!--
-        отключил твои стили переподключил бутстрап по рекомендациям последней версии
-        <link href="web/css/index.css" rel="stylesheet" tipe="text/css">
-        <link href="web/css/games.css" rel="stylesheet" tipe="text/css">
-        <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.0/css/bootstrap-combined.min.css" rel="stylesheet">
-    -->
+
     <script src="web/javascript/games/spy.js"></script>
     <script src="web/javascript/games/games.js"></script>
     <script src="web/javascript/games/mafia/WindowStates.js"></script>
@@ -25,7 +17,7 @@
 
 <body class="mt-5">
 <!-- новая панель навигации. Прикреплена к верху, сворачивается в кнопку на мелких (медиум) экранах-->
-<nav class="navbar navbar-expand-lg fixed-top navbar-dark bg-dark">
+<nav class="navbar navbar-expand-md fixed-top navbar-dark bg-dark">
     <div class="container">
         <!-- логотип-эмблема -->
         <a class="navbar-brand" href="#">НЁХ</a>
@@ -34,19 +26,9 @@
                 aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
-
-        <!--
-        здесь и далее добавляю исходные айди и классы на всякий случай, не хочу искать какие используются
-        в скриптах, а какие нет (там, где нет конфликта). Скорее всего, большинство из них можно будет
-        потом убрать, и ссылаться на объекты и классы бутстрапа
-        -->
-
         <!-- контейнер, содержимое которого сворачивается в кнопку на мелких экранах -->
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul id="mainMenuItems" class="navbar-nav mr-auto topMenuUl">
-                <li class="nav-item active">
-                    <a class="nav-link" href="#"> Home </a>
-                </li>
                 {{#page.mainMenu.items}}
                     <li class="nav-item active topMenuLi">
                         <a href="{{link}}" class="nav-link topMenuA">{{name}}</a>
@@ -60,20 +42,8 @@
 <!-- Основное "тело" сайта, его упаковываем в контейнер, чтобы применить адаптивность -->
 <main role="main" class="container pt-3">
     <div class="row">
-        <!--
-        создаем колонку адаптивной ширины (на экранах больше среднего займет 4/12 ширины)
-        размерная сетка бутстрапа делится на 12 колонок, и все размеры указываются в количестве
-        колонок относительно размера экрана. Средний (md) неплохо подходит, чтобы оно выглядело
-        адаптивно (схлопывалось в аккуратную колонку) на телефонных экранах. Возможно в будущем
-        дополнить адаптивность - возможности фреймворка позволяют также отображать на экранах
-        разного размера разные блоки, разное содержимое и так далее, без особых на то заморочек.
-        -->
-        <div class="col-12 col-md-4">
-            <!--Боковое меню-->
-            <!-- его по-хорошему тоже потом переписать на бутстрапе, просто пока не готов до конца
-            осознать как лучше это сделать. Вообще, у них есть подходящий под это инструмент
-            кнопок-вкладок, которые в зависимости от нажатия скрывают одни блоки и отображают другие,
-            и выгдядят собственно как вкладки в блоке -->
+        <!--Боковое меню-->
+        <div class="col-12 col-md-3">
             <div id="menuCounting" class="leftMenu">
                 <ul id="menuCountingItems">
                     {{# page.pageBody.counterMenu.items}}
@@ -86,7 +56,7 @@
         </div>
 
         <!--SPY-->
-        <div id="spy" class="bodyDiv col-12 col-md-8" >
+        <div id="spy" class="bodyDiv col-12 col-md-7" >
             <h2>
                 Шпион
             </h2>
@@ -99,7 +69,7 @@
                         <div class="col-sm-6">
                             <input type="text" id="userName" size="10" class="textboxWithLinck form-control"
                                    onkeyup="this.value = this.value.replace(/[^A-Za-zА-Яа-яЁё0-9]/,'');"
-                                   required />
+                                   required placeholder="Введите отображаемое имя"/>
                         </div>
                     </div>
                     <div class="form-group row">
@@ -118,7 +88,6 @@
                         Добавить себя шпион
                     </button>
                 </form>
-                <!-- <input type="button" onclick="addUser()" name="addUser" id="addUser" value="Добавить себя шпион"> -->
             </div>
 
             <div id="beforGame" class="beforGame" hidden>
@@ -152,6 +121,7 @@
                             <button type="button" class="btn btn-primary" onclick="showSpy()" name="showSpy">
                                 Показать шпиона
                             </button>
+                            <br><br>
                             <button type="button" class="btn btn-danger" onclick="stopGame()" name="stopGame">
                                 Закончить игру
                             </button>
@@ -184,7 +154,7 @@
         </div>
 
         <!--Mafia-->
-        <div id="mafia" class="bodyDiv col-12 col-md-8" hidden>
+        <div id="mafia" class="bodyDiv col-12 col-md-7" hidden>
             <h2>
                 Мафия
             </h2>
@@ -192,28 +162,31 @@
             <div id="mafia_user" class="mafia">
                 <p>{{page.pageBody.counterGamesMafia.gameDescription}}</p>
 
-                <label for="mafia_userName">
-                    <h5>Имя пользователя</h5>
-                </label>
-                <input type="text" id="mafia_userName" size="10"
-                       onkeyup="this.value = this.value.replace(/[^A-Za-zА-Яа-яЁё0-9]/,'');" class="textboxWithLinck"
-                       required />
-                <br />
-                <label for="mafia_sessionId">
-                    <h5>ID сессии (до 6 цифр)</h5>
-                </label>
-                <input type="number" id="mafia_sessionId" class="textboxWithLinck" min="0" max="999999" required />
-                <br />
-                <label for="mafia_sessionPas">
-                    <h5>Пароль сессии (до 6 цифр)</h5>
-                </label>
-                <input type="number" id="mafia_sessionPas" class="textboxWithLinck" min="0" max="999999" required />
-                <br />
-                <button type="button" class="btn btn-primary" onclick="mafia_login()" id="mafia_addUser"
-                        name="mafia_addUser">
-                    Добавить себя мафия
-                </button>
-                <!-- <input type="button" onclick="mafia_addUser()" id="mafia_addUser" name="mafia_addUser"value="Добавить себя мафия"> -->
+                <form>
+                    <div class="form-group row">
+                        <label for="mafia_userName" class="col-sm-4 col-form-label">Имя пользователя</label>
+                        <div class="col-sm-6">
+                            <input type="text" id="mafia_userName" size="10" class="textboxWithLinck form-control"
+                                   onkeyup="this.value = this.value.replace(/[^A-Za-zА-Яа-яЁё0-9]/,'');"
+                                   required placeholder="Введите отображаемое имя"/>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="mafia_sessionId" class="col-sm-4 col-form-label">ID сессии (до 6 цифр)</label>
+                        <div class="col-sm-6">
+                            <input type="number" id="mafia_sessionId" class="textboxWithLinck form-control" min="0" max="999999" required />
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="mafia_sessionPas" class="col-sm-4 col-form-label">Пароль сессии (до 6 цифр)</label>
+                        <div class="col-sm-6">
+                            <input type="number" id="mafia_sessionPas" class="textboxWithLinck form-control" min="0" max="999999" required />
+                        </div>
+                    </div>
+                    <button type="button" class="btn btn-primary" onclick="mafia_login()" name="mafia_addUser" id="mafia_addUser">
+                        Добавить себя мафия
+                    </button>
+                </form>
             </div>
 
             <div id="mafia_beforGame" class="mafia_beforGame" hidden>
@@ -270,13 +243,13 @@
     </div>
 </main>
 
-<!-- "подвал" сайта, пока заполняю чисто формально, потом будет нужно заполнить нормально -->
-<footer class="text-secondary mt-4">
-    <div class="container text-center">
-        <p class="">
+<footer class="mt-5 bg-light">
+    <div class="container mx-auto">
+        <p class="text-secondary text-center mb-0 text-uppercase">
             © Неведомая ёбаная херня Димы Романова, никакие права не
-            защищены, все спизжено. Коля тут не при чем!
+            защищены, все спизжено.
         </p>
+        <p class="text-black-50 text-center mt-0">Коля тут не при чем!</p>
     </div>
 </footer>
 
