@@ -2,7 +2,7 @@
 /**********WEB SOCKETS*******/
 
 var SEPORATOR = "_"
-var cardsWsConnectionUri = "ws://" + document.location.host +"/games/cards";
+var cardsWsConnectionUri = "ws://" + document.location.host +"/games/cards/ws";
 var cardsWebsocketConnection = new WebSocket(cardsWsConnectionUri);
 cardsWebsocketConnection.onerror = function(evt) { onConnectionError(evt) };
 cardsWebsocketConnection.onopen = function(evt) { onConnectionOpen(evt) };
@@ -34,11 +34,11 @@ function onConnectionMessage(evt) {
         document.getElementById("users").textContent = data
 
     }
-    else if(command=="startCardsEvent") {
+    else if(command=="startGameEvent") {
         cardsWebsocketConnection.send("ok")
-        cards_startGame()
+        startGame()
     }
-    else if(command=="stopCardsEvent") {
+    else if(command=="stopGameEvent") {
         cardsWebsocketConnection.send("ok")
         alert("Игра закончена! Вот карточки игроков:\n" + data)
         stopGamePosition()
@@ -70,7 +70,7 @@ function gamePosition() {
 /***********************************/
 var getUserAction = false
 
-function cards_login() {
+function login() {
     var xmlHttp = new XMLHttpRequest();
     var userName = document.getElementById("userName").value
     var userCard = document.getElementById("userCard").value
@@ -136,14 +136,14 @@ function cards_login() {
 
 
 
-function startCardsGame() {
+function startGame() {
     getUserAction = false
     var xmlHttp = new XMLHttpRequest();
     var userName = document.getElementById("userName").value
     var userCard = document.getElementById("userCard").value
     var sessionId = document.getElementById("sessionId").value
     var sessionPas = document.getElementById("sessionPas").value
-    xmlHttp.open("GET", "/games/cards_count_users?userName="+userName+"&userName="+userName+"&sessionId="+sessionId+
+    xmlHttp.open("GET", "/games/cards_count_users?userName="+userName+"&sessionId="+sessionId+
         "&sessionPas="+sessionPas, false); // false for synchronous request
     xmlHttp.send(null);
     if(xmlHttp.responseText<3)
@@ -159,7 +159,7 @@ function startCardsGame() {
     document.getElementById("gamerInformation").textContent = xmlHttp.responseText
     //alert(xmlHttp.responseText)
 }
-function stopCardsGame() {
+function stopGame() {
     var xmlHttp = new XMLHttpRequest();
     var userName = document.getElementById("userName").value
     var userCard = document.getElementById("userCard").value

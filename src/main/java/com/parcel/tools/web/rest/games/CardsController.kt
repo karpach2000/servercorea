@@ -1,13 +1,17 @@
 package com.parcel.tools.web.rest.games
 
+import com.parcel.tools.constructor.Page
+import com.parcel.tools.constructor.games.CounterGames
 import com.parcel.tools.games.GameSessionException
 import com.parcel.tools.games.GameSessionManagerException
 import com.parcel.tools.games.cards.CardsSessionManager
 import org.springframework.stereotype.Controller
+import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.ResponseBody
 import java.io.IOException
+import javax.servlet.http.HttpSession
 
 
 @Controller
@@ -15,6 +19,14 @@ class CardsController {
 
     private val logger = org.apache.log4j.Logger.getLogger(CardsController::class.java)
 
+    @RequestMapping("/games/cards")
+    @Throws(IOException::class)
+    internal fun games(model: Model, session: HttpSession): String {
+        val counter = CounterGames()
+        val page = Page(counter)
+        model.addAttribute("page", page)
+        return "web/html/games/cards"
+    }
 
     @RequestMapping("/games/cards_add_session")
     @ResponseBody
@@ -109,10 +121,10 @@ class CardsController {
     @Throws(IOException::class)
     internal fun countUsers(
             @RequestParam("userName") userName: String = "",
-            @RequestParam("userCard") userCard: String = "",
+           // @RequestParam("userCard") userCard: String = "",
             @RequestParam("sessionId") sessionId: String = "",
             @RequestParam("sessionPas") sessionPas: String = ""): String {
-        logger.info("countUsers($userName, $userCard, $sessionId, $sessionPas)")
+        logger.info("countUsers($userName, $sessionId, $sessionPas)")
         return CardsSessionManager.countUsersInGame(sessionId.toLong(), sessionPas.toLong()).toString()
     }
 

@@ -19,7 +19,7 @@ class CardsSession(sessionId: Long, sessionPas: Long) : GamesSession<CardsUser, 
     // start stop game
 
 
-    fun cards_startGame() {
+    override fun startGame() {
         if (!started) {
             started = true
             logger.info("startGame()...")
@@ -29,14 +29,14 @@ class CardsSession(sessionId: Long, sessionPas: Long) : GamesSession<CardsUser, 
             logger.info("Cards was changed")
             logger.info("...Game started")
 
-            startCardsEvent()
+            startGameEvent()
         }
     }
 
 
     //users
 
-    fun getAllCardsUsers(user: String): String {
+    private fun getAllCardsUsers(user: String): String {
         var userList = ""
         users.forEach {
             if(user != it.name)
@@ -63,17 +63,17 @@ class CardsSession(sessionId: Long, sessionPas: Long) : GamesSession<CardsUser, 
     }
 
     fun stopCardsGame() {
-        logger.info("stopCardGame()")
+        logger.info("stopGame()")
         users.clear()
         started = false
-        stopCardsEvent(gameResult)
+        stopGameEvent(gameResult)
     }
 
-    private fun stopCardsEvent(userCard: String) {
-        gameEvent.forEach { it.stopCardsEvent(userCard) }
+    override fun stopGameEvent(userCard: String) {
+        gameEvent.forEach { it.stopGameEvent(userCard) }
     }
-    fun startCardsEvent() {
-        gameEvent.forEach { it.startCardsEvent() }
+    override fun startGameEvent() {
+        gameEvent.forEach { it.startGameEvent() }
     }
 
 
@@ -123,10 +123,6 @@ class CardsSession(sessionId: Long, sessionPas: Long) : GamesSession<CardsUser, 
 
     override fun addUser(name: String): Boolean {
         return super.addUser(CardsUser(name))
-    }
-
-    override fun startGame() {
-        cards_startGame()
     }
 
 

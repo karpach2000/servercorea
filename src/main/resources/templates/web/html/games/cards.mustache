@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+    <title>Игры</title>
+
+    <script src="/web/javascript/games/cards.js"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css"
+          integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous" />
+</head>
+
+<body class="mt-5">
+<!-- новая панель навигации. Прикреплена к верху, сворачивается в кнопку на мелких (медиум) экранах-->
+<nav class="navbar navbar-expand-md fixed-top navbar-dark bg-dark">
+    <div class="container">
+        <!-- логотип-эмблема -->
+        <a class="navbar-brand" href="#">НЁХ</a>
+        <!-- Кнопка, в которую сворачивается меню на мелких экранах -->
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <!-- контейнер, содержимое которого сворачивается в кнопку на мелких экранах -->
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul id="mainMenuItems" class="navbar-nav mr-auto topMenuUl">
+                {{#page.mainMenu.items}}
+                    <li class="nav-item active topMenuLi">
+                        <a href="{{link}}" class="nav-link topMenuA">{{name}}</a>
+                    </li>
+                {{/page.mainMenu.items}}
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<!-- Основное "тело" сайта, его упаковываем в контейнер, чтобы применить адаптивность -->
+<main role="main" class="container pt-3">
+    <div class="row">
+        <!--Боковое меню-->
+        <div class="col-12 col-md-3">
+            <div id="menuCounting" class="leftMenu">
+                <ul id="menuCountingItems">
+                    {{# page.pageBody.counterMenu.items}}
+                        <li>
+                            <a href="{{link}}">{{name}}</a>
+                        </li>
+                    {{/ page.pageBody.counterMenu.items}}
+                </ul>
+            </div>
+        </div>
+
+
+
+        <!--SPY-->
+        <div id="cards" class="bodyDiv col-12 col-md-7" >
+            <h2>
+                Карточки
+            </h2>
+
+            <div id="user" class="cards">
+                <p>{{page.pageBody.counterGamesCards.gameDescription}}</p>
+                <form>
+                    <div class="form-group row">
+                        <label for="userName" class="col-sm-4 col-form-label">Имя пользователя</label>
+                        <div class="col-sm-6">
+                            <input type="text" id="userName" size="10" class="textboxWithLinck form-control"
+                                   onkeyup="this.value = this.value.replace(/[^A-Za-zА-Яа-яЁё0-9 ]/,'');"
+                                   required placeholder="Введите отображаемое имя"/>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="sessionId" class="col-sm-4 col-form-label">ID сессии (до 6 цифр)</label>
+                        <div class="col-sm-6">
+                            <input type="number" id="sessionId" class="textboxWithLinck form-control" min="0" max="999999" required />
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="sessionPas" class="col-sm-4 col-form-label">Пароль сессии (до 6 цифр)</label>
+                        <div class="col-sm-6">
+                            <input type="number" id="sessionPas" class="textboxWithLinck form-control" min="0" max="999999" required />
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="userCard" class="col-sm-4 col-form-label">Карточка соседа</label>
+                        <div class="col-sm-6">
+                            <input type="text" id="userCard" size="10" class="textboxWithLinck form-control"
+                                   onkeyup="this.value = this.value.replace(/[^A-Za-zА-Яа-яЁё0-9 ]/,'');"
+                                   required placeholder="Введите карточку"/>
+                        </div>
+                    </div>
+                    <button type="button" class="btn btn-primary" onclick="login()" name="addUser" id="addUser">
+                        Присоединиться
+                    </button>
+                </form>
+            </div>
+
+            <div id="beforGame" class="beforGame" hidden>
+                {{page.pageBody.counterGamesCards.tooltipWhenAddingUsers}}
+                <label for="startGame">
+                    <h5>
+                        !!!Дождитесь пока зайдут все пользователи!!!
+                    </h5>
+                </label>
+                <p>
+                    <button type="button" class="btn btn-primary" onclick="startGame()" id="startGame"
+                            name="startGame">
+                        Начать игру
+                    </button>
+                    <!-- <input type="button" onclick="startGame()" id="startGame" name="startGame" value="Начать игру"> -->
+                </p>
+                <textarea id="users" rows="17"></textarea>
+            </div>
+
+            <div id="game" class="game" hidden>
+                <div class="card-group">
+                    <div class="card">
+                        <div class="card-body">
+                            <h6 class="card-subtitle mb-2 text-muted">
+                                {{page.pageBody.counterGamesCards.tooltipDuringTheGame}}
+                            </h6>
+                            <p class="card-text">
+                                <textarea id="gamerInformation" rows="17"></textarea>
+                            </p>
+                            <br><br>
+                            <button type="button" class="btn btn-danger" onclick="stopGame()" name="stopGame">
+                                Закончить игру
+                            </button>
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<footer class="mt-5 bg-light">
+    <div class="container mx-auto">
+        <p class="text-secondary text-center mb-0 text-uppercase">
+            © Неведомая ёбаная херня Димы Романова, никакие права не
+            защищены, все спизжено.
+        </p>
+        <p class="text-black-50 text-center mt-0">Коля тут не при чем!</p>
+    </div>
+</footer>
+
+<!-- Optional JavaScript for Bootstrap -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"
+        integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut"
+        crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"
+        integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k"
+        crossorigin="anonymous"></script>
+</body>
+
+</html>

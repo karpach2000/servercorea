@@ -106,7 +106,7 @@ abstract class GamesSession<U : GameUser, E : GameEvent>(val sessionId: Long, va
         gameEvent.forEach { it.startGameEvent() }
     }
 
-    protected fun stopGameEvent(gameResult: String) {
+    protected open fun stopGameEvent(gameResult: String) {
         gameEvent.forEach { it.stopGameEvent(gameResult) }
     }
 

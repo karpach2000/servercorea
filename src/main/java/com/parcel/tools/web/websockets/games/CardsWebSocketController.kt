@@ -17,33 +17,20 @@ class CardsWebSocketController : TextWebSocketHandler() {
 
 
     class CardsEventHandler(private var session: WebSocketSession, private var name: String) : CardsEvent {
-        override fun stopCardsEvent(gameResult: String) {
-            sendMessage("stopCardsEvent$SEPORATOR$gameResult")
-        }
-
-        override fun startCardsEvent() {
-            sendMessage("startCardsEvent")
-        }
-
 
         override fun addUserEvent(userList: String) {
             sendMessage("addUserEvent$SEPORATOR$userList")
         }
 
         override fun startGameEvent() {
-            sendMessage("startCardsEvent")
+            sendMessage("startGameEvent")
         }
 
         override fun stopGameEvent(userCard: String){
-            sendMessage("stopCardsEvent$SEPORATOR$userCard")
+            sendMessage("stopGameEvent$SEPORATOR$userCard")
             //return userCard
         }
-/*
-        override fun cardsIsNotSecretEvent(userCard: String): String {
-            sendMessage("cardsIsNotSecretEvent$SEPORATOR$userCard")
-            return userCard
-        }
-*/
+
         fun updateSession(session: WebSocketSession) {
             this.session = session
         }
