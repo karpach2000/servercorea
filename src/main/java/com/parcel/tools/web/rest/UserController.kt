@@ -13,15 +13,13 @@ import javax.servlet.http.HttpServletRequest
 class UserController {
 
 
-
-
     /**
      * Разлогинится.
      */
     @RequestMapping("/logout")
     @Throws(IOException::class)
-    internal fun logout( request: HttpServletRequest): String {
-        val httpSession = request.getSession()
+    internal fun logout(request: HttpServletRequest): String {
+        val httpSession = request.session
         httpSession.invalidate()
         return "redirect:/"
     }
@@ -36,20 +34,21 @@ class UserController {
                          @RequestParam("password") password: String,
                          @RequestParam("role") role: String): String {
 
-       com.parcel.tools.Globals.userManager.addUser(login, password, role)
+        com.parcel.tools.Globals.userManager.addUser(login, password, role)
         val counter = CounterAdmin()
         val page = Page(counter)
 
         model.addAttribute("page", page)
         return "web/html/admin"
     }
+
     /**
      * Удалить пользователя.
      */
     @RequestMapping("/deleteUser")
     @Throws(IOException::class)
     internal fun dellUser(model: Model, request: HttpServletRequest,
-                          @RequestParam("login") login: String) : String {
+                          @RequestParam("login") login: String): String {
         com.parcel.tools.Globals.userManager.dellUser(login)
         val counter = CounterAdmin()
         val page = Page(counter)

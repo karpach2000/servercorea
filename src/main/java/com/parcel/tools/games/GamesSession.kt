@@ -1,8 +1,8 @@
 package com.parcel.tools.games
 
-class GameSessionException(message: String): Exception(message )
+class GameSessionException(message: String) : Exception(message)
 
-abstract class  GamesSession<U : GameUser, E:GameEvent>(val sessionId: Long, val sessionPas: Long) {
+abstract class GamesSession<U : GameUser, E : GameEvent>(val sessionId: Long, val sessionPas: Long) {
 
     private val logger = org.apache.log4j.Logger.getLogger(GamesSession::class.java!!)
 
@@ -22,12 +22,9 @@ abstract class  GamesSession<U : GameUser, E:GameEvent>(val sessionId: Long, val
     }
 
 
+    abstract fun startGame()
 
-
-    abstract fun  startGame()
-
-    fun stopGame()
-    {
+    open fun stopGame() {
         logger.info("stopGame()")
         users.clear()
         started = false
@@ -36,34 +33,25 @@ abstract class  GamesSession<U : GameUser, E:GameEvent>(val sessionId: Long, val
 
     /******USERS*******/
 
-    abstract fun addUser(name: String) :Boolean
+    abstract fun addUser(name: String): Boolean
 
-    protected fun addUser(user: U): Boolean
-    {
+    protected open fun addUser(user: U): Boolean {
         logger.info("addUser(${user.name})...")
         val userExist = isUserExist(user.name)
-        if(started && !userExist)
-        {
+        if (started && !userExist) {
             logger.warn("Game  started.")
             throw GameSessionException("The game is already running.")
-        }
-        else if(started && userExist)
-        {
+        } else if (started && userExist) {
             logger.warn("User $user already exists. Access is allowed.")
             addUserEvent(getAllUsers())
             return true
-        }
-        else if(user.name.length<1) {
+        } else if (user.name.length < 1) {
             logger.warn("To short user name.")
             throw GameSessionException("To short user name.")
-        }
-        else if(!started && userExist)
-        {
+        } else if (!started && userExist) {
             logger.warn("A user with the same name already exists.")
             throw GameSessionException("A user with the same name already exists.")
-        }
-        else
-        {
+        } else {
 
             users.add(user)
             logger.info("...addUser()")
@@ -71,28 +59,26 @@ abstract class  GamesSession<U : GameUser, E:GameEvent>(val sessionId: Long, val
             return true
         }
     }
-    fun getAllUsers():String
-    {
-        var userList =""
+
+    fun getAllUsers(): String {
+        var userList = ""
         users.forEach {
-           userList = userList+ "    " +it.name + "000\n"
+            userList = userList + "    " + it.name +"\n"
         }
         return userList
     }
 
-    private fun isUserExist(name: String): Boolean
-    {
+    fun isUserExist(name: String): Boolean {
         users.forEach {
-            if(it.name == name)
+            if (it.name == name)
                 return true
         }
         return false
     }
 
-    protected fun getUser(name: String): U
-    {
+    protected fun getUser(name: String): U {
         users.forEach {
-            if(it.name == name)
+            if (it.name == name)
                 return it
         }
         throw GameSessionManagerException("Can`t finde user: $name")
@@ -102,30 +88,25 @@ abstract class  GamesSession<U : GameUser, E:GameEvent>(val sessionId: Long, val
             users.count()
 
     /********EVENTS***********/
-    fun subscribeGameEvents(gameEvent: E)
-    {
+    fun subscribeGameEvents(gameEvent: E) {
         this.gameEvent.add(gameEvent)
     }
 
-    fun deSubscribeGameEvents(gameEvent: E)
-    {
+    fun deSubscribeGameEvents(gameEvent: E) {
         this.gameEvent.remove(gameEvent)
     }
 
-    private fun addUserEvent(userList: String)
-    {
+    fun addUserEvent(userList: String) {
         gameEvent.forEach {
             it.addUserEvent(userList)
         }
     }
 
-    protected fun startGameEvent()
-    {
+    protected fun startGameEvent() {
         gameEvent.forEach { it.startGameEvent() }
     }
 
-    protected fun stopGameEvent(gameResult: String)
-    {
+    protected fun stopGameEvent(gameResult: String) {
         gameEvent.forEach { it.stopGameEvent(gameResult) }
     }
 

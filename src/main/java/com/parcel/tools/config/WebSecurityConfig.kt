@@ -1,4 +1,4 @@
-package com.parcel.tools.config;
+package com.parcel.tools.config
 
 
 //import org.springframework.security.config.annotation.authentication.configurers.GlobalAuthenticationConfigurerAdapter
@@ -22,13 +22,12 @@ open class WebSecurityConfig : WebSecurityConfigurerAdapter() {
     lateinit var dataSource: DataSource
 
 
-
     @Throws(Exception::class)
     override fun configure(http: HttpSecurity) {
         println("CONFIGURE(http: HttpSecurity)!!!")
         http
                 .authorizeRequests()
-                .antMatchers(  "/web/css/*",  "/web/javascript/*",  "/web/javascript/games/*").permitAll()
+                .antMatchers("/web/css/*", "/web/javascript/*", "/web/javascript/games/*").permitAll()
                 .antMatchers("/", "/utils", "/etools",
                         "/games", "/games/*").permitAll()
                 .antMatchers("/admin").hasAuthority("ADMIN")
@@ -46,8 +45,6 @@ open class WebSecurityConfig : WebSecurityConfigurerAdapter() {
     }
 
 
-
-
     override fun configure(auth: AuthenticationManagerBuilder) {
         println("CONFIGURE!!!")
         printUsers()
@@ -58,18 +55,15 @@ open class WebSecurityConfig : WebSecurityConfigurerAdapter() {
                 //        "JOIN users ON users.id = roles_to_users.users_id " +
                 //        "JOIN roles ON roles.id = roles_to_users.roles_id " +
                 //        "WHERE users.login = ?")
-        .authoritiesByUsernameQuery("SELECT user_login, user_role FROM get_user_and_role( ? )")
+                .authoritiesByUsernameQuery("SELECT user_login, user_role FROM get_user_and_role( ? )")
     }
 
-    private fun printUsers()
-    {
-        val users =Globals.userManager.getAllUsers()
+    private fun printUsers() {
+        val users = Globals.userManager.getAllUsers()
         users.forEach {
             println("$it\n")
         }
     }
-
-
 
 
 }

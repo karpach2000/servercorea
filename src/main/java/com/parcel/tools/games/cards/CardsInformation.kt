@@ -8,18 +8,17 @@ import com.google.gson.GsonBuilder
 class UserInformation() {
 
     constructor(user: CardsUser, usersCount: Int, allUsers: String)
-            :this()
-    {
-        name=user.name
+            : this() {
+        name = user.name
         userCard = user.userCard
         this.usersCount = usersCount
         this.allUsers = allUsers
 
 
     }
-    constructor(error:String)
-            :this()
-    {
+
+    constructor(error: String)
+            : this() {
         this.error = error
     }
 
@@ -53,15 +52,13 @@ class UserInformation() {
      */
 
     override fun toString() =
-          "Name: $name\n"+
-           "Users in game: $usersCount\n"+
-            "Users:\n$allUsers"
+            "Имя: $name\n" +
+                    "Пользователей в игре: $usersCount\n" +
+                    "Пользователи и карточки:\n$allUsers"
 
 
-
-    fun toJson() :String
-    {
-        var builder =  GsonBuilder()
+    fun toJson(): String {
+        var builder = GsonBuilder()
         var gson = builder.create()
         return gson.toJson(this)
     }

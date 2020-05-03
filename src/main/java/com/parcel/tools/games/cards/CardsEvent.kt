@@ -2,9 +2,11 @@ package com.parcel.tools.games.cards
 
 import com.parcel.tools.games.GameEvent
 
-interface CardsEvent : GameEvent{
+interface CardsEvent : GameEvent {
 
-    fun cardsIsNotSecretEvent(userCard: String)
+    fun stopCardsEvent(userCard: String): String {
+        return userCard
+    }
 
 
 }

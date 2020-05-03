@@ -35,7 +35,7 @@
         {{page.pageBody.counterGamesCards.gameDescription}}
         <br>
         <label for="userName"><h5>Имя пользователя</h5></label>
-        <input type="text"   id="userName" size="10" onkeyup="this.value = this.value.replace(/[^A-Za-zА-Яа-яЁё0-9]/,'');"
+        <input type="text"   id="userName" size="10" onkeyup="this.value = this.value.replace(/[^A-Za-zА-Яа-яЁё0-9 ]/,'');"
                class="textboxWithLinck"  required><br>
         <!--label for="userPas" hidden>Пароль пользователя</label -->
         <!--input type="number"   id="userPas"  class="textboxWithLinck" min="0" max="999999" required hidden><br-->
@@ -44,9 +44,9 @@
         <label for="sessionPas"><h5>Пароль сессии (до 6 цифр)</h5></label>
         <input type="number"   id="sessionPas" class="textboxWithLinck" min="0" max="999999" required><br>
         <label for="userCard"><h5>Карточка соседу</h5></label>
-                <input type="text"   id="userCard" size="10" onkeyup="this.value = this.value.replace(/[^A-Za-zА-Яа-яЁё0-9]/,'');"
+                <input type="text"   id="userCard" size="10" onkeyup="this.value = this.value.replace(/[^A-Za-zА-Яа-яЁё0-9 ]/,'');"
                        class="textboxWithLinck"  required><br>
-        <input type="button" onclick="addUser()" name="addUser" id = "addUser" value="Добавить себя шпион">
+        <input type="button" onclick="addUser()" name="addUser" id = "addUser" value="Подключиться">
     </div>
 
     <div id="beforGame" class="beforGame" hidden>
@@ -64,8 +64,8 @@
         <br>
         <textarea id="gamerInformation"  rows="17">
         </textarea>
-        <input type="button" onclick="showCards()" name="showCards" value="Вскрыть карточки">
-        <input type="button" onclick="stopGame()" name="stopGame" value="Закончить игру">
+        <!--input type="button" onclick="showCards()" name="showCards" value="Вскрыть карточки"-->
+        <input type="button" onclick="stopCardsGame()" name="stopCardsGame" value="Закончить игру">
 
     </div>
 </div>

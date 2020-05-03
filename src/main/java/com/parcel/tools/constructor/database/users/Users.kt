@@ -6,24 +6,23 @@ class Users {
     //@Id
     //@GeneratedValue
     //@GeneratedValue(strategy = GenerationType.IDENTITY)
-    var id : Int?=null
+    var id: Int? = null
 
     //@Column(nullable = false)
-    var login: String? =null
+    var login: String? = null
 
     //@Column(nullable = false)
-    var password: String? =null
+    var password: String? = null
 
-    var active: Boolean? =null
+    var active: Boolean? = null
 
     //@Transient
-    var role: Role?=null
+    var role: Role? = null
 
-   //@Transient
-    fun setRole(role: String)
-    {
+    //@Transient
+    fun setRole(role: String) {
         Role.values().forEach {
-            if(it.user_role == role) {
+            if (it.user_role == role) {
                 this.role = it
                 return
             }
@@ -32,15 +31,11 @@ class Users {
     }
 
 
-
-
-
     override fun equals(cashRequest: Any?): Boolean {
         try {
             val user = cashRequest as Users
             return user.login == login
-        }
-        catch (e: Exception) {
+        } catch (e: Exception) {
             return false
         }
     }

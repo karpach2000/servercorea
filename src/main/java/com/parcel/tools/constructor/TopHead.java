@@ -1,4 +1,4 @@
 package com.parcel.tools.constructor;
 
-public class TopHead extends  Menu {
+public class TopHead extends Menu {
 }

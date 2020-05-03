@@ -1,5 +1,5 @@
 package com.parcel.tools.web.rest
-        //import com.github.mustachejava.DefaultMustacheFactory
+//import com.github.mustachejava.DefaultMustacheFactory
 
 //import org.springframework.web.bind.annotation.ResponseBody
 import com.parcel.tools.constructor.Page
@@ -33,7 +33,6 @@ class MainController {
         model.addAttribute("page", page)
         return "web/html/index"
     }
-
 
 
     @RequestMapping("/admin")

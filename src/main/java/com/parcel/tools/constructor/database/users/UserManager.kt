@@ -9,7 +9,7 @@ import java.sql.ResultSet
 import java.sql.SQLException
 
 
-class UserManagerException(message: String): Exception(message)
+class UserManagerException(message: String) : Exception(message)
 
 /**
  * Объект непосредсвенно работающий с БД. Инициализируется спрингом.
@@ -20,14 +20,11 @@ class UserManagerException(message: String): Exception(message)
 open class UserManager {
 
 
-
-
     @Autowired
     var jdbcTemplate: JdbcTemplate? = null
 
 
-
-    private val logger = org.apache.log4j.Logger.getLogger(UserManager::class.java!!)
+    private val logger = org.apache.log4j.Logger.getLogger(UserManager::class.java)
 
     init {
         logger.info("Init UserManager (database)")
@@ -40,23 +37,26 @@ open class UserManager {
             val user = Users()
             //user.id = rs.getInt("id")
             user.login = rs.getString("user_login")
-            user.password=rs.getString("user_password")
+            user.password = rs.getString("user_password")
             user.setRole(rs.getString("user_role"))
             return user
         }
     }
+
     internal inner class DeleteUserRowMapper : RowMapper<String> {
         @Throws(SQLException::class)
         override fun mapRow(rs: ResultSet, rowNum: Int): String {
             return rs.getString("delete_user")
         }
     }
+
     internal inner class AddUserRowMapper : RowMapper<String> {
         @Throws(SQLException::class)
         override fun mapRow(rs: ResultSet, rowNum: Int): String {
             return rs.getString("add_user")
         }
     }
+
     internal inner class GetUserRoles : RowMapper<String> {
         @Throws(SQLException::class)
         override fun mapRow(rs: ResultSet, rowNum: Int): String {
@@ -64,8 +64,7 @@ open class UserManager {
         }
     }
 
-    fun getAllUsers(): List<Users>
-    {
+    fun getAllUsers(): List<Users> {
         logger.info("getAllUsers()")
         return jdbcTemplate!!.query("SELECT * FROM get_users_whith_roles()",
                 GetUsersRowMapper())
@@ -73,12 +72,11 @@ open class UserManager {
 
     fun addUser(user: Users) = addUser(user.login!!, user.password!!, user.role!!.user_role)
 
-    fun addUser(login:String, password: String, role: String )
-    {
+    fun addUser(login: String, password: String, role: String) {
         logger.info("addUser($login, $password, $role)")
         val dbAns = jdbcTemplate!!.query("SELECT * FROM add_user('$login', '$password', '$role')",
                 AddUserRowMapper())[0]
-        if(dbAns == "OK")
+        if (dbAns == "OK")
             return
         else {
             logger.warn("Data base ansered: $dbAns")
@@ -86,12 +84,11 @@ open class UserManager {
         }
     }
 
-    fun dellUser(login: String)
-    {
+    fun dellUser(login: String) {
         logger.info("dellUser($login)")
         val dbAns = jdbcTemplate!!.query("SELECT * FROM delete_user('$login')",
                 DeleteUserRowMapper())[0]
-        if(dbAns == "OK")
+        if (dbAns == "OK")
             return
         else {
             logger.warn("Data base ansered: $dbAns")
@@ -99,8 +96,7 @@ open class UserManager {
         }
     }
 
-    fun getUserRoles(login: String) :ArrayList<String>
-    {
+    fun getUserRoles(login: String): ArrayList<String> {
         logger.info("getUserRoles($login)")
         val dbAns = jdbcTemplate!!.query("SELECT * FROM get_user_and_role('$login')",
                 GetUserRoles()) as ArrayList<String>
