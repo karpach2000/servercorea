@@ -59,7 +59,7 @@ function mafia_onConnectionMessage(evt) {
     //STATES...
     else if(command=="startGameEvent") {
         mafiaWebsocketConnection.send("ok")
-        updateWindowByState("MAFIA_VOTE")
+        updateWindowByState("CITIZEN_VOTE")
     }
     else if(command=="stopGameEvent") {
         mafiaWebsocketConnection.send("ok")
@@ -74,7 +74,11 @@ function mafia_onConnectionMessage(evt) {
     }
     else if(command=="openСitizensVote") {
         mafiaWebsocketConnection.send("ok")
-        alert("Игрок:" + data + " мертв!")
+        if(data!="")
+            alert("Игрок:" + data + " мертв!")
+        else
+            alert("К сожалению все живы.")
+
         updateWindowByState("CITIZEN_VOTE")
     }
     else if(command=="pong")

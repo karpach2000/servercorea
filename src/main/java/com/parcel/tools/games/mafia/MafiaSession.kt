@@ -118,7 +118,7 @@ class MafiaSession(sessionId: Long, sessionPas: Long) :  GamesSession<MafiaUser,
         if (!started) {
             started = true
             logger.info("startGame()...")
-            mafiaSessionState = MafiaSessionState.MAFIA_VOTE
+            mafiaSessionState = MafiaSessionState.CITIZEN_VOTE
             val mafiaNames = generateMafia()
             mafiaNames.forEach { this.getUser(it).role = MafiaUserRoles.MAFIA }
             startGameEvent()
@@ -176,7 +176,8 @@ class MafiaSession(sessionId: Long, sessionPas: Long) :  GamesSession<MafiaUser,
         mafiaSessionState = MafiaSessionState.CITIZEN_VOTE
         val result = getVoteResult()
         logger.info("voteResult: $result")
-        getUser(result).isAlife = false
+        if(result!="")
+            getUser(result).isAlife = false
         openСitizensVoteCountEvent(result)
         //обновляем таблицы голосования
         updateVoteTableEvent()
@@ -196,7 +197,10 @@ class MafiaSession(sessionId: Long, sessionPas: Long) :  GamesSession<MafiaUser,
         mafiaSessionState = MafiaSessionState.MAFIA_VOTE
         val result = getVoteResult()
         logger.info("voteResult: $result")
-        getUser(result).isAlife = false
+
+        if(result!="")
+            getUser(result).isAlife = false
+
         openMafiaVoteCountEvent(result)
         //обновляем таблицы голосования
         updateVoteTableEvent()
@@ -219,10 +223,9 @@ class MafiaSession(sessionId: Long, sessionPas: Long) :  GamesSession<MafiaUser,
             }
             it.clearVote()
         }
-        if(maxVoteUser!="")
-            return maxVoteUser
-        else
-            throw MafiaSessionException("No one users has votes.")
+
+        return maxVoteUser
+
     }
 
 
@@ -246,7 +249,7 @@ class MafiaSession(sessionId: Long, sessionPas: Long) :  GamesSession<MafiaUser,
 
     private fun countMafiaGamersIsNecessary(): Int
     {
-        return users.count()/3
+        return (users.count()-1)/3
     }
 
 
