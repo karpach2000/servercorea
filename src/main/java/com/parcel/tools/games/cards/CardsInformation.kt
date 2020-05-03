@@ -1,4 +1,4 @@
-package com.parcel.tools.games.spy
+package com.parcel.tools.games.cards
 
 import com.google.gson.GsonBuilder
 
@@ -7,25 +7,23 @@ import com.google.gson.GsonBuilder
  */
 class UserInformation() {
 
-    constructor(user: SpyUser, location:String, usersCount: Int, allUsers: String)
-            :this()
-    {
-        name=user.name
-        spy = user.spy
-        this.location = location
+    constructor(user: CardsUser, usersCount: Int, allUsers: String)
+            : this() {
+        name = user.name
+        userCard = user.userCard
         this.usersCount = usersCount
         this.allUsers = allUsers
 
 
     }
-    constructor(error:String)
-            :this()
-    {
+
+    constructor(error: String)
+            : this() {
         this.error = error
     }
 
     /**
-     * Списо игроков.
+     * Список игроков.
      */
     var allUsers = ""
 
@@ -40,9 +38,9 @@ class UserInformation() {
     var name = ""
 
     /**
-     * Является ли данный пользователь шпионом
+     * Карточка текущего игрока
      */
-    var spy = false
+    var userCard = ""
 
     /**
      * Сообщение об ошибке
@@ -52,25 +50,15 @@ class UserInformation() {
     /**
      * Локация либо сообщение о том -чт пользователь шпион
      */
-    var location = ""
-    get() {
-        if(!spy)
-            return field
-        else
-            return "ШПИОН(SPY)"
-    }
 
     override fun toString() =
-          "Name: $name\n"+
-           "location: $location\n"+
-           "Users in game: $usersCount\n"+
-            "Users:\n$allUsers"
+            "Имя: $name\n" +
+                    "Пользователей в игре: $usersCount\n" +
+                    "Пользователи и карточки:\n$allUsers"
 
 
-
-    fun toJson() :String
-    {
-        var builder =  GsonBuilder()
+    fun toJson(): String {
+        var builder = GsonBuilder()
         var gson = builder.create()
         return gson.toJson(this)
     }

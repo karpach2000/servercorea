@@ -1,4 +1,4 @@
-var currentMenuCountingItem="spy";
+var currentMenuCountingItem="cards";
 function menuClick(id) {
     showMenuContent(id);
 }

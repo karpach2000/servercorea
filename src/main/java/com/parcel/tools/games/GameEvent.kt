@@ -6,6 +6,6 @@ interface GameEvent {
 
     fun startGameEvent()
 
-    fun stopGameEvent(spyName: String)
+    fun stopGameEvent(userCard: String)
 
 }
