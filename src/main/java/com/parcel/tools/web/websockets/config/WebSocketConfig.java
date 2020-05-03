@@ -14,7 +14,7 @@ public class WebSocketConfig implements  WebSocketConfigurer {
 
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
-        registry.addHandler(new SpyWebSocketController(), "/games/spy").setAllowedOrigins("*");
-        registry.addHandler(new MafiaWebSocketController(), "/games/mafia").setAllowedOrigins("*");
+        registry.addHandler(new SpyWebSocketController(), "/games/spy/ws").setAllowedOrigins("*");
+        registry.addHandler(new MafiaWebSocketController(), "/games/mafia/ws").setAllowedOrigins("*");
     }
 }

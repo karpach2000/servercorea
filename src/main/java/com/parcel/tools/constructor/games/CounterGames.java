@@ -14,8 +14,8 @@ public class CounterGames {
 
     public CounterGames()
     {
-        counterMenu.addItem("Шпион.","spy");
-        counterMenu.addItem("Мафия.","mafia");
+        counterMenu.addItem("Шпион.","/games/spy");
+        counterMenu.addItem("Мафия.","/games/mafia");
 
     }
 }

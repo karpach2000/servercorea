@@ -1,6 +1,7 @@
 package com.parcel.tools.web.rest.games
 
 import com.parcel.tools.constructor.Page
+import com.parcel.tools.constructor.games.CounterGames
 import com.parcel.tools.constructor.gamesSettings.CounterGamesSettings
 import com.parcel.tools.games.GameSessionException
 import com.parcel.tools.games.GameSessionManagerException
@@ -23,6 +24,15 @@ class SpyController {
 
     private val logger = org.apache.log4j.Logger.getLogger(SpyController::class.java!!)
 
+
+    @RequestMapping("/games/spy")
+    @Throws(IOException::class)
+    internal fun games(model: Model, session: HttpSession): String {
+        val counter = CounterGames()
+        val page = Page(counter)
+        model.addAttribute("page", page)
+        return "web/html/games/spy"
+    }
 
 
     @RequestMapping("/games_settings_spy_addLocation")

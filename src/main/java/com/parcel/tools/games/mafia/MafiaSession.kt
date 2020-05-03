@@ -147,8 +147,6 @@ class MafiaSession(sessionId: Long, sessionPas: Long) :  GamesSession<MafiaUser,
    fun vote(userName: String, voteName: String) :Boolean
     {
         logger.info("vote($userName, $voteName)")
-        if(voteName=="")
-            return false
         getUser(userName).voteName = voteName
         users.forEach { it.votedCount = 0 }
         users.forEach {

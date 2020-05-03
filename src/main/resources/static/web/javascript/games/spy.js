@@ -2,7 +2,7 @@
 /**********WEB SOCKETS*******/
 
 var SEPORATOR = "_"
-var spyWsConnectionUri = "ws://" + document.location.host +"/games/spy";
+var spyWsConnectionUri = "ws://" + document.location.host +"/games/spy/ws";
 var spyWebsocketConnection = new WebSocket(spyWsConnectionUri);
 spyWebsocketConnection.onerror = function(evt) { onConnectionError(evt) };
 spyWebsocketConnection.onopen = function(evt) { onConnectionOpen(evt) };
