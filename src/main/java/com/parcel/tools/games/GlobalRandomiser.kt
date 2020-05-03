@@ -1,4 +1,4 @@
-package com.parcel.tools.spy
+package com.parcel.tools.games
 
 object GlobalRandomiser {
 

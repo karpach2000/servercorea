@@ -53,7 +53,7 @@ public abstract class Menu {
         addItem(new Item(name,lick));
     }
 
-    public void addItem(String name)
+    public void addItem(String игры, String s, String name)
     {
 
         addItem(new Item(name));
