@@ -2,7 +2,6 @@ package com.parcel.tools.games.cards
 
 import com.parcel.tools.games.GameSessionException
 import com.parcel.tools.games.GamesSession
-import com.parcel.tools.games.cards.CardsUser
 
 
 class CardsSessionException(message: String) : Exception(message)
@@ -20,7 +19,7 @@ class CardsSession(sessionId: Long, sessionPas: Long) : GamesSession<CardsUser, 
     // start stop game
 
 
-    override fun startGame() {
+    fun cards_startGame() {
         if (!started) {
             started = true
             logger.info("startGame()...")
@@ -30,7 +29,7 @@ class CardsSession(sessionId: Long, sessionPas: Long) : GamesSession<CardsUser, 
             logger.info("Cards was changed")
             logger.info("...Game started")
 
-            startGameEvent()
+            startCardsEvent()
         }
     }
 
@@ -72,6 +71,9 @@ class CardsSession(sessionId: Long, sessionPas: Long) : GamesSession<CardsUser, 
 
     private fun stopCardsEvent(userCard: String) {
         gameEvent.forEach { it.stopCardsEvent(userCard) }
+    }
+    fun startCardsEvent() {
+        gameEvent.forEach { it.startCardsEvent() }
     }
 
 
@@ -121,6 +123,10 @@ class CardsSession(sessionId: Long, sessionPas: Long) : GamesSession<CardsUser, 
 
     override fun addUser(name: String): Boolean {
         return super.addUser(CardsUser(name))
+    }
+
+    override fun startGame() {
+        cards_startGame()
     }
 
 

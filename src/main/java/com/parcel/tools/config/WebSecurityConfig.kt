@@ -5,15 +5,12 @@ package com.parcel.tools.config;
 
 import com.parcel.tools.Globals
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter
 import org.springframework.security.crypto.password.NoOpPasswordEncoder
-import org.springframework.security.provisioning.InMemoryUserDetailsManager
-import java.util.*
 import javax.sql.DataSource
 
 
@@ -32,7 +29,10 @@ open class WebSecurityConfig : WebSecurityConfigurerAdapter() {
         http
                 .authorizeRequests()
                 .antMatchers(  "/web/css/*",  "/web/javascript/*",
-                        "/web/javascript/games/*", "/web/javascript/games/mafia/*").permitAll()
+                        "/web/javascript/games/*",
+                        "/web/javascript/games/mafia/*",
+                        "/web/javascript/games/spy/*",
+                        "/web/javascript/games/cards/*").permitAll()
                 .antMatchers("/", "/utils", "/etools",
                         "/games", "/games/*").permitAll()
                 .antMatchers("/admin").hasAuthority("ADMIN")

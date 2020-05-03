@@ -2,27 +2,27 @@
 /**********WEB SOCKETS*******/
 
 var SEPORATOR = "_"
-var cardsWsConnectionUri = "ws://" + document.location.host +"/games/cards";
-var cardsWebsocketConnection = new WebSocket(cardsWsConnectionUri);
-cardsWebsocketConnection.onerror = function(evt) { onConnectionError(evt) };
-cardsWebsocketConnection.onopen = function(evt) { onConnectionOpen(evt) };
-cardsWebsocketConnection.onmessage = function(evt) { onConnectionMessage(evt) };
-cardsWebsocketConnection.onclose = function(evt) { onclose(evt) };
+var spyWsConnectionUri = "ws://" + document.location.host +"/games/spy";
+var spyWebsocketConnection = new WebSocket(spyWsConnectionUri);
+spyWebsocketConnection.onerror = function(evt) { onConnectionError(evt) };
+spyWebsocketConnection.onopen = function(evt) { onConnectionOpen(evt) };
+spyWebsocketConnection.onmessage = function(evt) { onConnectionMessage(evt) };
+spyWebsocketConnection.onclose = function(evt) { onclose(evt) };
 
 function onConnectionError(evt) {
     console.log("Connection error.")
 }
 
 function onConnectionOpen() {
-    cardsWebsocketConnection.send("ping")
+    spyWebsocketConnection.send("ping")
 }
 function onclose() {
     //websocketConnection.close()
-    cardsWebsocketConnection = new WebSocket(cardsWsConnectionUri);
-    cardsWebsocketConnection.onerror = function(evt) { onConnectionError(evt) };
-    cardsWebsocketConnection.onopen = function(evt) { onConnectionOpen(evt) };
-    cardsWebsocketConnection.onmessage = function(evt) { onConnectionMessage(evt) };
-    cardsWebsocketConnection.onclose = function(evt) { onclose(evt) };
+    spyWebsocketConnection = new WebSocket(spyWsConnectionUri);
+    spyWebsocketConnection.onerror = function(evt) { onConnectionError(evt) };
+    spyWebsocketConnection.onopen = function(evt) { onConnectionOpen(evt) };
+    spyWebsocketConnection.onmessage = function(evt) { onConnectionMessage(evt) };
+    spyWebsocketConnection.onclose = function(evt) { onclose(evt) };
 }
 
 function onConnectionMessage(evt) {
@@ -30,21 +30,26 @@ function onConnectionMessage(evt) {
     var command = evt.data.split(SEPORATOR )[0]
     var data = evt.data.split(SEPORATOR )[1]
     if(command=="addUserEvent") {
-        cardsWebsocketConnection.send("ok_"+document.getElementById("userName").value+document.getElementById("userCard").value)
+        spyWebsocketConnection.send("ok_"+document.getElementById("userName").value)
         document.getElementById("users").textContent = data
 
     }
-    else if(command=="startCardsEvent") {
-        cardsWebsocketConnection.send("ok")
-        cards_startGame()
+    else if(command=="startGameEvent") {
+        spyWebsocketConnection.send("ok")
+        startGame()
     }
-    else if(command=="stopCardsEvent") {
-        cardsWebsocketConnection.send("ok")
-        alert("Игра закончена! Вот карточки игроков:\n" + data)
+    else if(command=="stopGameEvent") {
+        spyWebsocketConnection.send("ok")
+        alert("Игра закончена! Шпион " + data)
         stopGamePosition()
 
     }
-
+    else if(command=="spyIsNotSecretEvent") {
+        spyWebsocketConnection.send("ok")
+        document.getElementById("gamerInformation").textContent =
+            "!!!Шпион: "+data + "!!!\n" + document.getElementById("gamerInformation").textContent
+        alert("Шпион " + data)
+    }
 }
 
 /**********POSITIONS****************/
@@ -70,21 +75,15 @@ function gamePosition() {
 /***********************************/
 var getUserAction = false
 
-function cards_login() {
+function spy_login() {
     var xmlHttp = new XMLHttpRequest();
     var userName = document.getElementById("userName").value
-    var userCard = document.getElementById("userCard").value
     var sessionId = document.getElementById("sessionId").value
     var sessionPas = document.getElementById("sessionPas").value
 
     if(userName == "")
     {
         alert("Заполните поле \"Имя пользователя\"")
-        return
-    }
-    if(userCard == "")
-    {
-        alert("Заполните поле \"Карточка соседа\"")
         return
     }
     else if(sessionId == "")
@@ -99,16 +98,16 @@ function cards_login() {
     }
 
     //create session
-    xmlHttp.open("GET", "/games/cards_add_session?sessionId="+sessionId+
+    xmlHttp.open("GET", "/games/spy_add_session?userName="+userName+"&sessionId="+sessionId+
         "&sessionPas="+sessionPas, false); // false for synchronous request
-    xmlHttp.send();
+    xmlHttp.send(null);
     if(xmlHttp.responseText=="true") {
-        cardsWebsocketConnection.send("init"+SEPORATOR+sessionId +" "+sessionPas+" "+userName)
+        spyWebsocketConnection.send("init"+SEPORATOR+sessionId +" "+sessionPas+" "+userName)
         //lert("Игра создана.")
     }
     else if(xmlHttp.responseText=="false")
     {
-        cardsWebsocketConnection.send("init"+SEPORATOR+sessionId +" "+sessionPas+" "+userName)
+        spyWebsocketConnection.send("init"+SEPORATOR+sessionId +" "+sessionPas+" "+userName)
         //alert("Ничего не делаем.")
     }
     else
@@ -118,8 +117,8 @@ function cards_login() {
     }
 
     //Add user
-    xmlHttp.open("GET", "/games/cards_addUser?userName="+userName+"&sessionId="+sessionId+
-        "&sessionPas="+sessionPas+"&userCard="+userCard, false); // false for synchronous request
+    xmlHttp.open("GET", "/games/spy_addUser?userName="+userName+"&sessionId="+sessionId+
+        "&sessionPas="+sessionPas, false); // false for synchronous request
     xmlHttp.send(null);
     if(xmlHttp.responseText=="true")
     {
@@ -136,14 +135,13 @@ function cards_login() {
 
 
 
-function startCardsGame() {
+function spy_startGame() {
     getUserAction = false
     var xmlHttp = new XMLHttpRequest();
     var userName = document.getElementById("userName").value
-    var userCard = document.getElementById("userCard").value
     var sessionId = document.getElementById("sessionId").value
     var sessionPas = document.getElementById("sessionPas").value
-    xmlHttp.open("GET", "/games/cards_count_users?userName="+userName+"&userName="+userName+"&sessionId="+sessionId+
+    xmlHttp.open("GET", "/games/spy_count_users?userName="+userName+"&sessionId="+sessionId+
         "&sessionPas="+sessionPas, false); // false for synchronous request
     xmlHttp.send(null);
     if(xmlHttp.responseText<3)
@@ -152,62 +150,58 @@ function startCardsGame() {
         return
     }
 
-    xmlHttp.open("GET", "/games/cards_start_game?userName="+userName+"&sessionId="+sessionId+
-        "&sessionPas="+sessionPas+"&userCard="+userCard, false); // false for synchronous request
+    xmlHttp.open("GET", "/games/spy_start_game?userName="+userName+"&sessionId="+sessionId+
+        "&sessionPas="+sessionPas, false); // false for synchronous request
     xmlHttp.send(null);
     gamePosition()
     document.getElementById("gamerInformation").textContent = xmlHttp.responseText
     //alert(xmlHttp.responseText)
 }
-function stopCardsGame() {
+function spy_stopGame() {
     var xmlHttp = new XMLHttpRequest();
     var userName = document.getElementById("userName").value
-    var userCard = document.getElementById("userCard").value
     var sessionId = document.getElementById("sessionId").value
     var sessionPas = document.getElementById("sessionPas").value
-    xmlHttp.open("GET", "/games/cards_stop_game?userName="+userName+"&sessionId="+sessionId+
-        "&sessionPas="+sessionPas+"&userCard="+userCard, false); // false for synchronous request
+    xmlHttp.open("GET", "/games/spy_stop_game?userName="+userName+"&sessionId="+sessionId+
+        "&sessionPas="+sessionPas, false); // false for synchronous request
     xmlHttp.send(null);
     stopGamePosition()
     //alert(xmlHttp.responseText)
 
 }
-/*
-function showCards() {
+
+function showSpy() {
     var xmlHttp = new XMLHttpRequest();
     var userName = document.getElementById("userName").value
-    var userCard = document.getElementById("userCard").value
     var sessionId = document.getElementById("sessionId").value
     var sessionPas = document.getElementById("sessionPas").value
-    xmlHttp.open("GET", "/games/cards_get_cards?userName="+userName+"&sessionId="+sessionId+
-        "&sessionPas="+sessionPas+"&userCard="+userCard, false); // false for synchronous request
+    xmlHttp.open("GET", "/games/spy_get_spy?userName="+userName+"&sessionId="+sessionId+
+        "&sessionPas="+sessionPas, false); // false for synchronous request
     xmlHttp.send(null);
 
     //document.getElementById("gamerInformation").textContent =
         //"!!!Шпион: "+xmlHttp.responseText + "!!!\n" + document.getElementById("gamerInformation").textContent
 }
 
-function isCardsShowen() {
+function isSpyShowen() {
     var xmlHttp = new XMLHttpRequest();
     var userName = document.getElementById("userName").value
-    var userCard = document.getElementById("userCard").value
     var sessionId = document.getElementById("sessionId").value
     var sessionPas = document.getElementById("sessionPas").value
-    xmlHttp.open("GET", "/games/cards_is_cards_showen?userName="+userName+"&sessionId="+sessionId+
-        "&sessionPas="+sessionPas+"&userCard="+userCard, false); // false for synchronous request
+    xmlHttp.open("GET", "/games/spy_is_spy_showen?userName="+userName+"&sessionId="+sessionId+
+        "&sessionPas="+sessionPas, false); // false for synchronous request
     xmlHttp.send(null);
     alert(xmlHttp.responseText)
 }
-*/
+
 function getUsers()
 {
     var xmlHttp = new XMLHttpRequest();
     var userName = document.getElementById("userName").value
-    var userCard = document.getElementById("userCard").value
     var sessionId = document.getElementById("sessionId").value
     var sessionPas = document.getElementById("sessionPas").value
-    xmlHttp.open("GET", "/games/cards_get_users?userName="+userName+"&sessionId="+sessionId+
-        "&sessionPas="+sessionPas+"&userCard="+userCard, false); // false for synchronous request
+    xmlHttp.open("GET", "/games/spy_get_users?userName="+userName+"&sessionId="+sessionId+
+        "&sessionPas="+sessionPas, false); // false for synchronous request
     xmlHttp.send(null);
     document.getElementById("users").textContent = xmlHttp.responseText
 }

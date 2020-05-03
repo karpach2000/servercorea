@@ -2,10 +2,7 @@ package com.parcel.tools.web.rest.games
 
 import com.parcel.tools.games.GameSessionException
 import com.parcel.tools.games.GameSessionManagerException
-import com.parcel.tools.games.GamesSessionManager
-import com.parcel.tools.games.cards.CardsSessionException
 import com.parcel.tools.games.cards.CardsSessionManager
-import com.parcel.tools.games.cards.CardsUser
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam

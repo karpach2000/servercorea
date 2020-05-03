@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
     <title>Игры</title>
-
+    <script src="web/javascript/games/cards.js"></script>
     <script src="web/javascript/games/spy.js"></script>
     <script src="web/javascript/games/games.js"></script>
     <script src="web/javascript/games/mafia/WindowStates.js"></script>
@@ -54,7 +54,88 @@
                 </ul>
             </div>
         </div>
+      <!--CARDS-->
+        <div id="cards" class="bodyDiv col-12 col-md-7" hidden>
+            <h2>
+                Карточки
+            </h2>
 
+            <div id="user" class="cards">
+                <p>{{page.pageBody.counterGamesCards.gameDescription}}</p>
+                <form>
+                    <div class="form-group row">
+                        <label for="userName" class="col-sm-4 col-form-label">Имя пользователя</label>
+                        <div class="col-sm-6">
+                            <input type="text" id="userName" size="10" class="textboxWithLinck form-control"
+                                   onkeyup="this.value = this.value.replace(/[^A-Za-zА-Яа-яЁё0-9 ]/,'');"
+                                   required placeholder="Введите отображаемое имя"/>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="sessionId" class="col-sm-4 col-form-label">ID сессии (до 6 цифр)</label>
+                        <div class="col-sm-6">
+                            <input type="number" id="sessionId" class="textboxWithLinck form-control" min="0" max="999999" required />
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="sessionPas" class="col-sm-4 col-form-label">Пароль сессии (до 6 цифр)</label>
+                        <div class="col-sm-6">
+                            <input type="number" id="sessionPas" class="textboxWithLinck form-control" min="0" max="999999" required />
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                     <label for="userCard" class="col-sm-4 col-form-label">Карточка для соседа</label>
+                    <div class="col-sm-6">
+                      <input type="text" id="userCard" size="10" class="textboxWithLinck form-control"
+                               onkeyup="this.value = this.value.replace(/[^A-Za-zА-Яа-яЁё0-9 ]/,'');"
+                               required placeholder="Введите карточку"/>
+                      </div>
+                     </div>
+                    <button type="button" class="btn btn-primary" onclick="cards_login()" name="cards_addUser" id="cards_addUser">
+                        Присоединиться
+                    </button>
+                </form>
+            </div>
+
+            <div id="beforGame" class="beforGame" hidden>
+                {{page.pageBody.counterGamesCards.tooltipWhenAddingUsers}}
+                <label for="startCardsGame">
+                    <h5>
+                        !!!Дождитесь пока зайдут все пользователи!!!
+                    </h5>
+                </label>
+                <p>
+                    <button type="button" class="btn btn-primary" onclick="startCardsGame()" id="startCardsGame"
+                            name="startCardsGame">
+                        Поехали!
+                    </button>
+
+                </p>
+                <textarea id="users" rows="17"></textarea>
+            </div>
+
+            <div id="game" class="game" hidden>
+                <div class="card-group">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">InGame</h5>
+                            <h6 class="card-subtitle mb-2 text-muted">
+                                {{page.pageBody.counterGamesCards.tooltipDuringTheGame}}
+                            </h6>
+                            <p class="card-text">
+                                <textarea id="gamerInformation" rows="17"></textarea>
+                            </p>
+                            <br>
+                            <button type="button" class="btn btn-danger" onclick="stopCardsGame()" name="stopCardsGame">
+                                Закончить игру
+                            </button>
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
         <!--SPY-->
         <div id="spy" class="bodyDiv col-12 col-md-7" >
             <h2>
@@ -84,8 +165,8 @@
                             <input type="number" id="sessionPas" class="textboxWithLinck form-control" min="0" max="999999" required />
                         </div>
                     </div>
-                    <button type="button" class="btn btn-primary" onclick="spy_login()" name="addUser" id="addUser">
-                        Добавить себя шпион
+                    <button type="button" class="btn btn-primary" onclick="spy_login()" name="spy_addUser" id="spy_addUser">
+                        Присоединиться
                     </button>
                 </form>
             </div>
@@ -98,11 +179,11 @@
                     </h5>
                 </label>
                 <p>
-                    <button type="button" class="btn btn-primary" onclick="startGame()" id="startGame"
-                            name="startGame">
+                    <button type="button" class="btn btn-primary" onclick="spy_startGame()" id="spy_startGame"
+                            name="spy_startGame">
                         Начать игру
                     </button>
-                    <!-- <input type="button" onclick="startGame()" id="startGame" name="startGame" value="Начать игру"> -->
+                    <!-- <input type="button" onclick="startGame()" id="spy_startGame" name="spy_startGame" value="Начать игру"> -->
                 </p>
                 <textarea id="users" rows="17"></textarea>
             </div>
@@ -122,7 +203,7 @@
                                 Показать шпиона
                             </button>
                             <br><br>
-                            <button type="button" class="btn btn-danger" onclick="stopGame()" name="stopGame">
+                            <button type="button" class="btn btn-danger" onclick="spy_stopGame()" name="stopGame">
                                 Закончить игру
                             </button>
                         </div>

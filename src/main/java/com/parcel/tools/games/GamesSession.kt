@@ -102,7 +102,7 @@ abstract class GamesSession<U : GameUser, E : GameEvent>(val sessionId: Long, va
         }
     }
 
-    protected fun startGameEvent() {
+    protected open fun startGameEvent() {
         gameEvent.forEach { it.startGameEvent() }
     }
 

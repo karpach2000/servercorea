@@ -2,7 +2,7 @@ package com.parcel.tools.constructor.games.cards;
 
 
 public class CounterGamesCards {
-    public String gameDescription = "Игрок придумывает некий объект, передает его другому игроку," +
+    public String gameDescription = "Игрок придумывает некий объект, передает его другому игроку, " +
             "который не знает, что это за объект, но все остальные знают (вроде карточки с надписью " +
             "на лбу). Задача игрока раньше других догадаться, что написано в его карточке.";
     public String tooltipWhenAddingUsers = "Дождитесь когда все пользователи будут добавлены. " +

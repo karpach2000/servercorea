@@ -3,7 +3,6 @@ package com.parcel.tools.games.mafia
 import com.parcel.tools.games.GamesSession
 import com.parcel.tools.games.GlobalRandomiser
 import com.parcel.tools.games.mafia.voteinformation.MafiaCitizenVoteInformation
-import java.lang.Exception
 
 
 class MafiaSessionException(message: String): Exception(message)

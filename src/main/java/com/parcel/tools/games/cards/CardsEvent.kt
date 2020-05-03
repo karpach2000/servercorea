@@ -4,9 +4,10 @@ import com.parcel.tools.games.GameEvent
 
 interface CardsEvent : GameEvent {
 
-    fun stopCardsEvent(userCard: String): String {
-        return userCard
-    }
+    fun stopCardsEvent(gameResult: String)
+
+    fun startCardsEvent()
+
 
 
 }
