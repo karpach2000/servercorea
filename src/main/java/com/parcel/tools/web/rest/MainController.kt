@@ -17,14 +17,14 @@ import javax.servlet.http.HttpSession
 class MainController {
 
 
-    @RequestMapping("/")
+    @RequestMapping("/", "/games")
     @Throws(IOException::class)
     internal fun index(model: Model, session: HttpSession): String {
 
         val mainPage = MainPage()
         val page = Page(mainPage)
         model.addAttribute("page", page)
-        return "redirect:/games"
+        return "redirect:/games/spy"
     }
 
 
@@ -38,14 +38,7 @@ class MainController {
         return "web/html/admin"
     }
 
-    @RequestMapping("/games")
-    @Throws(IOException::class)
-    internal fun games(model: Model, session: HttpSession): String {
-        val counter = CounterGames()
-        val page = Page(counter)
-        model.addAttribute("page", page)
-        return "web/html/games"
-    }
+
 
     @RequestMapping("/games_settings")
     @Throws(IOException::class)
