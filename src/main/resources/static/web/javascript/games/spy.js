@@ -135,7 +135,7 @@ function spy_login() {
 
 
 
-function spy_startGame() {
+function startGame() {
     getUserAction = false
     var xmlHttp = new XMLHttpRequest();
     var userName = document.getElementById("userName").value
@@ -157,7 +157,7 @@ function spy_startGame() {
     document.getElementById("gamerInformation").textContent = xmlHttp.responseText
     //alert(xmlHttp.responseText)
 }
-function spy_stopGame() {
+function stopGame() {
     var xmlHttp = new XMLHttpRequest();
     var userName = document.getElementById("userName").value
     var sessionId = document.getElementById("sessionId").value
