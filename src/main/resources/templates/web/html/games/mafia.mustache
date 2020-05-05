@@ -26,12 +26,42 @@
         <!-- контейнер, содержимое которого сворачивается в кнопку на мелких экранах -->
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul id="mainMenuItems" class="navbar-nav mr-auto topMenuUl">
-                {{#page.mainMenu.items}}
-                    <li class="nav-item active topMenuLi">
-                        <a href="{{link}}" class="nav-link topMenuA">{{name}}</a>
-                    </li>
-                {{/page.mainMenu.items}}
+                <li class="nav-item">
+                    <!-- #FIXIT Нужна заглушка -->
+                    <!-- #FIXIT Ссылка относительная, будет работать для папки, 
+                        не будет работать дляфайлов, лежащих уровнем выше -->
+                    <a class="nav-link disabled" href="../index.html"> Главная </a>
+                </li>
+                <li class="nav-item dropdown active">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Dropdown
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <!-- #FIXIT теперь сюда надо передавать не все меню, а только список игр -->
+                        {{#page.mainMenu.items}}
+                        <a class="dropdown-item" href="{{link}}">{{name}}</a>
+                        {{/page.mainMenu.items}}
+
+                        <div class="dropdown-divider"></div>
+                        <!-- #FIXIT Нужна заглушка -->
+                        <!-- #FIXIT Ссылка относительная, будет работать для папки, 
+                        не будет работать дляфайлов, лежащих уровнем выше -->
+                        <a class="dropdown-item active" href="../games.html"> Все игры</a>
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <!-- #FIXIT Нужна заглушка -->
+                    <!-- #FIXIT Ссылка относительная, будет работать для папки, 
+                        не будет работать дляфайлов, лежащих уровнем выше -->
+                    <a class="nav-link disabled" href="../games_settings.html"> Настройка игр </a>
+                </li>
             </ul>
+            <form class="form-inline">
+                <!-- #FIXIT Ссылка относительная, будет работать для папки, 
+                        не будет работать дляфайлов, лежащих уровнем выше -->
+                <a href="../login"  class="btn btn-secondary disabled" role="button">LogIn</a>
+                <a href="../logout" class="btn btn-secondary"          role="button">LogOut</a>
+              </form>
         </div>
     </div>
 </nav>
