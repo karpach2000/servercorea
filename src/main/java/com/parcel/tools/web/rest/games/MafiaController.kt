@@ -1,5 +1,7 @@
 package com.parcel.tools.web.rest.games
 
+import com.parcel.tools.constructor.Page
+import com.parcel.tools.constructor.games.CounterGames
 import com.parcel.tools.games.GameSessionException
 import com.parcel.tools.games.GameSessionManagerException
 import com.parcel.tools.games.mafia.MafiaSessionException
@@ -10,11 +12,23 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.ResponseBody
 import java.io.IOException
+import javax.servlet.http.HttpSession
 
 @Controller
 class MafiaController {
 
     private val logger = org.apache.log4j.Logger.getLogger(MafiaController::class.java!!)
+
+
+    @RequestMapping("/games/mafia")
+    @Throws(IOException::class)
+    internal fun games(model: Model, session: HttpSession): String {
+        val counter = CounterGames()
+        val page = Page(counter)
+        model.addAttribute("page", page)
+        return "web/html/games/mafia"
+    }
+
 
     @RequestMapping("/games/mafia_add_session")
     @ResponseBody

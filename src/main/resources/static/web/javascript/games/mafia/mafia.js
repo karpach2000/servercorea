@@ -7,7 +7,7 @@ let ws = new WindowStates()
 /**********WEB SOCKETS*******/
 
 var SEPORATOR = "_"
-var mafiaWsConnectionUri = "ws://" + document.location.host +"/games/mafia";
+var mafiaWsConnectionUri = "ws://" + document.location.host +"/games/mafia/ws";
 var mafiaWebsocketConnection = new WebSocket(mafiaWsConnectionUri);
 mafiaWebsocketConnection.onerror = function(evt) { mafia_onConnectionError(evt) };
 mafiaWebsocketConnection.onopen = function(evt) { mafia_onConnectionOpen(evt) };
@@ -59,7 +59,7 @@ function mafia_onConnectionMessage(evt) {
     //STATES...
     else if(command=="startGameEvent") {
         mafiaWebsocketConnection.send("ok")
-        updateWindowByState("MAFIA_VOTE")
+        updateWindowByState("CITIZEN_VOTE")
     }
     else if(command=="stopGameEvent") {
         mafiaWebsocketConnection.send("ok")
@@ -68,13 +68,20 @@ function mafia_onConnectionMessage(evt) {
     }
     else if(command=="openMafiaVote") {
         mafiaWebsocketConnection.send("ok")
-        alert("Игрок:" + data + " мертв!")
+        if(data!="")
+            alert("Игрок:" + data + " мертв!")
+        else
+            alert("К сожалению все живы.")
         updateWindowByState("MAFIA_VOTE")
 
     }
     else if(command=="openСitizensVote") {
         mafiaWebsocketConnection.send("ok")
-        alert("Игрок:" + data + " мертв!")
+        if(data!="")
+            alert("Игрок:" + data + " мертв!")
+        else
+            alert("К сожалению все живы.")
+
         updateWindowByState("CITIZEN_VOTE")
     }
     else if(command=="pong")
@@ -297,9 +304,7 @@ function mafia_getLeader()
 function mafia_getMafiaVoteVariants()
 {
     var voteVariants =  mafia_request("mafia_getUsersForVoteMafia").split(SEPORATOR)
-    document.getElementById("mafia_voteVariants").innerHTML =""
-    document.getElementById("mafia_voteVariants").innerHTML =
-        document.getElementById("mafia_voteVariants").innerHTML + "<option></option>"
+    document.getElementById("mafia_voteVariants").innerHTML ="<option></option>"
     for(var i=0; i< voteVariants.length; i=i+1) {
         if(voteVariants[i].length>0)
             document.getElementById("mafia_voteVariants").innerHTML =

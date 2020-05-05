@@ -22,7 +22,7 @@ apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
 
 group = 'ru.parcel'
-version = '0.0.20-MAFIA'
+version = '0.0.24-MAFIA'
 sourceCompatibility = 1.8
 
 repositories {

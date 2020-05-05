@@ -32,9 +32,10 @@ open class WebSecurityConfig : WebSecurityConfigurerAdapter() {
         http
                 .authorizeRequests()
                 .antMatchers(  "/web/css/*",  "/web/javascript/*",
-                        "/web/javascript/games/*", "/web/javascript/games/mafia/*").permitAll()
+                        "/web/javascript/games/**", "/web/javascript/games/mafia/**").permitAll()
                 .antMatchers("/", "/utils", "/etools",
-                        "/games", "/games/*").permitAll()
+                         "/games/**", "/games/mafia").permitAll()
+
                 .antMatchers("/admin").hasAuthority("ADMIN")
                 .antMatchers("/games_settings", "/games_settings/*").hasAnyAuthority("ADMIN", "USER")
                 .anyRequest().authenticated()
