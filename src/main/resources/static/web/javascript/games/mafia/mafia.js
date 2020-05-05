@@ -304,9 +304,7 @@ function mafia_getLeader()
 function mafia_getMafiaVoteVariants()
 {
     var voteVariants =  mafia_request("mafia_getUsersForVoteMafia").split(SEPORATOR)
-    document.getElementById("mafia_voteVariants").innerHTML =""
-    document.getElementById("mafia_voteVariants").innerHTML =
-        document.getElementById("mafia_voteVariants").innerHTML + "<option></option>"
+    document.getElementById("mafia_voteVariants").innerHTML ="<option></option>"
     for(var i=0; i< voteVariants.length; i=i+1) {
         if(voteVariants[i].length>0)
             document.getElementById("mafia_voteVariants").innerHTML =

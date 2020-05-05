@@ -81,7 +81,7 @@ class MafiaSession(sessionId: Long, sessionPas: Long) :  GamesSession<MafiaUser,
     {
         logger.info("getUsersForVoteСitizen($userName)")
         var ans = ""
-        if(getUser(userName).role!=MafiaUserRoles.LEADING) {
+        if(getUser(userName).role!=MafiaUserRoles.LEADING && getUser(userName).isAlife) {
             val SEPORATOR = "_"
             users.forEach {
                 if (it.isAlife && it.role!=MafiaUserRoles.LEADING) {
@@ -99,7 +99,7 @@ class MafiaSession(sessionId: Long, sessionPas: Long) :  GamesSession<MafiaUser,
     {
         logger.info("getUsersForVoteMafia($userName)")
         var ans = ""
-        if(getUser(userName).role==MafiaUserRoles.MAFIA) {
+        if(getUser(userName).role==MafiaUserRoles.MAFIA && getUser(userName).isAlife) {
             val SEPORATOR = "_"
             users.forEach {
                 if (it.isAlife && it.role!=MafiaUserRoles.LEADING) {
