@@ -31,6 +31,8 @@ class MainController {
 
 
 
+
+
     @RequestMapping("/admin")
     @Throws(IOException::class)
     internal fun admin(model: Model, session: HttpSession): String {
