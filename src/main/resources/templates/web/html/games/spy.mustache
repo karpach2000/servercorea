@@ -8,11 +8,14 @@
     <title>Игры</title>
 
     <script src="/web/javascript/games/spy.js"></script>
+    <!-- Управление видимостью объектов - общий файл для всех страниц -->
+    <script src="/web/javascript/styleToggler.js"></script>
+
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css"
           integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous" />
 </head>
 
-<body class="mt-5">
+<body class="mt-5"  onload="toggleMenu()">
 <!-- новая панель навигации. Прикреплена к верху, сворачивается в кнопку на мелких (медиум) экранах-->
 <nav class="navbar navbar-expand-md fixed-top navbar-dark bg-dark">
     <div class="container">
@@ -27,62 +30,72 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul id="mainMenuItems" class="navbar-nav mr-auto topMenuUl">
                 <li class="nav-item">
-                    <!-- #FIXIT Нужна заглушка -->
-                    <!-- #FIXIT Ссылка относительная, будет работать для папки, 
-                        не будет работать дляфайлов, лежащих уровнем выше -->
-                    <a class="nav-link disabled" href="../index.html"> Главная </a>
+                    <a class="nav-link disabled" href="/index.html"> Главная </a>
                 </li>
                 <li class="nav-item dropdown active">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Dropdown
+                        Игры
                     </a>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <!-- #FIXIT теперь сюда надо передавать не все меню, а только список игр -->
-                        {{#page.mainMenu.items}}
+                        {{# page.pageBody.counterMenu.items}}
                         <a class="dropdown-item" href="{{link}}">{{name}}</a>
-                        {{/page.mainMenu.items}}
+                        {{/ page.pageBody.counterMenu.items}}
 
                         <div class="dropdown-divider"></div>
-                        <!-- #FIXIT Нужна заглушка -->
-                        <!-- #FIXIT Ссылка относительная, будет работать для папки, 
-                        не будет работать дляфайлов, лежащих уровнем выше -->
-                        <a class="dropdown-item active" href="../games.html"> Все игры</a>
+                        <a class="dropdown-item active" href="/games.html"> Все игры</a>
                     </div>
                 </li>
-                <li class="nav-item">
-                    <!-- #FIXIT Нужна заглушка -->
-                    <!-- #FIXIT Ссылка относительная, будет работать для папки, 
-                        не будет работать дляфайлов, лежащих уровнем выше -->
-                    <a class="nav-link disabled" href="../games_settings.html"> Настройка игр </a>
+                <li class="nav-item ">
+                    <a class="nav-link disabled" id="navLinkSettings" href="/games_settings.html"> Настройка игр </a>
                 </li>
             </ul>
-            <form class="form-inline">
-                <!-- #FIXIT Ссылка относительная, будет работать для папки, 
-                        не будет работать дляфайлов, лежащих уровнем выше -->
-                <a href="../login"  class="btn btn-secondary disabled" role="button">LogIn</a>
-                <a href="../logout" class="btn btn-secondary"          role="button">LogOut</a>
-              </form>
+                <div class="btn-group align-right" role="group">
+                    <a 
+                        href="/login"  
+                        class="btn btn-secondary" 
+                        id="buttonLogin"  
+                        role="button"
+                        >
+                            LogIn
+                    </a>
+                    <a 
+                        href="/admin"  
+                        class="btn btn-outline-secondary" 
+                        id="buttonUser"   
+                        role="button"
+                        >
+                            User
+                    </a>
+                    <a 
+                        href="/logout" 
+                        class="btn btn-secondary"
+                        id="buttonLogout" 
+                        role="button"
+                        >
+                            LogOut
+                    </a>
+                </div>
         </div>
     </div>
 </nav>
 
+
 <!-- Основное "тело" сайта, его упаковываем в контейнер, чтобы применить адаптивность -->
 <main role="main" class="container pt-3">
     <div class="row">
-        <!--Боковое меню-->
-        <div class="col-12 col-md-3">
+
+
+        <!--Боковое меню - теперь тут будут жить подсказки-->
+        <div class="col-12 col-md-3 ">
             <div id="menuCounting" class="leftMenu">
-                <ul id="menuCountingItems">
-                    {{# page.pageBody.counterMenu.items}}
-                        <li>
-                            <a href="{{link}}">{{name}}</a>
-                        </li>
-                    {{/ page.pageBody.counterMenu.items}}
-                </ul>
+                <p class="font-weight-bold">
+                    Подсказка: 
+                </p>
+                <p id="leftTip">
+                    постарайтесь получить удовольствие от игры
+                </p>
             </div>
         </div>
-
-
 
         <!--SPY-->
         <div id="spy" class="bodyDiv col-12 col-md-7" >
