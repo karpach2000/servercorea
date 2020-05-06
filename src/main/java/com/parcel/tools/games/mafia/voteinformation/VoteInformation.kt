@@ -2,6 +2,7 @@ package com.parcel.tools.games.mafia.voteinformation
 
 import com.google.gson.GsonBuilder
 import com.google.gson.annotations.Expose
+import com.parcel.tools.games.mafia.MafiaSessionState
 import com.parcel.tools.games.mafia.MafiaUser
 import com.parcel.tools.games.mafia.MafiaUserRoles
 import java.lang.Exception
@@ -18,17 +19,24 @@ class TableRow
     var isAlife = ""
     var voteCount = ""
 }
+/**
+ * Таблица пользователей и ролей, отображаемая игрокам.
+ */
+class Table {
+    val rows = ArrayList<TableRow>()
+}
 
 /**
  * Класс предназначен для работы с информацией отображаемой пользователю в таблице при голосовании.
  */
 class VoteInformation(
         @Expose(serialize = false, deserialize = false) private val user: MafiaUser,
-        @Expose (serialize = false, deserialize = false) private val  users: ArrayList<MafiaUser>) {
+        @Expose(serialize = false, deserialize = false) private val users: ArrayList<MafiaUser>,
+        @Expose(serialize = false, deserialize = false) private val mafiaSessionState: MafiaSessionState) {
 
 
 
-    val rows = ArrayList<TableRow>()
+    val table = Table()
 
 
     fun toJson():String
@@ -36,7 +44,7 @@ class VoteInformation(
         putDataToTable()
         var builder =  GsonBuilder()
         var gson = builder.create()
-        return gson.toJson(this)
+        return gson.toJson(table)
     }
 
     fun toHtml(): String
@@ -54,7 +62,7 @@ class VoteInformation(
                 "                </thead>\n" +
                 "                <tbody>"
 
-        rows.forEach {
+        table.rows.forEach {
             ans=ans+ "                    <tr   class='table-data'>\n" +
                     "                        <td>${it.name}</td>\n" +
                     "                        <td>${it.role}</td>\n" +
@@ -74,13 +82,22 @@ class VoteInformation(
      */
     private fun putDataToTable()
     {
-        rows.clear()
+        table.rows.clear()
         users.forEach {
 
             val tr = TableRow()
             tr.name = it.name
             tr.isAlife = it.isAlife.toString()
-            tr.voteCount = it.votedCount.toString()
+
+            //горожане не видят как голосует мафия
+            if(user.role == MafiaUserRoles.CITIZEN && this.mafiaSessionState == MafiaSessionState.MAFIA_VOTE)
+            {
+                tr.voteCount = "SECRET"
+            }
+            else
+                tr.voteCount = it.votedCount.toString()
+
+            //горожане не видят ролей пользователей
             if (user.role == MafiaUserRoles.CITIZEN) {
                 if(it.isAlife)
                     tr.role = "SECRET"
@@ -93,7 +110,8 @@ class VoteInformation(
             } else if (user.role == MafiaUserRoles.LEADING) {
                 tr.role = it.role.toString()
             }
-            rows.add(tr)
+
+            table.rows.add(tr)
             //throw MafiaCitizenVoteInformationException("User role not correct!")
         }
     }
