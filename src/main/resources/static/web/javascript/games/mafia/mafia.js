@@ -54,7 +54,8 @@ function mafia_onConnectionMessage(evt) {
     }
     else if(command=="updateVoteTable") {
         mafiaWebsocketConnection.send("ok")
-        document.getElementById("mafia_userVoteTable").innerHTML = data
+        let vtg =new VoteTableGenerator()
+        document.getElementById("mafia_userVoteTable").innerHTML = vtg.generate(data)
     }
     //STATES...
     else if(command=="startGameEvent") {

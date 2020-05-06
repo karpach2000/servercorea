@@ -1,22 +1,43 @@
 package com.parcel.tools.games.mafia.voteinformation
 
+import com.google.gson.GsonBuilder
+import com.google.gson.annotations.Expose
 import com.parcel.tools.games.mafia.MafiaUser
 import com.parcel.tools.games.mafia.MafiaUserRoles
 import java.lang.Exception
 
-class MafiaCitizenVoteInformationException(message: String): Exception(message)
-class MafiaCitizenVoteInformation(private val user: MafiaUser, private val  users: ArrayList<MafiaUser>) {
+class MafiaVoteInformationException(message: String): Exception(message)
 
-    inner class TableRow
+/**
+ * Строка таблицы пользователей и ролей, отображаемая игрокам.
+ */
+class TableRow
+{
+    var name = ""
+    var role = ""
+    var isAlife = ""
+    var voteCount = ""
+}
+
+/**
+ * Класс предназначен для работы с информацией отображаемой пользователю в таблице при голосовании.
+ */
+class VoteInformation(
+        @Expose(serialize = false, deserialize = false) private val user: MafiaUser,
+        @Expose (serialize = false, deserialize = false) private val  users: ArrayList<MafiaUser>) {
+
+
+
+    val rows = ArrayList<TableRow>()
+
+
+    fun toJson():String
     {
-        var name = ""
-        var role = ""
-        var isAlife = ""
-        var voteCount = ""
+        putDataToTable()
+        var builder =  GsonBuilder()
+        var gson = builder.create()
+        return gson.toJson(this)
     }
-
-    val table = ArrayList<TableRow>()
-
 
     fun toHtml(): String
     {
@@ -33,7 +54,7 @@ class MafiaCitizenVoteInformation(private val user: MafiaUser, private val  user
                 "                </thead>\n" +
                 "                <tbody>"
 
-        table.forEach {
+        rows.forEach {
             ans=ans+ "                    <tr   class='table-data'>\n" +
                     "                        <td>${it.name}</td>\n" +
                     "                        <td>${it.role}</td>\n" +
@@ -48,9 +69,12 @@ class MafiaCitizenVoteInformation(private val user: MafiaUser, private val  user
     }
 
 
+    /**
+     * Преобразует информацию из классов users в информацию передаваемую непосредственно пользователю user
+     */
     private fun putDataToTable()
     {
-        table.clear()
+        rows.clear()
         users.forEach {
 
             val tr = TableRow()
@@ -59,7 +83,7 @@ class MafiaCitizenVoteInformation(private val user: MafiaUser, private val  user
             tr.voteCount = it.votedCount.toString()
             if (user.role == MafiaUserRoles.CITIZEN) {
                 if(it.isAlife)
-                    tr.role = "Информация скрыта"
+                    tr.role = "SECRET"
                 else
                     tr.role = it.role.toString()
 
@@ -69,7 +93,7 @@ class MafiaCitizenVoteInformation(private val user: MafiaUser, private val  user
             } else if (user.role == MafiaUserRoles.LEADING) {
                 tr.role = it.role.toString()
             }
-            table.add(tr)
+            rows.add(tr)
             //throw MafiaCitizenVoteInformationException("User role not correct!")
         }
     }

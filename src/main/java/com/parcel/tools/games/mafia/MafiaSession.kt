@@ -2,7 +2,7 @@ package com.parcel.tools.games.mafia
 
 import com.parcel.tools.games.GamesSession
 import com.parcel.tools.games.GlobalRandomiser
-import com.parcel.tools.games.mafia.voteinformation.MafiaCitizenVoteInformation
+import com.parcel.tools.games.mafia.voteinformation.VoteInformation
 import java.lang.Exception
 
 
@@ -140,7 +140,7 @@ class MafiaSession(sessionId: Long, sessionPas: Long) :  GamesSession<MafiaUser,
     fun getSitizenVoteTable(userName: String):String
     {
         logger.info("getSitizenVoteTable($userName)")
-        return MafiaCitizenVoteInformation(getUser(userName), users).toHtml()
+        return VoteInformation(getUser(userName), users).toJson()
     }
 
 
@@ -255,7 +255,7 @@ class MafiaSession(sessionId: Long, sessionPas: Long) :  GamesSession<MafiaUser,
     fun updateVoteTableEvent()
     {
         gameEvent.forEach {
-            val table = MafiaCitizenVoteInformation(getUser(it.userName), users).toHtml()
+            val table = VoteInformation(getUser(it.userName), users).toJson()
             it.updateVoteTable(table)
         }
     }
