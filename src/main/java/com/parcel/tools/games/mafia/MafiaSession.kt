@@ -2,19 +2,14 @@ package com.parcel.tools.games.mafia
 
 import com.parcel.tools.games.GamesSession
 import com.parcel.tools.games.GlobalRandomiser
-import com.parcel.tools.games.mafia.voteinformation.MafiaCitizenVoteInformation
+import com.parcel.tools.games.mafia.voteinformation.VoteInformation
 import java.lang.Exception
 
 
 class MafiaSessionException(message: String): Exception(message)
 class MafiaSession(sessionId: Long, sessionPas: Long) :  GamesSession<MafiaUser, MafiaEvent>(sessionId, sessionPas) {
 
-    private enum class MafiaSessionState
-    {
-        ADD_USERS,
-        CITIZEN_VOTE,
-        MAFIA_VOTE,
-    }
+
 
     private val logger = org.apache.log4j.Logger.getLogger(MafiaSession::class.java!!)
     private var firstUserAdded = false
@@ -140,7 +135,7 @@ class MafiaSession(sessionId: Long, sessionPas: Long) :  GamesSession<MafiaUser,
     fun getSitizenVoteTable(userName: String):String
     {
         logger.info("getSitizenVoteTable($userName)")
-        return MafiaCitizenVoteInformation(getUser(userName), users).toHtml()
+        return VoteInformation(getUser(userName), users, this.mafiaSessionState).toJson()
     }
 
 
@@ -255,7 +250,7 @@ class MafiaSession(sessionId: Long, sessionPas: Long) :  GamesSession<MafiaUser,
     fun updateVoteTableEvent()
     {
         gameEvent.forEach {
-            val table = MafiaCitizenVoteInformation(getUser(it.userName), users).toHtml()
+            val table = VoteInformation(getUser(it.userName), users, this.mafiaSessionState).toJson()
             it.updateVoteTable(table)
         }
     }
