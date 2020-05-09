@@ -43,7 +43,14 @@ class MainController {
         return "web/html/admin"
     }
 
-
+    @RequestMapping("/games")
+    @Throws(IOException::class)
+    internal fun games(model: Model, session: HttpSession): String {
+        val counter = CounterGamesSettings()
+        val page = Page(counter)
+        model.addAttribute("page", page)
+        return "web/html/games/games"
+    }
 
     @RequestMapping("/games_settings")
     @Throws(IOException::class)
