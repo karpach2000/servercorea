@@ -19,7 +19,7 @@ import javax.servlet.http.HttpSession
 class MainController {
 
 
-    @RequestMapping("/", "/games")
+    @RequestMapping("/")
     @Throws(IOException::class)
     internal fun index(model: Model, session: HttpSession): String {
 
