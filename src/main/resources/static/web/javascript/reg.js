@@ -8,19 +8,23 @@ function reg() {
 
     let checkUsername = checkUser(login);
     if (checkUsername==false) {
-        //alert - имя существует
+        alert("Имя уже существует!")
     } else if (password != password2){
-        //alert - пароли не совпадают
+        alert("Пароли не совпадают!")
     } else {
         // отправляем на сервер
         xmlHttp.open("GET", "/users/reg/addUserU?login="+login+"&password="+password+
         "&password2="+password2, false); // false for synchronous request
         xmlHttp.send(null);
-        // alert(xmlHttp.responseText)
+        
         document.getElementById("alertMessage").innerHTML = xmlHttp.responseText ;
         $('#alertModal').modal(show)
     }
     
     //console.log("GET RX: " + xmlHttp.responseText)
 
+}
+
+function checkUser(username){
+    return true
 }
