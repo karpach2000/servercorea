@@ -9,6 +9,6 @@ function reg() {
         "&password2="+password2, false); // false for synchronous request
     xmlHttp.send(null);
     //console.log("GET RX: " + xmlHttp.responseText)
-    alert(xmlHttp.responseText)
-
+    // alert(xmlHttp.responseText)
+    document.getElementById("alertMessage").innerHTML = xmlHttp.responseText ;
 }
