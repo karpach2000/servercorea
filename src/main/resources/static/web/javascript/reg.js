@@ -13,12 +13,11 @@ function reg() {
         alert("Пароли не совпадают!")
     } else {
         // отправляем на сервер
-        xmlHttp.open("GET", "/users/reg/addUserU?login="+login+"&password="+password+
-        "&password2="+password2, false); // false for synchronous request
+        xmlHttp.open("GET", "/users/reg/addUserU?login="+login+"&password="+password+"&password2="+password2, false); // false for synchronous request
         xmlHttp.send(null);
         
         document.getElementById("alertMessage").innerHTML = xmlHttp.responseText ;
-        $('#alertModal').modal(show)
+        $('#alertModal').modal()
     }
     
     //console.log("GET RX: " + xmlHttp.responseText)
