@@ -68,12 +68,17 @@ function stopGamePosition() {
     document.getElementById("leftTip").innerHTML = "постарайтесь получить удовольствие от игры";
 }
 
-function gamePosition() {
+function gamePosition(location,isSpy) {
     document.getElementById("user").hidden = true
     document.getElementById("game").hidden = false
     document.getElementById("beforGame").hidden = true
 
     //role
+    if (isSpy == true){
+        document.getElementById("leftTip").innerHTML = "поздравляем, вы тот самый шпион! Вам придется очень внимательно отвечать на вопросы, и еще внимательнее их задавать другим - вы ведь не хотите, чтобы Вас раскрыли? Ну и конечно слушать ответы других: давно известно, что болтун - находка для шпиона!";
+    } else {
+        document.getElementById("leftTip").innerHTML = `ваша локация - <strong>${location}</strong>, но кто-то из Вас об этом не знает, но очень хочет узнать. Сохрани ее в тайне, найди злого шпиона, и постарайся не быть слишком подозрительным - а то могут и тебя за шпиона принять.`;
+    }
 }
 
 /***********************************/
@@ -157,11 +162,24 @@ function startGame() {
     xmlHttp.open("GET", "/games/spy_start_game?userName="+userName+"&sessionId="+sessionId+
         "&sessionPas="+sessionPas, false); // false for synchronous request
     xmlHttp.send(null);
-    gamePosition()
-    document.getElementById("gamerInformation").textContent = xmlHttp.responseText
-//   parser
+    //   parser
+    let incomingData = JSON.parse(xmlHttp.responseText)
+    
+    if (incomingData.spy == true){
+        incomingData.location = "Локация неизвестна";
+        incomingData.name +=" (ШПИОН)"
+    } 
+    // switch divs and hints
+    gamePosition(incomingData.location,incomingData.spy)
+    // put data into the page
+    document.getElementById("gamerInformation").textContent = "Ваше имя: " + incomingData.name + 
+        "\nЛокация: " + incomingData.location + 
+        "\nПрисоединилось игроков: " + incomingData.usersCount + "\n " +
+        incomingData.allUsers;
+
     //alert(xmlHttp.responseText)
 }
+
 function stopGame() {
     var xmlHttp = new XMLHttpRequest();
     var userName = document.getElementById("userName").value
