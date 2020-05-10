@@ -174,7 +174,7 @@ function startGame() {
     // put data into the page
     document.getElementById("gamerInformation").textContent = "Ваше имя: " + incomingData.name + 
         "\nЛокация: " + incomingData.location + 
-        "\nПрисоединилось игроков: " + incomingData.usersCount + "\n " +
+        "\nПрисоединилось игроков: " + incomingData.usersCount + "\n" +
         incomingData.allUsers;
 
     //alert(xmlHttp.responseText)

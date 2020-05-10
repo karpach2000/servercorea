@@ -219,15 +219,14 @@
             </div>
 
             <div id="game" class="game" hidden>
-                <div class="card-group">
+                <div class="row">
+                    <div class="col-12 col-md-6">
                     <div class="card">
                         <div class="card-body">
                             <h5 class="card-title">InGame</h5>
-                            <h6 class="card-subtitle mb-2 text-muted">
-                                {{page.pageBody.counterGamesSpy.tooltipDuringTheGame}}
-                            </h6>
+                            
                             <p class="card-text">
-                                <textarea id="gamerInformation" rows="17"></textarea>
+                                <textarea class="form-control" id="gamerInformation" rows="17"></textarea>
                             </p>
                             <button type="button" class="btn btn-primary" onclick="showSpy()" name="showSpy" hidden>
                                 Показать шпиона
@@ -238,7 +237,8 @@
                             </button>
                         </div>
                     </div>
-
+                    </div>
+                    <div class="col-12 col-md-6">
                     <div class="card">
                         <div class="card-body">
                             <h5 class="card-title">Локации в игре</h5>
@@ -259,6 +259,7 @@
                                 </tbody>
                             </table>
                         </div>
+                    </div>
                     </div>
                 </div>
             </div>
