@@ -34,10 +34,11 @@ open class WebSecurityConfig : WebSecurityConfigurerAdapter() {
                 .antMatchers(  "/web/css/*",  "/web/javascript/*", "/web/images/**",
                         "/web/javascript/games/**", "/web/javascript/games/mafia/**").permitAll()
 
-                .antMatchers("/", "/utils", "/etools",
-                         "/games/**", "/games").permitAll()
 
                 .antMatchers("/session/**").permitAll()
+
+
+                .antMatchers("/users/**").permitAll()
 
                 .antMatchers("/admin").hasAuthority("ADMIN")
                 .antMatchers("/games_settings", "/games_settings/*").hasAnyAuthority("ADMIN", "USER")
