@@ -35,7 +35,7 @@ open class WebSecurityConfig : WebSecurityConfigurerAdapter() {
                         "/web/javascript/games/**", "/web/javascript/games/mafia/**").permitAll()
 
 
-                .antMatchers("/session/**").permitAll()
+                .antMatchers("/session/**", "/", "/games/**").permitAll()
 
 
                 .antMatchers("/users/**").permitAll()
