@@ -17,6 +17,8 @@ function toggleForAnon () {
     document.getElementById("buttonLogin").hidden = false;
     document.getElementById("buttonLogout").hidden = true;
     document.getElementById("navLinkSettings").classList.add('disabled');
+
+    document.getElementById("buttonReg").hidden = true;
 }
 
 function toggleForUser (username) {
@@ -24,5 +26,7 @@ function toggleForUser (username) {
     document.getElementById("buttonUser").hidden = false;
     document.getElementById("buttonLogin").hidden = true;
     document.getElementById("buttonLogout").hidden = false;
-    document.getElementById("navLinkSettings").classList.remove('disabled');    
+    document.getElementById("navLinkSettings").classList.remove('disabled');
+    
+    document.getElementById("buttonReg").hidden = true;
 }
