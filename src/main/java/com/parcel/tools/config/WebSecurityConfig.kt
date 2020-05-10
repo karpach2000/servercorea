@@ -33,7 +33,9 @@ open class WebSecurityConfig : WebSecurityConfigurerAdapter() {
                 .authorizeRequests()
                 .antMatchers(  "/web/css/**",  "/web/javascript/**").permitAll()
 
+
                 .antMatchers("/", "/games/**").permitAll()
+
 
                 .antMatchers("/session/**").permitAll()
 
