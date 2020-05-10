@@ -44,10 +44,13 @@ class UserController {
     }
 
 
+
+
+
     /**
      * Добавить пользователя.
      */
-    @RequestMapping("/addUser")
+    @RequestMapping("/users/addUser")
     @Throws(IOException::class)
     internal fun addUser(model: Model, request: HttpServletRequest,
                          @RequestParam("login") login: String,
@@ -61,10 +64,12 @@ class UserController {
         model.addAttribute("page", page)
         return "web/html/admin"
     }
+
+
     /**
      * Удалить пользователя.
      */
-    @RequestMapping("/deleteUser")
+    @RequestMapping("/users/deleteUser")
     @Throws(IOException::class)
     internal fun dellUser(model: Model, request: HttpServletRequest,
                           @RequestParam("login") login: String) : String {
@@ -74,6 +79,44 @@ class UserController {
 
         model.addAttribute("page", page)
         return "web/html/admin"
+    }
+
+
+    /**
+     * Добавить пользователя c ролью юзер.
+     * (заделка что бы в будующем закрыть дыру в безопасности
+     * позволяющую вновь зарегестрированому пользователю присвоить
+     * себе роль администратора.)
+     */
+    @RequestMapping("/users/reg/addUserU")
+    @ResponseBody
+    @Throws(IOException::class)
+    internal fun addUserU(model: Model, request: HttpServletRequest,
+                          @RequestParam("login") login: String,
+                          @RequestParam("password") password: String,
+                          @RequestParam("password2") password2: String): String {
+
+        try {
+            com.parcel.tools.Globals.userManager.addUserU(login, password, password2)
+            return "true"
+        }
+        catch (ex: Exception)
+        {
+            return ex.message.toString()
+        }
+
+    }
+
+    /**
+     * Пользователпи.
+     */
+    @RequestMapping("/users/reg")
+    @Throws(IOException::class)
+    internal fun reg(model: Model, request: HttpServletRequest) : String {
+        val counter = CounterAdmin()
+        val page = Page(counter)
+        model.addAttribute("page", page)
+        return "web/html/reg"
     }
 
 }
