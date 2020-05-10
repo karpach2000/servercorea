@@ -57,12 +57,15 @@ function beforGamePosition() {
     document.getElementById("user").hidden = true
     document.getElementById("game").hidden = true
     document.getElementById("beforGame").hidden = false
+
+    document.getElementById("leftTip").innerHTML = "дождитесь, пока все желающие присоединятся к игре. Вас должно быть не меньше 3 человек";
 }
 function stopGamePosition() {
     document.getElementById("user").hidden = false
     document.getElementById("game").hidden = true
     document.getElementById("beforGame").hidden = true
 
+    document.getElementById("leftTip").innerHTML = "постарайтесь получить удовольствие от игры";
 }
 
 function gamePosition() {
@@ -70,6 +73,7 @@ function gamePosition() {
     document.getElementById("game").hidden = false
     document.getElementById("beforGame").hidden = true
 
+    //role
 }
 
 /***********************************/
@@ -155,6 +159,7 @@ function startGame() {
     xmlHttp.send(null);
     gamePosition()
     document.getElementById("gamerInformation").textContent = xmlHttp.responseText
+//   parser
     //alert(xmlHttp.responseText)
 }
 function stopGame() {
