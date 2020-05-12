@@ -74,9 +74,31 @@ open class UserManager {
 
     fun addUser(user: Users) = addUser(user.login!!, user.password!!, user.role!!.user_role)
 
-    fun addUser(login:String, password: String, role: String )
+    fun addUser(login:String, password: String, role: String = "USER" )
     {
         logger.info("addUser($login, $password, $role)")
+        val dbAns = jdbcTemplate!!.query("SELECT * FROM add_user('$login', '$password', '$role')",
+                AddUserRowMapper())[0]
+        if(dbAns == "OK")
+            return
+        else {
+            logger.warn("Data base ansered: $dbAns")
+            throw UserManagerException(dbAns)
+        }
+    }
+
+    /**
+     * Добавить пользователя.
+     * (используется пользователем при его регистрации)
+     */
+    fun addUserU(login:String, password: String, password2: String, role: String = "USER" )
+    {
+        logger.info("addUser($login, $password, $role)")
+        //проверка пароля
+        if(password !=password2)
+            throw UserManagerException("Password from firs textbox\n" +
+                    "does not match whith  password from textbox.")
+        //непосредственно добавление
         val dbAns = jdbcTemplate!!.query("SELECT * FROM add_user('$login', '$password', '$role')",
                 AddUserRowMapper())[0]
         if(dbAns == "OK")

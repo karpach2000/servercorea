@@ -31,9 +31,15 @@ open class WebSecurityConfig : WebSecurityConfigurerAdapter() {
         println("CONFIGURE(http: HttpSecurity)!!!")
         http
                 .authorizeRequests()
-                .antMatchers(  "/web/css/*",  "/web/javascript/*",  "/web/javascript/games/*").permitAll()
-                .antMatchers("/", "/utils", "/etools",
-                        "/games", "/games/*").permitAll()
+                .antMatchers(  "/web/css/*",  "/web/javascript/*", "/web/images/**",
+                        "/web/javascript/games/**", "/web/javascript/games/mafia/**").permitAll()
+
+
+                .antMatchers("/session/**", "/", "/games/**").permitAll()
+
+
+                .antMatchers("/users/**").permitAll()
+
                 .antMatchers("/admin").hasAuthority("ADMIN")
                 .antMatchers("/games_settings", "/games_settings/*").hasAnyAuthority("ADMIN", "USER")
                 .anyRequest().authenticated()

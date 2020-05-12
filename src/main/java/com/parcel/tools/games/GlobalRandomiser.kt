@@ -1,4 +1,4 @@
-package com.parcel.tools.spy
+package com.parcel.tools.games
 
 object GlobalRandomiser {
 
@@ -12,7 +12,7 @@ object GlobalRandomiser {
 
         var value = 0
         for(i in 0..itiration) {
-            value = random.nextInt(area - 1)
+            value = random.nextInt(area)
             if(!previousValues.contains(value)) {
                 previousValues.add(value)
                 if(previousValues.size> memory)

@@ -2,27 +2,27 @@
 /**********WEB SOCKETS*******/
 
 var SEPORATOR = "_"
-var wsConnectionUri = "ws://" + document.location.host +"/games/spy";
-var websocketConnection = new WebSocket(wsConnectionUri);
-websocketConnection.onerror = function(evt) { onConnectionError(evt) };
-websocketConnection.onopen = function(evt) { onConnectionOpen(evt) };
-websocketConnection.onmessage = function(evt) { onConnectionMessage(evt) };
-websocketConnection.onclose = function(evt) { onclose(evt) };
+var spyWsConnectionUri = "ws://" + document.location.host +"/games/spy/ws";
+var spyWebsocketConnection = new WebSocket(spyWsConnectionUri);
+spyWebsocketConnection.onerror = function(evt) { onConnectionError(evt) };
+spyWebsocketConnection.onopen = function(evt) { onConnectionOpen(evt) };
+spyWebsocketConnection.onmessage = function(evt) { onConnectionMessage(evt) };
+spyWebsocketConnection.onclose = function(evt) { onclose(evt) };
 
 function onConnectionError(evt) {
-alert("Ошибка соединения с сервером, перезагрузите страницу!")
+    console.log("Connection error.")
 }
 
 function onConnectionOpen() {
-    websocketConnection.send("ping")
+    spyWebsocketConnection.send("ping")
 }
 function onclose() {
     //websocketConnection.close()
-    websocketConnection = new WebSocket(wsConnectionUri);
-    websocketConnection.onerror = function(evt) { onConnectionError(evt) };
-    websocketConnection.onopen = function(evt) { onConnectionOpen(evt) };
-    websocketConnection.onmessage = function(evt) { onConnectionMessage(evt) };
-    websocketConnection.onclose = function(evt) { onclose(evt) };
+    spyWebsocketConnection = new WebSocket(spyWsConnectionUri);
+    spyWebsocketConnection.onerror = function(evt) { onConnectionError(evt) };
+    spyWebsocketConnection.onopen = function(evt) { onConnectionOpen(evt) };
+    spyWebsocketConnection.onmessage = function(evt) { onConnectionMessage(evt) };
+    spyWebsocketConnection.onclose = function(evt) { onclose(evt) };
 }
 
 function onConnectionMessage(evt) {
@@ -30,22 +30,22 @@ function onConnectionMessage(evt) {
     var command = evt.data.split(SEPORATOR )[0]
     var data = evt.data.split(SEPORATOR )[1]
     if(command=="addUserEvent") {
-        websocketConnection.send("ok_"+document.getElementById("userName").value)
+        spyWebsocketConnection.send("ok_"+document.getElementById("userName").value)
         document.getElementById("users").textContent = data
 
     }
     else if(command=="startGameEvent") {
-        websocketConnection.send("ok")
+        spyWebsocketConnection.send("ok")
         startGame()
     }
     else if(command=="stopGameEvent") {
-        websocketConnection.send("ok")
+        spyWebsocketConnection.send("ok")
         alert("Игра закончена! Шпион " + data)
         stopGamePosition()
 
     }
     else if(command=="spyIsNotSecretEvent") {
-        websocketConnection.send("ok")
+        spyWebsocketConnection.send("ok")
         document.getElementById("gamerInformation").textContent =
             "!!!Шпион: "+data + "!!!\n" + document.getElementById("gamerInformation").textContent
         alert("Шпион " + data)
@@ -57,25 +57,34 @@ function beforGamePosition() {
     document.getElementById("user").hidden = true
     document.getElementById("game").hidden = true
     document.getElementById("beforGame").hidden = false
+
+    document.getElementById("leftTip").innerHTML = "дождитесь, пока все желающие присоединятся к игре. Вас должно быть не меньше 3 человек";
 }
 function stopGamePosition() {
     document.getElementById("user").hidden = false
     document.getElementById("game").hidden = true
     document.getElementById("beforGame").hidden = true
 
+    document.getElementById("leftTip").innerHTML = "постарайтесь получить удовольствие от игры";
 }
 
-function gamePosition() {
+function gamePosition(location,isSpy) {
     document.getElementById("user").hidden = true
     document.getElementById("game").hidden = false
     document.getElementById("beforGame").hidden = true
 
+    //role
+    if (isSpy == true){
+        document.getElementById("leftTip").innerHTML = "поздравляем, вы тот самый шпион! Вам придется очень внимательно отвечать на вопросы, и еще внимательнее их задавать другим - вы ведь не хотите, чтобы Вас раскрыли? Ну и конечно слушать ответы других: давно известно, что болтун - находка для шпиона!";
+    } else {
+        document.getElementById("leftTip").innerHTML = `ваша локация - <strong>${location}</strong>, но кто-то из Вас об этом не знает, но очень хочет узнать. Сохрани ее в тайне, найди злого шпиона, и постарайся не быть слишком подозрительным - а то могут и тебя за шпиона принять.`;
+    }
 }
 
 /***********************************/
 var getUserAction = false
 
-function addUser() {
+function spy_login() {
     var xmlHttp = new XMLHttpRequest();
     var userName = document.getElementById("userName").value
     var sessionId = document.getElementById("sessionId").value
@@ -102,21 +111,19 @@ function addUser() {
         "&sessionPas="+sessionPas, false); // false for synchronous request
     xmlHttp.send(null);
     if(xmlHttp.responseText=="true") {
-        websocketConnection.send("init"+SEPORATOR+sessionId +" "+sessionPas+" "+userName)
+        spyWebsocketConnection.send("init"+SEPORATOR+sessionId +" "+sessionPas+" "+userName)
         //lert("Игра создана.")
     }
     else if(xmlHttp.responseText=="false")
     {
-        websocketConnection.send("init"+SEPORATOR+sessionId +" "+sessionPas+" "+userName)
+        spyWebsocketConnection.send("init"+SEPORATOR+sessionId +" "+sessionPas+" "+userName)
         //alert("Ничего не делаем.")
     }
     else
     {
-
         alert(xmlHttp.responseText)
         return
     }
-
 
     //Add user
     xmlHttp.open("GET", "/games/spy_addUser?userName="+userName+"&sessionId="+sessionId+
@@ -131,12 +138,8 @@ function addUser() {
     }
     else
     {
-
         alert(xmlHttp.responseText)
     }
-
-
-
 }
 
 
@@ -159,10 +162,24 @@ function startGame() {
     xmlHttp.open("GET", "/games/spy_start_game?userName="+userName+"&sessionId="+sessionId+
         "&sessionPas="+sessionPas, false); // false for synchronous request
     xmlHttp.send(null);
-    gamePosition()
-    document.getElementById("gamerInformation").textContent = xmlHttp.responseText
+    //   parser
+    let incomingData = JSON.parse(xmlHttp.responseText)
+    
+    if (incomingData.spy == true){
+        incomingData.location = "Локация неизвестна";
+        incomingData.name +=" (ШПИОН)"
+    } 
+    // switch divs and hints
+    gamePosition(incomingData.location,incomingData.spy)
+    // put data into the page
+    document.getElementById("gamerInformation").textContent = "Ваше имя: " + incomingData.name + 
+        "\nЛокация: " + incomingData.location + 
+        "\nПрисоединилось игроков: " + incomingData.usersCount + "\n" +
+        incomingData.allUsers;
+
     //alert(xmlHttp.responseText)
 }
+
 function stopGame() {
     var xmlHttp = new XMLHttpRequest();
     var userName = document.getElementById("userName").value

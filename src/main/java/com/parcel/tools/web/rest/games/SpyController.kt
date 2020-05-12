@@ -3,9 +3,11 @@ package com.parcel.tools.web.rest.games
 import com.parcel.tools.constructor.Page
 import com.parcel.tools.constructor.games.CounterGames
 import com.parcel.tools.constructor.gamesSettings.CounterGamesSettings
-import com.parcel.tools.spy.SpySessionException
-import com.parcel.tools.spy.SpySessionManager
-import com.parcel.tools.spy.SpySessionManagerException
+import com.parcel.tools.games.GameSessionException
+import com.parcel.tools.games.GameSessionManagerException
+import com.parcel.tools.games.spy.SpySessionException
+import com.parcel.tools.games.spy.SpySessionManager
+import com.parcel.tools.games.spy.SpySessionManagerException
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.core.userdetails.User
 import org.springframework.stereotype.Controller
@@ -18,27 +20,20 @@ import javax.servlet.http.HttpSession
 
 
 @Controller
-class GamesController {
+class SpyController {
 
-    private val logger = org.apache.log4j.Logger.getLogger(GamesController::class.java!!)
+    private val logger = org.apache.log4j.Logger.getLogger(SpyController::class.java!!)
 
-    @RequestMapping("/games")
+
+    @RequestMapping("/games/spy")
     @Throws(IOException::class)
     internal fun games(model: Model, session: HttpSession): String {
         val counter = CounterGames()
         val page = Page(counter)
         model.addAttribute("page", page)
-        return "web/html/games"
+        return "web/html/games/spy"
     }
 
-    @RequestMapping("/games_settings")
-    @Throws(IOException::class)
-    internal fun gamesSettings(model: Model, session: HttpSession): String {
-        val counter = CounterGamesSettings()
-        val page = Page(counter)
-        model.addAttribute("page", page)
-        return "web/html/gamesSettings"
-    }
 
     @RequestMapping("/games_settings_spy_addLocation")
     @Throws(IOException::class)
@@ -90,10 +85,10 @@ class GamesController {
         return try {
             SpySessionManager.addUser(sessionId.toLong(), sessionPas.toLong(), userName).toString()
         }
-        catch(ex: SpySessionManagerException) {
+        catch(ex: GameSessionManagerException) {
             ex.message!!
         }
-        catch (ex: SpySessionException){
+        catch (ex: GameSessionException){
             logger.warn(ex.message)
             ex.message!!
         }
@@ -111,7 +106,7 @@ class GamesController {
         SpySessionManager.startGame(sessionId.toLong(), sessionPas.toLong())
         val userInformation =
                 SpySessionManager.getUserInformation(sessionId.toLong(), sessionPas.toLong(),userName)
-        return userInformation.toString()
+        return userInformation.toJson()
     }
 
     @RequestMapping("/games/spy_stop_game")
@@ -145,18 +140,7 @@ class GamesController {
 
     }
 
-    /*
-    @RequestMapping("/games/spy_is_spy_showen")///games/spy_get_users
-    @ResponseBody
-    @Throws(IOException::class)
-    internal fun isSpyShowen(model: Model,
-                             @RequestParam("userName") userName: String = "",
-                             @RequestParam("sessionId") sessionId: String = "",
-                             @RequestParam("sessionPas") sessionPas: String = ""): String {
-        logger.info("isSpyShowen($userName, $sessionId, $sessionPas)")
-        return SpySessionManager.isSpyUncovered(sessionId.toLong(), sessionPas.toLong()).toString()
-    }
-    */
+
     @RequestMapping("/games/spy_get_users")///games/spy_get_users
     @ResponseBody
     @Throws(IOException::class)

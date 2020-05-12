@@ -1,4 +1,4 @@
-package com.parcel.tools.spy.database
+package com.parcel.tools.games.spy.database
 
 class SpyLocation {
     var id : Int?=null
