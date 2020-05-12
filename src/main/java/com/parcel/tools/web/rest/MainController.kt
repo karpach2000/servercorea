@@ -26,7 +26,7 @@ class MainController {
         val counter = CounterGames()
         val page = Page(counter)
         model.addAttribute("page", page)
-        return "web/html/games"
+        return "web/html/index"
     }
 
 
