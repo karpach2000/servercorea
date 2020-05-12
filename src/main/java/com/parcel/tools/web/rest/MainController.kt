@@ -23,10 +23,10 @@ class MainController {
     @Throws(IOException::class)
     internal fun index(model: Model, session: HttpSession): String {
 
-        val mainPage = MainPage()
-        val page = Page(mainPage)
+        val counter = CounterGames()
+        val page = Page(counter)
         model.addAttribute("page", page)
-        return "redirect:/games/spy"
+        return "web/html/games"
     }
 
 
@@ -46,10 +46,10 @@ class MainController {
     @RequestMapping("/games")
     @Throws(IOException::class)
     internal fun games(model: Model, session: HttpSession): String {
-        val counter = CounterGamesSettings()
+        val counter = CounterGames()
         val page = Page(counter)
         model.addAttribute("page", page)
-        return "web/html/games/games"
+        return "web/html/games"
     }
 
     @RequestMapping("/games_settings")

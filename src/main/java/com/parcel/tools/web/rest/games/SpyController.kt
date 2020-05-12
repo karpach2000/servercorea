@@ -106,7 +106,7 @@ class SpyController {
         SpySessionManager.startGame(sessionId.toLong(), sessionPas.toLong())
         val userInformation =
                 SpySessionManager.getUserInformation(sessionId.toLong(), sessionPas.toLong(),userName)
-        return userInformation.toString()
+        return userInformation.toJson()
     }
 
     @RequestMapping("/games/spy_stop_game")

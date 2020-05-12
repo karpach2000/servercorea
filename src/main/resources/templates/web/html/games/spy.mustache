@@ -8,11 +8,14 @@
     <title>Игры</title>
 
     <script src="/web/javascript/games/spy.js"></script>
+    <!-- Управление видимостью объектов - общий файл для всех страниц -->
+    <script src="/web/javascript/styleToggler.js"></script>
+
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css"
           integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous" />
 </head>
 
-<body class="mt-5">
+<body class="mt-5"  onload="toggleMenu()">
 <!-- новая панель навигации. Прикреплена к верху, сворачивается в кнопку на мелких (медиум) экранах-->
 <nav class="navbar navbar-expand-md fixed-top navbar-dark bg-dark">
     <div class="container">
@@ -26,33 +29,134 @@
         <!-- контейнер, содержимое которого сворачивается в кнопку на мелких экранах -->
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul id="mainMenuItems" class="navbar-nav mr-auto topMenuUl">
-                {{#page.mainMenu.items}}
-                    <li class="nav-item active topMenuLi">
-                        <a href="{{link}}" class="nav-link topMenuA">{{name}}</a>
-                    </li>
-                {{/page.mainMenu.items}}
+                <li class="nav-item">
+                    <a class="nav-link disabled" href="/index"> Главная </a>
+                </li>
+                <li class="nav-item dropdown active">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Игры
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        {{# page.pageBody.counterMenu.items}}
+                        <a class="dropdown-item" href="{{link}}">{{name}}</a>
+                        {{/ page.pageBody.counterMenu.items}}
+
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item active" href="/games"> Все игры</a>
+                    </div>
+                </li>
+                <li class="nav-item ">
+                    <a class="nav-link disabled" id="navLinkSettings" href="/games_settings"> Настройка игр </a>
+                </li>
             </ul>
+                <div class="btn-group align-right" role="group">
+                    <a 
+                        href="/login"  
+                        class="btn btn-secondary" 
+                        id="buttonLogin"  
+                        role="button"
+                        >
+                            LogIn
+                    </a>
+                    <a 
+                        href="#"  
+                        class="btn btn-secondary" 
+                        id="buttonReg"  
+                        role="button"
+                        onClick="window.open('/users/reg', '_blank', 'toolbar=no,menubar=no,location=no,scrollbars=yes');"
+                        hidden
+                        >
+                            New user
+                    </a>
+                    <a 
+                        href="/admin"  
+                        class="btn btn-outline-secondary" 
+                        id="buttonUser"   
+                        role="button"
+                        >
+                            User
+                    </a>
+                    <a 
+                        href="/logout" 
+                        class="btn btn-secondary"
+                        id="buttonLogout" 
+                        role="button"
+                        >
+                            LogOut
+                    </a>
+                </div>
         </div>
     </div>
 </nav>
 
+
 <!-- Основное "тело" сайта, его упаковываем в контейнер, чтобы применить адаптивность -->
 <main role="main" class="container pt-3">
     <div class="row">
-        <!--Боковое меню-->
-        <div class="col-12 col-md-3">
+
+
+        <!--Боковое меню - теперь тут будут жить подсказки-->
+        <div class="col-12 col-md-3 ">
             <div id="menuCounting" class="leftMenu">
-                <ul id="menuCountingItems">
-                    {{# page.pageBody.counterMenu.items}}
-                        <li>
-                            <a href="{{link}}">{{name}}</a>
-                        </li>
-                    {{/ page.pageBody.counterMenu.items}}
-                </ul>
+                <p class="font-weight-bold">
+                    Подсказка: 
+                </p>
+                <p id="leftTip">
+                    постарайтесь получить удовольствие от игры
+                </p>
+                
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#fullRulesModal">
+                    Читать полные правила
+                </button>
+                  
+                <!-- Modal -->
+                <div class="modal fade" id="fullRulesModal" tabindex="-1" role="dialog" aria-labelledby="fullRulesModalTitle" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="fullRulesModalTitle">
+                                    Полные правила игры
+                                </h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <p>
+                                    Игра состоит из ограниченных временем игровых раундов. В каждом раунде - новая локация, новый шпион. Все игроки, кроме шпионов, видят в поле "location" название локации, в которой находится большинство из них, шпион(ы) видит надпись "SPY (вы шпион)". Также, все без исключения видят полный список игроков в лобби.
+                                </p>
+                                <p>
+                                    Задача игроков - за отведенное время найти и ЕДИНОГЛАСНО указать на шпиона, задача шпиона - отгадать локацию, в которой находятся игроки. Для этого все игроки по очереди задают друг другу вопросы, связанные с этой локацией. Первым вопрос задает наиболее подозрительный из игроков.
+                                </p>
+                                <p>
+                                    Вопросы должны, с одной стороны, быть достаточно конкретными, чтобы шпион выдал себя тем, что он не знает локацию, с другой - должны быть достаточно обтекаемы, чтобы не дать понять в явной форме, что это за локация. В связи с этим, вопросы должны задаваться либо в формате "да или нет?", либо в формате "А или Б?". Вопросы с открытым ответом не рекомендуются.
+                                </p>
+                                <p>
+                                    Раунд заканчивается в одном из трех случаев:
+                                </p>
+                                <ol>
+                                    <li>
+                                        Время истекло. Игроки должны проголосовать, кто был шпионом. Если они не угадали - шпион победил (смог уйти и не раскрыть себя). Отгадывать локацию ему при этом не обязательно.
+                                    </li>
+                                    <li>
+                                        Время еще не истекло, но игроки точно решили, кто же шпион. Если игроки не угадали, шпион выиграл.
+                                    </li>
+                                    <li>
+                                        Время еще не истекло, но шпион готов назвать локацию. Если он назвал ее неверно, он проиграл.
+                                    </li>
+                                </ol>
+                                <p>
+                                    Примечание. Когда игроки уже начали голосование за "казнь" шпиона, он не может назвать локацию - он уже скомпрометирован.
+                                </p>
+                                <p>
+                                    Уточнение для случая, когда шпионов больше одного. Для победы не-шпионов нужно правильно раскрыть всех шпионов до единого. Если хотя бы один уйдет незамеченным - вы проиграли. С другой стороны, даже одному шпиону достаточно правильно назвать локацию, чтобы шпионы победили.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-
-
 
         <!--SPY-->
         <div id="spy" class="bodyDiv col-12 col-md-7" >
@@ -61,7 +165,25 @@
             </h2>
 
             <div id="user" class="spy">
-                <p>{{page.pageBody.counterGamesSpy.gameDescription}}</p>
+                
+                <div class="collapse show" id="shortRulesCollapse">
+                    <div class="card card-body">
+                        <p>В каждом раунде игроки оказываются в какой-то локации, но один (или несколько) 
+                            неизбежно оказывается шпионом, который не знает, где находится. 
+                        </p>    
+                        <p>
+                            Его задача — разговорить других игроков, определить локацию и не разоблачить
+                            себя. Остальные, в свою очередь, пытаются обтекаемо дать понять «своим», что 
+                            знают, где находится, и сузить круг подозреваемых.
+                        </p>  
+                    </div>
+                </div>
+                <p>
+                    <button class="btn btn-secondary" type="button" data-toggle="collapse" data-target="#shortRulesCollapse" aria-expanded="false" aria-controls="shortRulesCollapse">
+                        Скрыть/показать краткие правила
+                    </button>
+                </p>
+
                 <form>
                     <div class="form-group row">
                         <label for="userName" class="col-sm-4 col-form-label">Имя пользователя</label>
@@ -107,15 +229,14 @@
             </div>
 
             <div id="game" class="game" hidden>
-                <div class="card-group">
+                <div class="row">
+                    <div class="col-12 col-md-6">
                     <div class="card">
                         <div class="card-body">
                             <h5 class="card-title">InGame</h5>
-                            <h6 class="card-subtitle mb-2 text-muted">
-                                {{page.pageBody.counterGamesSpy.tooltipDuringTheGame}}
-                            </h6>
+                            
                             <p class="card-text">
-                                <textarea id="gamerInformation" rows="17"></textarea>
+                                <textarea class="form-control" id="gamerInformation" rows="17"></textarea>
                             </p>
                             <button type="button" class="btn btn-primary" onclick="showSpy()" name="showSpy" hidden>
                                 Показать шпиона
@@ -126,7 +247,8 @@
                             </button>
                         </div>
                     </div>
-
+                    </div>
+                    <div class="col-12 col-md-6">
                     <div class="card">
                         <div class="card-body">
                             <h5 class="card-title">Локации в игре</h5>
@@ -147,6 +269,7 @@
                                 </tbody>
                             </table>
                         </div>
+                    </div>
                     </div>
                 </div>
             </div>

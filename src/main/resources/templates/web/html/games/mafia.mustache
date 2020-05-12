@@ -9,12 +9,14 @@
     <script src="/web/javascript/games/mafia/WindowStates.js"></script>
     <script src="/web/javascript/games/mafia/VoteTableGenerator.js"></script>
     <script src="/web/javascript/games/mafia/mafia.js"></script>
+    <!-- Управление видимостью объектов - общий файл для всех страниц -->
+    <script src="/web/javascript/styleToggler.js"></script>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css"
           integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous" />
 </head>
 
-<body class="mt-5">
-<!-- новая панель навигации. Прикреплена к верху, сворачивается в кнопку на мелких (медиум) экранах-->
+<body class="mt-5"  onload="toggleMenu()">
+    <!-- новая панель навигации. Прикреплена к верху, сворачивается в кнопку на мелких (медиум) экранах-->
 <nav class="navbar navbar-expand-md fixed-top navbar-dark bg-dark">
     <div class="container">
         <!-- логотип-эмблема -->
@@ -27,12 +29,62 @@
         <!-- контейнер, содержимое которого сворачивается в кнопку на мелких экранах -->
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul id="mainMenuItems" class="navbar-nav mr-auto topMenuUl">
-                {{#page.mainMenu.items}}
-                    <li class="nav-item active topMenuLi">
-                        <a href="{{link}}" class="nav-link topMenuA">{{name}}</a>
-                    </li>
-                {{/page.mainMenu.items}}
+                <li class="nav-item">
+                    <a class="nav-link disabled" href="/index"> Главная </a>
+                </li>
+                <li class="nav-item dropdown active">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Игры
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        {{# page.pageBody.counterMenu.items}}
+                        <a class="dropdown-item" href="{{link}}">{{name}}</a>
+                        {{/ page.pageBody.counterMenu.items}}
+
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item active" href="/games"> Все игры</a>
+                    </div>
+                </li>
+                <li class="nav-item ">
+                    <a class="nav-link disabled" id="navLinkSettings" href="/games_settings"> Настройка игр </a>
+                </li>
             </ul>
+                <div class="btn-group align-right" role="group">
+                    <a 
+                        href="/login"  
+                        class="btn btn-secondary" 
+                        id="buttonLogin"  
+                        role="button"
+                        >
+                            LogIn
+                    </a>
+                    <a 
+                        href="#"  
+                        class="btn btn-secondary" 
+                        id="buttonReg"  
+                        role="button"
+                        onClick="window.open('/users/reg', '_blank', 'toolbar=no,menubar=no,location=no,scrollbars=yes');"
+                        hidden
+                        >
+                            New user
+                    </a>
+                    <a 
+                        href="/admin"  
+                        class="btn btn-outline-secondary" 
+                        id="buttonUser"   
+                        role="button"
+                        >
+                            User
+                    </a>
+                    <a 
+                        href="/logout" 
+                        class="btn btn-secondary"
+                        id="buttonLogout" 
+                        role="button"
+                        >
+                            LogOut
+                    </a>
+                </div>
         </div>
     </div>
 </nav>
@@ -40,19 +92,19 @@
 <!-- Основное "тело" сайта, его упаковываем в контейнер, чтобы применить адаптивность -->
 <main role="main" class="container pt-3">
     <div class="row">
-        <!--Боковое меню-->
-        <div class="col-12 col-md-3">
+
+
+        <!--Боковое меню - теперь тут будут жить подсказки-->
+        <div class="col-12 col-md-3 ">
             <div id="menuCounting" class="leftMenu">
-                <ul id="menuCountingItems">
-                    {{# page.pageBody.counterMenu.items}}
-                        <li>
-                            <a href="{{link}}">{{name}}</a>
-                        </li>
-                    {{/ page.pageBody.counterMenu.items}}
-                </ul>
+                <p class="font-weight-bold">
+                    Подсказка: 
+                </p>
+                <p id="leftTip">
+                    постарайтесь получить удовольствие от игры
+                </p>
             </div>
         </div>
-
 
         <!--Mafia-->
         <div id="mafia" class="bodyDiv col-12 col-md-7">
