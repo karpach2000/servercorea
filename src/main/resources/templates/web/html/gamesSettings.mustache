@@ -1,78 +1,80 @@
 <!DOCTYPE html>
 <html lang="ru">
-    <head>
-        
-        {{>web/html/pattern/headDepend}}
-        <title>Настройки игр</title>
-    </head>
-    <body class="mt-5"  onload="toggleMenu()">
 
-        {{>web/html/pattern/navbar}}
-        <main role="main" class="container pt-3">
-        <!--Боковое меню-->
-        <div id="menuCounting" class="leftMenu">
-            <ul id="menuCountingItems">
-                {{# page.pageBody.counterMenu.items}}
-                <li>
-                    <a onclick="menuClick(&quot;{{ link }}&quot;)">{{
-                        name
-                    }}</a>
-                </li>
-                {{/ page.pageBody.counterMenu.items}}
-            </ul>
-        </div>
-        <!--SPY-->
-        <div id="spy" class="bodyDiv">
-            <div id="user" class="spy">
-                <h2>{{ page.pageBody.errorMessage }}</h2>
+<head>
 
-                <form method="GET" action="/games_settings_spy_addLocation">
-                    <label for="locationName">Название локации</label>
-                    <p
-                        title="Только русские и латинские сиволы пробел, дефис и точка. Не более 30 символов. Нельзя удалять чужие локации если ты не администратор."
-                    >
-                        <input
-                            type="text"
-                            name="locationName"
-                            id="locationName"
-                            size="30"
-                            onkeyup="this.value = this.value.replace(/[^A-Za-zА-Яа-яЁё0-9 .-]/,'');"
-                            class="textboxWithLinck"
-                            required
-                        />
-                    </p>
+    {{>web/html/pattern/headDepend}}
+    <title>Настройки игр</title>
+</head>
 
-                    <br />
-                    <input type="submit" name="button" value="Add" />
-                    <input type="submit" name="button" value="Delete" />
-                </form>
+<body class="mt-5" onload="toggleMenu()">
+
+    {{>web/html/pattern/navbar}}
+    <main role="main" class="container pt-3">
+        <div class="row">
+
+            <!--Боковое меню-->
+            <div class="col-12 col-md-3 ">
+                <div id="menuCounting" class="leftMenu">
+                    <ul id="menuCountingItems">
+                        {{# page.pageBody.counterMenu.items}}
+                        <li>
+                            <a onclick="menuClick(&quot;{{ link }}&quot;)">{{ name }} </a>
+                        </li>
+                        {{/ page.pageBody.counterMenu.items}}
+                    </ul>
+                </div>
             </div>
 
-            <div id="game" class="bodyDiv">
-                <ul id="locations">
-                    <table  class="table table-bordered table-hover">
-                        <thead class="thead-light">
-                            <tr>
-                                <th>Локация</th>
-                                <th>Создатель</th>
-                            </tr>
-                        </thead>
-                        <tbody class="table table-striped">
-                            {{# page.pageBody.locations}}
-                            <tr class="table-data">
-                                <td>{{ locationName }}</td>
-                                <td>{{ authorLogin }}</td>
-                            </tr>
-                            {{/ page.pageBody.locations}}
-                        </tbody>
-                    </table>
-                </ul>
+            <!--SPY-->
+            <div id="bodyDiv" class="col-12 col-md-7">
+                <div id="spy">
+                    <div id="user" class="spy">
+                        <h2>{{ page.pageBody.errorMessage }}</h2>
+
+                        <form method="GET" action="/games_settings_spy_addLocation">
+                            <label for="locationName">Название локации</label>
+                            <p
+                                title="Только русские и латинские сиволы пробел, дефис и точка. Не более 30 символов. Нельзя удалять чужие локации если ты не администратор.">
+                                <input type="text" name="locationName" id="locationName" size="30"
+                                    onkeyup="this.value = this.value.replace(/[^A-Za-zА-Яа-яЁё0-9 .-]/,'');"
+                                    class="textboxWithLinck" required />
+                            </p>
+
+                            <br />
+                            <input type="submit" name="button" value="Add" />
+                            <input type="submit" name="button" value="Delete" />
+                        </form>
+                    </div>
+
+                    <div id="game" class="bodyDiv">
+                        <ul id="locations">
+                            <table class="table table-bordered table-hover">
+                                <thead class="thead-light">
+                                    <tr>
+                                        <th>Локация</th>
+                                        <th>Создатель</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="table table-striped">
+                                    {{# page.pageBody.locations}}
+                                    <tr class="table-data">
+                                        <td>{{ locationName }}</td>
+                                        <td>{{ authorLogin }}</td>
+                                    </tr>
+                                    {{/ page.pageBody.locations}}
+                                </tbody>
+                            </table>
+                        </ul>
+                    </div>
+                </div>
             </div>
         </div>
-   </main> 
+    </main>
 
-   {{>web/html/pattern/footer}}
-   {{>web/html/pattern/footDepend}}
+    {{>web/html/pattern/footer}}
+    {{>web/html/pattern/footDepend}}
 
 </body>
+
 </html>
