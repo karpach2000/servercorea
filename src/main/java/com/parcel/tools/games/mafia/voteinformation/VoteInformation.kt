@@ -47,6 +47,8 @@ class VoteInformation(
         return gson.toJson(table)
     }
 
+    /*
+    //УСТАРЕЛ!!!!
     fun toHtml(): String
     {
         putDataToTable()
@@ -75,7 +77,7 @@ class VoteInformation(
                 "        </ul>"
         return ans
     }
-
+    */
 
     /**
      * Преобразует информацию из классов users в информацию передаваемую непосредственно пользователю user
@@ -90,7 +92,7 @@ class VoteInformation(
             tr.isAlife = it.isAlife.toString()
 
             //горожане не видят как голосует мафия
-            if(user.role == MafiaUserRoles.CITIZEN && this.mafiaSessionState == MafiaSessionState.MAFIA_VOTE)
+            if(user.role != MafiaUserRoles.MAFIA && user.role != MafiaUserRoles.LEADING && this.mafiaSessionState == MafiaSessionState.MAFIA_VOTE)
             {
                 tr.voteCount = "SECRET"
             }
@@ -104,8 +106,22 @@ class VoteInformation(
                 else
                     tr.role = it.role.toString()
 
-            } else if (user.role == MafiaUserRoles.MAFIA) {
-                tr.role = it.role.toString()
+            }
+            //шериф не видит ролей пользователей
+            else if(user.role == MafiaUserRoles.SHERIFF)
+            {
+                //но если он проверил пользователя то видит
+                if(it.sheriffOptions.checkedUserNames.contains(it.name))
+                    tr.role = it.role.toString()
+                else
+                    tr.role = "SECRET"
+            }
+            //мафиозе видят только мафиозе, горожан, лидера. Остальных игроков принимают за горожан (пока аони живы).
+            else if (user.role == MafiaUserRoles.MAFIA) {
+                if(!it.isAlife || it.role== MafiaUserRoles.LEADING || it.role==MafiaUserRoles.MAFIA || it.role==MafiaUserRoles.CITIZEN)
+                    tr.role = it.role.toString()
+                else
+                    tr.role = MafiaUserRoles.CITIZEN.toString()
 
             } else if (user.role == MafiaUserRoles.LEADING) {
                 tr.role = it.role.toString()

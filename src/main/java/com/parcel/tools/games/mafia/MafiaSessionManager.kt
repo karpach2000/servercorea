@@ -94,6 +94,30 @@ object MafiaSessionManager :
     }
 
 
+
+
+    /******SPESHIAL*******/
+    /**
+     * Проверить является ли игрок мафией.
+     * Работает если проверяющий имеет роль шерифа.
+     * Метод передает в объект MafiaUser(userName) (если он шериф) информацию  о том пользователе
+     *      которого он проверил.
+     * Метод возвращает роль проверяемого пользователя.
+     */
+    fun checkUserSheriff(sessionId: Long, sessionPas: Long,userName: String, checkedUserName: String): String
+    {
+        logger.info("checkUserSheriff($sessionId, $sessionPas $userName, $checkedUserName)")
+        return getSession(sessionId, sessionPas).checkUserSheriff(userName, checkedUserName)
+    }
+
+    /**
+     * Получить список игроков которых может проверить шериф.
+     */
+    fun getCheckUserSheriffVariants(sessionId: Long, sessionPas: Long, userName: String): String {
+        logger.info("getCheckUserSheriffVariants($sessionId, $sessionPas, $userName)")
+        return getSession(sessionId, sessionPas).getCheckUserSheriffVariants(userName)
+    }
+
     /*********УПРАВЛЕНИЕ СЕССИЯМИ**********/
 
     override fun addSession(sessionId: Long, sessionPas: Long)

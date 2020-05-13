@@ -9,6 +9,10 @@ import java.lang.Exception
 class MafiaSessionException(message: String): Exception(message)
 class MafiaSession(sessionId: Long, sessionPas: Long) :  GamesSession<MafiaUser, MafiaEvent>(sessionId, sessionPas) {
 
+    /**
+     * Символ используемый для разделения элементов массива при передаче данных WEB страницу.
+     */
+    private val SEPORATOR = "_"
 
 
     private val logger = org.apache.log4j.Logger.getLogger(MafiaSession::class.java!!)
@@ -69,7 +73,7 @@ class MafiaSession(sessionId: Long, sessionPas: Long) :  GamesSession<MafiaUser,
 
 
     /**
-     * Получить варианты за кого можно проголосовать когда голосует город.
+     * Получить варианты за кого можно проголосовать когда голосует ГОРОД.
      * (список кандидатов)
      */
     fun getUsersForVoteСitizen(userName: String):String
@@ -87,7 +91,7 @@ class MafiaSession(sessionId: Long, sessionPas: Long) :  GamesSession<MafiaUser,
         return ans
     }
     /**
-     * Получить варианты за кого можно проголосовать когда голосует мафия.
+     * Получить варианты за кого можно проголосовать когда голосует МАФИЯ.
      * (список кандидатов)
      */
     fun getUsersForVoteMafia(userName: String):String
@@ -108,6 +112,10 @@ class MafiaSession(sessionId: Long, sessionPas: Long) :  GamesSession<MafiaUser,
 
     /*******GAME******/
 
+    /**
+     * Начать игру.
+     * (данный метод также распределяет роли)
+     */
     override fun startGame()
     {
         if (!started) {
@@ -116,6 +124,8 @@ class MafiaSession(sessionId: Long, sessionPas: Long) :  GamesSession<MafiaUser,
             mafiaSessionState = MafiaSessionState.CITIZEN_VOTE
             val mafiaNames = generateMafia()
             mafiaNames.forEach { this.getUser(it).role = MafiaUserRoles.MAFIA }
+            val sheriffNames = generateSheriff()
+            sheriffNames.forEach { this.getUser(it).role = MafiaUserRoles.SHERIFF }
             startGameEvent()
             updateVoteTableEvent()
         }
@@ -220,15 +230,62 @@ class MafiaSession(sessionId: Long, sessionPas: Long) :  GamesSession<MafiaUser,
         return maxVoteUser
 
     }
+    /******SPESHIAL*******/
+    /**
+     * Проверить является ли игрок мафией.
+     * Работает если проверяющий имеет роль шерифа.
+     * Метод передает в объект MafiaUser(userName) (если он шериф) информацию  о том пользователе которого он проверил.
+     * Метод возвращает роль проверяемого пользователя.
+     */
+    fun checkUserSheriff(userName: String, checkedUserName: String): String
+    {
+        logger.info("checkUserSheriff($userName, $checkedUserName")
+        val sheriff = getUser(userName)
+        if(sheriff.role==MafiaUserRoles.SHERIFF)
+        {
+            val checkUser = getUser(checkedUserName)
+            sheriff.sheriffOptions.checkedUserNames.add(userName)
+            return  checkUser.role.toString()
+        }
+        else throw MafiaSessionException("Only sheriff can check roles of users")
+    }
+
+    /**
+     * Получить список игроков которых может проверить шериф.
+     */
+    fun getCheckUserSheriffVariants(userName: String): String
+    {
+        logger.info("getCheckUserSheriffVariants($userName")
+        val sheriff = getUser(userName)
+        return if(sheriff.role==MafiaUserRoles.SHERIFF)
+        {
+            val usersAvalable = ArrayList<String>()
+            users.forEach {
+                if(it.role!=MafiaUserRoles.LEADING && it.name!=userName &&
+                        !sheriff.sheriffOptions.checkedUserNames.contains(it.name))
+                    usersAvalable.add(it.name)
+            }
+            toCsvLine(usersAvalable)
+        }
+        else ""
+    }
 
 
-
-
+    /******PRIVATE*******/
+    /**
+     * Выбирает из списка игроков, игроков которые будут играть за Мафию.
+     */
     private fun generateMafia():ArrayList<String>
     {
+        /**
+         * Функция расчета количества игроков играющих за мафию.
+         * (надо все этифункции расчета игроков в дальнейшем вынести куда то !!!!)
+         */
+        fun countMafiaGamersIsNecessary()=(users.count()-1)/3
+
         val mafiaNames = ArrayList<String>()
         val users = ArrayList<MafiaUser>()
-        this.users.forEach { if(it.role != MafiaUserRoles.LEADING)users.add(it) }
+        this.users.forEach { if(it.role == MafiaUserRoles.CITIZEN)users.add(it) }
         var mafiaCount = countMafiaGamersIsNecessary()
         while(mafiaCount>0)
         {
@@ -239,11 +296,42 @@ class MafiaSession(sessionId: Long, sessionPas: Long) :  GamesSession<MafiaUser,
         }
         return mafiaNames
     }
-
-    private fun countMafiaGamersIsNecessary(): Int
+    /**
+     * Выбирает из списка игроков, игроков которые будут играть за Мафию.
+     */
+    private fun generateSheriff():ArrayList<String>
     {
-        return (users.count()-1)/3
+        /**
+         * Функция расчета количества игроков играющих за шерифа.
+         * (надо все этифункции расчета игроков в дальнейшем вынести куда то !!!!)
+         */
+        fun countSheriffGamersIsNecessary()=if(users.count()<7) 0 else 1
+
+        val sheriffNames = ArrayList<String>()
+        val users = ArrayList<MafiaUser>()
+        this.users.forEach { if(it.role == MafiaUserRoles.CITIZEN)users.add(it) }
+        //количество шерифов
+        var sheriffCount = countSheriffGamersIsNecessary()
+        while(sheriffCount>0)
+        {
+            val i = GlobalRandomiser.getRundom(users.size)
+            sheriffNames.add(users[i].name)
+            users.removeAt(i)
+            sheriffCount --
+        }
+        return sheriffNames
     }
+
+    /******TOOLS*******/
+
+    private fun toCsvLine(data: ArrayList<String>): String
+    {
+        var ans = ""
+        data.forEach { ans = ans + SEPORATOR + it }
+        return ans
+    }
+
+
 
 
     /*******EVENTS*******/
