@@ -263,6 +263,10 @@ function mafia_updateWindowByRole()
     {
         ws.mafiaPosition()
     }
+    else if(role=="SHERIFF")
+    {
+        ws.sheriffPosition()
+    }
 }
 
 /******PRIVATE******/
