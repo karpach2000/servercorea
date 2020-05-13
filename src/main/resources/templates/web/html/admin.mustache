@@ -1,88 +1,75 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
+        
+    {{>web/html/pattern/headDepend}}   
     <title>Администрирование</title>
-    <link href="/web/css/index.css" rel="stylesheet" tipe="text/css">
-    <link href="/web/css/admin.css" rel="stylesheet" tipe="text/css">
-    <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.0/css/bootstrap-combined.min.css" rel="stylesheet">
     <script src="/web/javascript/admin.js"></script>
 </head>
-<body>
-<header>
-    <div class="header-panel">
 
-    </div>
+<body class="mt-5"  onload="toggleMenu()">
 
+    {{>web/html/pattern/navbar}}
+    <main role="main" class="container pt-3">
+        <!--Боковое меню-->
+        <div id="menuCounting" class="leftMenu">
+            <ul id="menuCountingItems" >
+                {{# page.pageBody.counterMenu.items}}<li><a onclick='menuClick("{{link}}")'>{{name}}</a></li> {{/ page.pageBody.counterMenu.items}}
+            </ul>
+        </div>
 
-    <div id="divMainMenu"  class="topMenu">
-        <ul id="mainMenuItems" class="topMenuUl">
-            {{#page.mainMenu.items}}<li class="topMenuLi"><a href="{{link}}" class="topMenuA">{{name}}</a></li> {{/page.mainMenu.items}}
-        </ul>
-        <br>
-    </div>
-</header>
-<!--Боковое меню-->
-<div id="menuCounting" class="leftMenu">
-    <ul id="menuCountingItems" >
-        {{# page.pageBody.counterMenu.items}}<li><a onclick='menuClick("{{link}}")'>{{name}}</a></li> {{/ page.pageBody.counterMenu.items}}
-    </ul>
-</div>
-
-    <div id="createUser" class="createUser" class="bodyDiv" hidden>
-        <form method="GET" class="bodyDiv" action="/users/addUser">
-            <label for="login">Имя пользователя</label>
-            <input type="text"   id="login" size="10" name = "login" onkeyup="this.value = this.value.replace(/[^A-Za-zА-Яа-яЁё0-9]/,'');"
-                   class="login"  required><br>
-            <!--label for="userPas" hidden>Пароль пользователя</label -->
-            <!--input type="number"   id="userPas"  class="textboxWithLinck" min="0" max="999999" required hidden><br-->
-            <label for="password">Пароль</label>
-            <input type=text"   id="password" name ="password" class="password" required><br>
-            <label for="role">Роль пользователя</label>
-            <select id="role" name="role" required>
-                <option>USER</option>
-                <option>ADMIN</option>
-            </select><br>
-            <input type="submit" name="createUser" value="Создать пользователя">
-        </form>
-    </div>
+            <div id="createUser" class="createUser" class="bodyDiv" hidden>
+                <form method="GET" class="bodyDiv" action="/users/addUser">
+                    <label for="login">Имя пользователя</label>
+                    <input type="text"   id="login" size="10" name = "login" onkeyup="this.value = this.value.replace(/[^A-Za-zА-Яа-яЁё0-9]/,'');"
+                        class="login"  required><br>
+                    <!--label for="userPas" hidden>Пароль пользователя</label -->
+                    <!--input type="number"   id="userPas"  class="textboxWithLinck" min="0" max="999999" required hidden><br-->
+                    <label for="password">Пароль</label>
+                    <input type="text"   id="password" name ="password" class="password" required><br>
+                    <label for="role">Роль пользователя</label>
+                    <select id="role" name="role" required>
+                        <option>USER</option>
+                        <option>ADMIN</option>
+                    </select><br>
+                    <input type="submit" name="createUser" value="Создать пользователя">
+                </form>
+            </div>
 
 
 
-    <div id="deleteUser" class="bodyDiv" hidden>
-            <form method="GET" action="/users/deleteUser" class="bodyDiv">
-                <label for="login">Имя пользователя</label>
-                <input type="text"  name = "login"  id="name" size="10" onkeyup="this.value = this.value.replace(/[^A-Za-zА-Яа-яЁё0-9]/,'');" required>
-                <input type="submit" name="deleteUser" value="Удалить пользователя">
-            </form>
-    </div>
-    <div id="userList" class="bodyDiv">
-        <ul id="menuCountingItems" class="bodyDiv">
-            <table border="1">
-                <thead>
-                <tr>
-                    <th>Логин</th>
-                    <th>Пароль</th>
-                    <th>Роль</th>
-                </tr>
-                </thead>
-                <tbody>
-                {{# page.pageBody.users}}
-
-                    <tr   class='table-data'>
-                        <td>{{login}}</td>
-                        <td>{{password}}</td>
-                        <td>{{role}}</td>
+            <div id="deleteUser" class="bodyDiv" hidden>
+                    <form method="GET" action="/users/deleteUser" class="bodyDiv">
+                        <label for="login">Имя пользователя</label>
+                        <input type="text"  name = "login"  id="name" size="10" onkeyup="this.value = this.value.replace(/[^A-Za-zА-Яа-яЁё0-9]/,'');" required>
+                        <input type="submit" name="deleteUser" value="Удалить пользователя">
+                    </form>
+            </div>
+            <div id="userList" class="bodyDiv">
+                <table  class="table table-bordered table-hover">
+                    <thead class="thead-light">
+                    <tr>
+                        <th>Логин</th>
+                        <th>Пароль</th>
+                        <th>Роль</th>
                     </tr>
-                {{/ page.pageBody.users}}
-                </tbody>
-            </table>
-        </ul>
-    <div/>
-
-</div>
-
-
-
+                    </thead>
+                    <tbody class="table table-striped">
+                    {{# page.pageBody.users}}
+                        <tr class='table-data'>
+                            <td>{{login}}</td>
+                            <td>{{password}}</td>
+                            <td>{{role}}</td>
+                        </tr>
+                    {{/ page.pageBody.users}}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+    
+    {{>web/html/pattern/footer}}
+    {{>web/html/pattern/footDepend}}
 
 </body>
 </html>

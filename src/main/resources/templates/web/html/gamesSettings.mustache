@@ -1,76 +1,78 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <title>Игры</title>
-    <link href="web/css/index.css" rel="stylesheet" tipe="text/css">
-    <link href="web/css/gamesSettings.css" rel="stylesheet" tipe="text/css">
-    <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.0/css/bootstrap-combined.min.css" rel="stylesheet">
-</head>
-<body>
-<header>
-    <div class="header-panel">
+<html lang="ru">
+    <head>
+        
+        {{>web/html/pattern/headDepend}}
+        <title>Настройки игр</title>
+    </head>
+    <body class="mt-5"  onload="toggleMenu()">
 
-    </div>
+        {{>web/html/pattern/navbar}}
+        <main role="main" class="container pt-3">
+        <!--Боковое меню-->
+        <div id="menuCounting" class="leftMenu">
+            <ul id="menuCountingItems">
+                {{# page.pageBody.counterMenu.items}}
+                <li>
+                    <a onclick="menuClick(&quot;{{ link }}&quot;)">{{
+                        name
+                    }}</a>
+                </li>
+                {{/ page.pageBody.counterMenu.items}}
+            </ul>
+        </div>
+        <!--SPY-->
+        <div id="spy" class="bodyDiv">
+            <div id="user" class="spy">
+                <h2>{{ page.pageBody.errorMessage }}</h2>
 
+                <form method="GET" action="/games_settings_spy_addLocation">
+                    <label for="locationName">Название локации</label>
+                    <p
+                        title="Только русские и латинские сиволы пробел, дефис и точка. Не более 30 символов. Нельзя удалять чужие локации если ты не администратор."
+                    >
+                        <input
+                            type="text"
+                            name="locationName"
+                            id="locationName"
+                            size="30"
+                            onkeyup="this.value = this.value.replace(/[^A-Za-zА-Яа-яЁё0-9 .-]/,'');"
+                            class="textboxWithLinck"
+                            required
+                        />
+                    </p>
 
-    <div id="divMainMenu"  class="topMenu">
-        <ul id="mainMenuItems" class="topMenuUl">
-            {{#page.mainMenu.items}}<li class="topMenuLi"><a href="{{link}}" class="topMenuA">{{name}}</a></li> {{/page.mainMenu.items}}
-        </ul>
-        <br>
-    </div>
-</header>
-<!--Боковое меню-->
-<div id="menuCounting" class="leftMenu">
-    <ul id="menuCountingItems" >
-        {{# page.pageBody.counterMenu.items}}<li><a onclick='menuClick("{{link}}")'>{{name}}</a></li> {{/ page.pageBody.counterMenu.items}}
-    </ul>
-</div>
-<!--SPY-->
-<div id="spy" class="bodyDiv">
-    <div id="user" class="spy">
-        <h2>{{page.pageBody.errorMessage}}</h2>
+                    <br />
+                    <input type="submit" name="button" value="Add" />
+                    <input type="submit" name="button" value="Delete" />
+                </form>
+            </div>
 
-            <form method="GET" action="/games_settings_spy_addLocation">
-                <label for="locationName">Название локации</label>
-                <p title="Только русские и латинские сиволы пробел, дефис и точка. Не более 30 символов. Нельзя удалять чужие локации если ты не администратор.">
-                <input type="text"  name = "locationName"  id="locationName" size="30"
-                       onkeyup="this.value = this.value.replace(/[^A-Za-zА-Яа-яЁё0-9 .-]/,'');"
-                       class="textboxWithLinck"  required></p><br>
-                <input type="submit" name="button" value="Add">
-                <input type="submit" name="button" value="Delete">
-            </form>
+            <div id="game" class="bodyDiv">
+                <ul id="locations">
+                    <table  class="table table-bordered table-hover">
+                        <thead class="thead-light">
+                            <tr>
+                                <th>Локация</th>
+                                <th>Создатель</th>
+                            </tr>
+                        </thead>
+                        <tbody class="table table-striped">
+                            {{# page.pageBody.locations}}
+                            <tr class="table-data">
+                                <td>{{ locationName }}</td>
+                                <td>{{ authorLogin }}</td>
+                            </tr>
+                            {{/ page.pageBody.locations}}
+                        </tbody>
+                    </table>
+                </ul>
+            </div>
+        </div>
+   </main> 
 
-    </div>
-
-
-
-
-    <div id="game" class="bodyDiv">
-        <ul id="locations" >
-            <table border="1">
-                <thead>
-                <tr>
-                    <th>Локация</th>
-                    <th>Создатель</th>
-                </tr>
-                </thead>
-                <tbody>
-                {{# page.pageBody.locations}}
-                    <tr   class='table-data'>
-                        <td>{{locationName}}</td>
-                        <td>{{authorLogin}}</td>
-                    </tr>
-                {{/ page.pageBody.locations}}
-                </tbody>
-            </table>
-        </ul>
-
-    </div>
-</div>
-
-
-
+   {{>web/html/pattern/footer}}
+   {{>web/html/pattern/footDepend}}
 
 </body>
 </html>
