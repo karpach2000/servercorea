@@ -254,7 +254,7 @@ class MafiaController {
 
 
     /**
-     * Шериф проверяет игрока.
+     * Получить список игроков которых может проверить шериф.
      */
     @RequestMapping("/games/mafia_getCheckUserSheriffVariants")
     @ResponseBody
@@ -262,7 +262,7 @@ class MafiaController {
     internal fun getCheckUserSheriffVariants(model: Model,
                                   @RequestParam("userName") userName: String = "",
                                   @RequestParam("sessionId") sessionId: String = "",
-                                  @RequestParam("sessionPas") sessionPas: String = "",
+                                  @RequestParam("sessionPas") sessionPas: String = ""
     ): String {
         logger.info("getCheckUserSheriffVariants($userName, $sessionId, $sessionPas)")
         return MafiaSessionManager.getCheckUserSheriffVariants(sessionId.toLong(),

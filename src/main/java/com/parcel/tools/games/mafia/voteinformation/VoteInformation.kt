@@ -111,7 +111,7 @@ class VoteInformation(
             else if(user.role == MafiaUserRoles.SHERIFF)
             {
                 //но если он проверил пользователя то видит
-                if(it.sheriffOptions.checkedUserNames.contains(it.name))
+                if(user.sheriffOptions.checkedUserNames.contains(it.name))
                     tr.role = it.role.toString()
                 else
                     tr.role = "SECRET"

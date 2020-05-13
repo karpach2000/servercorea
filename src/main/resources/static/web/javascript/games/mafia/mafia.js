@@ -73,6 +73,7 @@ function mafia_onConnectionMessage(evt) {
             alert("Игрок:" + data + " мертв!")
         else
             alert("К сожалению все живы.")
+        mafia_getSheriffCheckVariants()
         updateWindowByState("MAFIA_VOTE")
 
     }
@@ -82,7 +83,7 @@ function mafia_onConnectionMessage(evt) {
             alert("Игрок:" + data + " мертв!")
         else
             alert("К сожалению все живы.")
-
+        mafia_checkUserSheriff()
         updateWindowByState("CITIZEN_VOTE")
     }
     else if(command=="pong")
@@ -170,6 +171,7 @@ function mafia_wanToBeaLeader()
  */
 function mafia_citizenVote() {
     console.log("mafia_citizenVote()")
+    //mafia_getSheriffCheckVariants()
     mafia_request("mafia_getCitizenVoteResult")
 }
 
@@ -178,6 +180,7 @@ function mafia_citizenVote() {
  */
 function mafia_mafiaVote() {
     console.log("mafia_mafiaVote()")
+    //mafia_checkUserSheriff()
     mafia_request("mafia_getMafiaVoteResult")
 }
 
@@ -328,7 +331,38 @@ function mafia_getСitizenVoteVariants()
     }
 }
 
-
+/**
+ * Получить варианты за кого можно проголосовать когда голосует город.
+ * (список кандидатов)
+ */
+function mafia_getSheriffCheckVariants()
+{
+    var variants =  mafia_request("mafia_getCheckUserSheriffVariants").split(SEPORATOR)
+    document.getElementById("mafia_checkUserSheriffVariants").innerHTML ="<option></option>"
+    for(var i=0; i< variants.length; i=i+1) {
+        if(variants[i].length>0)
+            document.getElementById("mafia_checkUserSheriffVariants").innerHTML =
+                document.getElementById("mafia_checkUserSheriffVariants").innerHTML + "<option>" + variants[i] + "</option>"
+    }
+}
+/**
+ * Шериф проверяет игрока.
+ */
+function mafia_checkUserSheriff() {
+    console.log("GET TX: mafia_checkUserSheriff")
+    var xmlHttp = new XMLHttpRequest();
+    var userName = document.getElementById("mafia_userName").value
+    var sessionId = document.getElementById("mafia_sessionId").value
+    var sessionPas = document.getElementById("mafia_sessionPas").value
+    var checkUser = document.getElementById("mafia_checkUserSheriffVariants").value
+    if(checkUser.length>0) {
+        xmlHttp.open("GET", "/games/mafia_checkUserSheriff?userName=" + userName + "&sessionId=" + sessionId +
+            "&sessionPas=" + sessionPas + "&checkedUserName=" + checkUser, false); // false for synchronous request
+        xmlHttp.send(null);
+        console.log("GET RX: " + xmlHttp.responseText)
+        return xmlHttp.responseText
+    }
+}
 
 
 function mafia_request(command) {

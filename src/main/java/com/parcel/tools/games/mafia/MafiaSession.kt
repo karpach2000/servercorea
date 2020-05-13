@@ -182,6 +182,7 @@ class MafiaSession(sessionId: Long, sessionPas: Long) :  GamesSession<MafiaUser,
         if(result!="")
             getUser(result).isAlife = false
         openСitizensVoteCountEvent(result)
+        Thread.sleep(100)//AHTUNG KOSTILE
         //обновляем таблицы голосования
         updateVoteTableEvent()
         return result
@@ -205,6 +206,7 @@ class MafiaSession(sessionId: Long, sessionPas: Long) :  GamesSession<MafiaUser,
             getUser(result).isAlife = false
 
         openMafiaVoteCountEvent(result)
+        Thread.sleep(100)//AHTUNG KOSTILE
         //обновляем таблицы голосования
         updateVoteTableEvent()
         return result
@@ -244,7 +246,7 @@ class MafiaSession(sessionId: Long, sessionPas: Long) :  GamesSession<MafiaUser,
         if(sheriff.role==MafiaUserRoles.SHERIFF)
         {
             val checkUser = getUser(checkedUserName)
-            sheriff.sheriffOptions.checkedUserNames.add(userName)
+            sheriff.sheriffOptions.checkedUserNames.add(checkedUserName)
             return  checkUser.role.toString()
         }
         else throw MafiaSessionException("Only sheriff can check roles of users")
