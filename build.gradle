@@ -23,7 +23,7 @@ apply plugin: 'io.spring.dependency-management'
 
 group = 'ru.parcel'
 
-version = '0.0.26-KOLA'
+version = '0.0.27-MAFIA_SHERIF'
 sourceCompatibility = 1.8
 
 repositories {
