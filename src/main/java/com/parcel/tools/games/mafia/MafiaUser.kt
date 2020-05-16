@@ -13,6 +13,10 @@ class MafiaUser(name:String) : GameUser(name) {
          * Имена пользователей которых проверил шериф.
          */
         val checkedUserNames = ArrayList<String>()
+        /**
+         * Был ли этот пользователь проверен шерифом
+         */
+        var checked = false
     }
 
 

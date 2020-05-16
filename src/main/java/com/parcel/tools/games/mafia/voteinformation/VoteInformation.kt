@@ -18,6 +18,7 @@ class TableRow
     var role = ""
     var isAlife = ""
     var voteCount = ""
+    var sheriffChecked = "SECRET"
 }
 /**
  * Таблица пользователей и ролей, отображаемая игрокам.
@@ -91,6 +92,15 @@ class VoteInformation(
             tr.name = it.name
             tr.isAlife = it.isAlife.toString()
 
+            /*****ИНФА ДЛЯ ВЕДУЩЕГО*****/
+            if(user.role==MafiaUserRoles.LEADING)
+            {
+                tr.sheriffChecked = it.sheriffOptions.checked.toString()
+            }
+
+
+
+            /***ПОДСЧЕТ ГОЛОСОВ*****/
             //горожане не видят как голосует мафия
             if(user.role != MafiaUserRoles.MAFIA && user.role != MafiaUserRoles.LEADING && this.mafiaSessionState == MafiaSessionState.MAFIA_VOTE)
             {
@@ -99,6 +109,8 @@ class VoteInformation(
             else
                 tr.voteCount = it.votedCount.toString()
 
+
+            /****РОЛИ*****/
             //горожане не видят ролей пользователей
             if (user.role == MafiaUserRoles.CITIZEN) {
                 if(it.isAlife)

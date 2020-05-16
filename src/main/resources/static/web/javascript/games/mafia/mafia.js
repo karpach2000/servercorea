@@ -3,6 +3,10 @@
  * (приводит его в состояние соответсвующее текущей таблицы состояния)
  */
 let ws = new WindowStates()
+/**
+ * Рисует таблицу.
+ */
+let vtg =new VoteTableGenerator()
 
 /**********WEB SOCKETS*******/
 
@@ -54,7 +58,7 @@ function mafia_onConnectionMessage(evt) {
     }
     else if(command=="updateVoteTable") {
         mafiaWebsocketConnection.send("ok")
-        let vtg =new VoteTableGenerator()
+
         document.getElementById("mafia_userVoteTable").innerHTML = vtg.generate(data)
     }
     //STATES...
@@ -248,6 +252,7 @@ function mafia_updateWindowByRole()
 {
 
     var role = mafia_request("mafia_getRole")
+    vtg.role = role
     //прописываем роль пользователю
     document.getElementById("mafia_role").textContent = "Роль: " +  role
     //если пользователь не лидер убираем кнопку голосования

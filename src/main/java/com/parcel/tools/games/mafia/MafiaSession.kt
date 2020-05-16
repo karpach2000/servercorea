@@ -234,7 +234,7 @@ class MafiaSession(sessionId: Long, sessionPas: Long) :  GamesSession<MafiaUser,
     }
     /******SPESHIAL*******/
     /**
-     * Проверить является ли игрок мафией.
+     * Проверить яроль игрока.
      * Работает если проверяющий имеет роль шерифа.
      * Метод передает в объект MafiaUser(userName) (если он шериф) информацию  о том пользователе которого он проверил.
      * Метод возвращает роль проверяемого пользователя.
@@ -246,7 +246,8 @@ class MafiaSession(sessionId: Long, sessionPas: Long) :  GamesSession<MafiaUser,
         if(sheriff.role==MafiaUserRoles.SHERIFF)
         {
             val checkUser = getUser(checkedUserName)
-            sheriff.sheriffOptions.checkedUserNames.add(checkedUserName)
+            checkUser.sheriffOptions.checked = true//ставим метку чт оэтот пользователь проверен шерифом
+            sheriff.sheriffOptions.checkedUserNames.add(checkedUserName)//даем шерифу список всех провереных пользователей
             return  checkUser.role.toString()
         }
         else throw MafiaSessionException("Only sheriff can check roles of users")
