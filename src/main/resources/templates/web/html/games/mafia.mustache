@@ -27,6 +27,32 @@
                 <p id="leftTip">
                     постарайтесь получить удовольствие от игры
                 </p>
+                
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#fullRulesModal">
+                    Читать полные правила
+                </button>
+                  
+                <!-- Modal -->
+                <div class="modal fade" id="fullRulesModal" tabindex="-1" role="dialog" aria-labelledby="fullRulesModalTitle" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="fullRulesModalTitle">
+                                    Полные правила игры
+                                </h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <p>
+                                    здесь будут полные правила игры
+                                </p>
+                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -37,7 +63,24 @@
             </h2>
 
             <div id="mafia_user" class="mafia">
-                <p>{{page.pageBody.counterGamesMafia.gameDescription}}</p>
+                
+               <div class="collapse show" id="shortRulesCollapse">
+                    <div class="card card-body">
+                        <p>
+                            Жители города, обессилевшие от разгула мафии, выносят решение 
+                            пересажать в тюрьму всех мафиози до единого. В ответ мафия объявляет 
+                            войну до полного уничтожения всех мирных горожан. 
+                        </p>    
+                        <p>
+                            Кто победит в этой классической ролевой игре - зависит от тебя!
+                        </p>  
+                    </div>
+                </div>
+                <p>
+                    <button class="btn btn-secondary btn-sm" type="button" data-toggle="collapse" data-target="#shortRulesCollapse" aria-expanded="false" aria-controls="shortRulesCollapse">
+                        Скрыть/показать краткие правила
+                    </button>
+                </p>
 
                 <form>
                     <div class="form-group row">

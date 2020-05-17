@@ -25,6 +25,32 @@
                 <p id="leftTip">
                     постарайтесь получить удовольствие от игры
                 </p>
+                
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#fullRulesModal">
+                    Читать полные правила
+                </button>
+                  
+                <!-- Modal -->
+                <div class="modal fade" id="fullRulesModal" tabindex="-1" role="dialog" aria-labelledby="fullRulesModalTitle" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="fullRulesModalTitle">
+                                    Полные правила игры
+                                </h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <p>
+                                    Здесь будут полные правила игры
+                                </p>
+                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -35,7 +61,19 @@
             </h2>
 
             <div id="user" class="cards">
-                <p>Игрок придумывает некий объект, передает его другому игроку, который не знает, что это за объект, но все остальные знают (вроде карточки с надписью на лбу). Задача игрока раньше других догадаться, что написано в его карточке.</p>
+                <div class="collapse show" id="shortRulesCollapse">
+                    <div class="card card-body">
+                        <p>Игрок придумывает некий объект, передает его другому игроку, который не знает,
+                            что это за объект, но все остальные знают (вроде карточки с надписью на лбу). 
+                            Задача игрока раньше других догадаться, что написано в его карточке.
+                        </p>    
+                    </div>
+                </div>
+                <p>
+                    <button class="btn btn-secondary btn-sm" type="button" data-toggle="collapse" data-target="#shortRulesCollapse" aria-expanded="false" aria-controls="shortRulesCollapse">
+                        Скрыть/показать краткие правила
+                    </button>
+                </p>
                 <form>
                     <div class="form-group row">
                         <label for="userName" class="col-sm-4 col-form-label">Имя пользователя</label>

@@ -13,80 +13,143 @@
     {{>web/html/pattern/navbar}}
     <main role="main" class="container pt-3">
         <div class="row">
-            <!--Боковое меню-->
+            
+            <!--Боковое меню - теперь тут будут жить подсказки-->
             <div class="col-12 col-md-3 ">
                 <div id="menuCounting" class="leftMenu">
-                    <ul id="menuCountingItems">
-                        {{# page.pageBody.counterMenu.items}}
-                        <li><a onclick='menuClick("{{link}}")'>{{name}}</a></li>
-                        {{/ page.pageBody.counterMenu.items}}
-                    </ul>
+                    <p class="font-weight-bold">
+                        Подсказка: 
+                    </p>
+                    <p id="leftTip">
+                        постарайтесь не злоупотреблять правами администратора
+                    </p>
+                    
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#fullRulesModal">
+                        Читать полные правила
+                    </button>
+                    
+                    <!-- Modal -->
+                    <div class="modal fade" id="fullRulesModal" tabindex="-1" role="dialog" aria-labelledby="fullRulesModalTitle" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="fullRulesModalTitle">
+                                        Инструкция к администрированию пользователей
+                                    </h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <p>
+                                        На данный момент, отсюда доступно три операции:
+                                    </p>
+                                    <ol>
+                                        <li>Просмотр списка пользователей</li>
+                                        <li>Добавление нового пользователя с указанием прав</li>
+                                        <li>Удаление пользователя</li>
+                                    </ol> 
+                                    <p>
+                                        Наверное, скоро появится что-то еще.
+                                    </p>                               
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div id="bodyDiv" class="col-12 col-md-7">
-                <div id="createUser" class="createUser" class="bodyDiv" hidden>
-                    
-                    <form method="GET" class="bodyDiv" action="/users/addUser">
-                        <div class="form-group row">
-                            <label for="login" class="col-sm-4 col-form-label">
-                                Имя пользователя
-                            </label>
-                            <div class="col-sm-6">
-                                <input type="text" id="login" size="10" name="login" class="form-control"
-                                    onkeyup="this.value = this.value.replace(/[^A-Za-zА-Яа-яЁё0-9]/,'');" 
-                                    required placeholder="Введите отображаемое имя">
-                            </div>
-                        </div>
-                        <div class="form-group row">
-                            <label for="password" class="col-sm-4 col-form-label">
-                                Введите пароль
-                            </label>
-                            <div class="col-sm-6">
-                                <input
-                                    type="text"
-                                    id="password"
-                                    name ="password"
-                                    class="password form-control"
-                                    required
-                                    placeholder="Введите пароль"
-                                />
-                            </div>
-                        </div>
-                        <div class="form-group row">     
-                            <label for="role" class="col-sm-4 col-form-label">Роль пользователя</label>
-                            <div class="col-sm-6">   
-                                <select id="role" name="role" class="form-control" required>
-                                    <option>USER</option>
-                                    <option>ADMIN</option>
-                                </select>
-                            </div> 
-                        </div>    
-                            <button type="submit" id="createUser" name="createUser" class="btn btn-primary">
-                                Создать пользователя
+
+            <div class="col-12 col-md-5">
+                <h3>Действия с пользователями</h3>
+
+                <div class="accordion" id="userActions">
+                    <div class="card">
+                        <div class="card-header" id="headingOne">
+                        <h5 class="mb-0">
+                            <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                            Добавление пользователей
                             </button>
-                    </form>
+                        </h5>
+                        </div>
 
-                </div>
-
-
-
-                <div id="deleteUser" class="bodyDiv" hidden>
-                    <form method="GET" action="/users/deleteUser" class="bodyDiv">
-                        <div class="form-group row">
-                            <label for="login" class="col-sm-4 col-form-label">
-                                Имя пользователя
-                            </label>
-                            <div class="col-sm-6">
-                                <input type="text" id="login" size="10" name="login" class="form-control"
-                                    onkeyup="this.value = this.value.replace(/[^A-Za-zА-Яа-яЁё0-9]/,'');" 
-                                    required placeholder="Введите отображаемое имя">
+                        <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#userActions">
+                            <div id="createUser" class="createUser card-body" class="bodyDiv">
+                        
+                                <form method="GET" class="bodyDiv" action="/users/addUser">
+                                    <div class="form-group row">
+                                        <label for="login" class="col-sm-6 col-form-label">
+                                            Имя пользователя
+                                        </label>
+                                        <div class="col-sm-6">
+                                            <input type="text" id="login" size="10" name="login" class="form-control"
+                                                onkeyup="this.value = this.value.replace(/[^A-Za-zА-Яа-яЁё0-9]/,'');" 
+                                                required placeholder="Введите отображаемое имя">
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label for="password" class="col-sm-6 col-form-label">
+                                            Введите пароль
+                                        </label>
+                                        <div class="col-sm-6">
+                                            <input
+                                                type="text"
+                                                id="password"
+                                                name ="password"
+                                                class="password form-control"
+                                                required
+                                                placeholder="Введите пароль"
+                                            />
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">     
+                                        <label for="role" class="col-sm-6 col-form-label">Роль пользователя</label>
+                                        <div class="col-sm-6">   
+                                            <select id="role" name="role" class="form-control" required>
+                                                <option>USER</option>
+                                                <option>ADMIN</option>
+                                            </select>
+                                        </div> 
+                                    </div>    
+                                        <button type="submit" id="createUser" name="createUser" class="btn btn-primary">
+                                            Создать пользователя
+                                        </button>
+                                </form>
                             </div>
                         </div>
-                        <button type="submit" id="deleteUser" name="deleteUser" class="btn btn-warning">
-                            Удалить пользователя
-                        </button>
-                    </form>
+                    </div>
+                    <div class="card">
+                        <div class="card-header" id="headingTwo">
+                        <h5 class="mb-0">
+                            <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                            Удаление пользователей
+                            </button>
+                        </h5>
+                        </div>
+                        <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#userActions">
+                            <div id="deleteUser" class="bodyDiv card-body">
+                                <form method="GET" action="/users/deleteUser" class="bodyDiv">
+                                    <div class="form-group row">
+                                        <label for="login" class="col-sm-6 col-form-label">
+                                            Имя пользователя
+                                        </label>
+                                        <div class="col-sm-6">
+                                            <input type="text" id="login" size="10" name="login" class="form-control"
+                                                onkeyup="this.value = this.value.replace(/[^A-Za-zА-Яа-яЁё0-9]/,'');" 
+                                                required placeholder="Введите отображаемое имя">
+                                        </div>
+                                    </div>
+                                    <button type="submit" id="deleteUser" name="deleteUser" class="btn btn-warning">
+                                        Удалить пользователя
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
                 </div>
+            </div>
+
+            <div id="bodyDiv" class="col-12 col-md-4">
+                <h3>Список пользователей</h3>  
                 <div id="userList" class="bodyDiv">
                     <table class="table table-bordered table-hover">
                         <thead class="thead-light">

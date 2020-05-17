@@ -13,60 +13,116 @@
     <main role="main" class="container pt-3">
         <div class="row">
 
-            <!--Боковое меню-->
+            <!--Боковое меню - теперь тут будут жить подсказки-->
             <div class="col-12 col-md-3 ">
                 <div id="menuCounting" class="leftMenu">
-                    <ul id="menuCountingItems">
-                        {{# page.pageBody.counterMenu.items}}
-                        <li>
-                            <a onclick="menuClick(&quot;{{ link }}&quot;)">{{ name }} </a>
-                        </li>
-                        {{/ page.pageBody.counterMenu.items}}
-                    </ul>
+                    <p class="font-weight-bold">
+                        Подсказка: 
+                    </p>
+                    <p id="leftTip">
+                        постарайтесь получить удовольствие от игры
+                    </p>
+                    
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#fullRulesModal">
+                        Читать полные правила
+                    </button>
+                    
+                    <!-- Modal -->
+                    <div class="modal fade" id="fullRulesModal" tabindex="-1" role="dialog" aria-labelledby="fullRulesModalTitle" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="fullRulesModalTitle">
+                                        Полные правила игры
+                                    </h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <p>
+                                        Игра состоит из ограниченных временем игровых раундов. В каждом раунде - новая локация, новый шпион. Все игроки, кроме шпионов, видят в поле "location" название локации, в которой находится большинство из них, шпион(ы) видит надпись "SPY (вы шпион)". Также, все без исключения видят полный список игроков в лобби.
+                                    </p>
+                                    <p>
+                                        Задача игроков - за отведенное время найти и ЕДИНОГЛАСНО указать на шпиона, задача шпиона - отгадать локацию, в которой находятся игроки. Для этого все игроки по очереди задают друг другу вопросы, связанные с этой локацией. Первым вопрос задает наиболее подозрительный из игроков.
+                                    </p>
+                                    <p>
+                                        Вопросы должны, с одной стороны, быть достаточно конкретными, чтобы шпион выдал себя тем, что он не знает локацию, с другой - должны быть достаточно обтекаемы, чтобы не дать понять в явной форме, что это за локация. В связи с этим, вопросы должны задаваться либо в формате "да или нет?", либо в формате "А или Б?". Вопросы с открытым ответом не рекомендуются.
+                                    </p>
+                                    <p>
+                                        Раунд заканчивается в одном из трех случаев:
+                                    </p>
+                                    <ol>
+                                        <li>
+                                            Время истекло. Игроки должны проголосовать, кто был шпионом. Если они не угадали - шпион победил (смог уйти и не раскрыть себя). Отгадывать локацию ему при этом не обязательно.
+                                        </li>
+                                        <li>
+                                            Время еще не истекло, но игроки точно решили, кто же шпион. Если игроки не угадали, шпион выиграл.
+                                        </li>
+                                        <li>
+                                            Время еще не истекло, но шпион готов назвать локацию. Если он назвал ее неверно, он проиграл.
+                                        </li>
+                                    </ol>
+                                    <p>
+                                        Примечание. Когда игроки уже начали голосование за "казнь" шпиона, он не может назвать локацию - он уже скомпрометирован.
+                                    </p>
+                                    <p>
+                                        Уточнение для случая, когда шпионов больше одного. Для победы не-шпионов нужно правильно раскрыть всех шпионов до единого. Если хотя бы один уйдет незамеченным - вы проиграли. С другой стороны, даже одному шпиону достаточно правильно назвать локацию, чтобы шпионы победили.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
             <!--SPY-->
-            <div id="bodyDiv" class="col-12 col-md-7">
+            <div class="col-12 col-md-4 bodyDiv">
+                <h3>Шпион - добавить/удалить локацию</h3>
                 <div id="spy">
                     <div id="user" class="spy">
-                        <h2>{{ page.pageBody.errorMessage }}</h2>
-
+                        
                         <form method="GET" action="/games_settings_spy_addLocation">
-                            <label for="locationName">Название локации</label>
-                            <p
-                                title="Только русские и латинские сиволы пробел, дефис и точка. Не более 30 символов. Нельзя удалять чужие локации если ты не администратор.">
-                                <input type="text" name="locationName" id="locationName" size="30"
-                                    onkeyup="this.value = this.value.replace(/[^A-Za-zА-Яа-яЁё0-9 .-]/,'');"
-                                    class="textboxWithLinck" required />
+                            <label for="locationName" class="col-form-label">Название локации</label>
+                            <input type="text" name="locationName" id="locationName" size="30"
+                                onkeyup="this.value = this.value.replace(/[^A-Za-zА-Яа-яЁё0-9 .-]/,'');"
+                                class="textboxWithLinck form-control" placeholder="Введите локацию" 
+                                required />
+                            <p class="text-muted">
+                                Только русские и латинские сиволы пробел, дефис и точка. 
+                                Не более 30 символов.
+                                Нельзя удалять чужие локации если ты не администратор.
                             </p>
-
-                            <br />
-                            <input type="submit" name="button" value="Add" />
-                            <input type="submit" name="button" value="Delete" />
+                            <button type="submit" class="btn btn-primary" name="button" id="addLocstion" value="Add">
+                                Добавить локацию
+                            </button>
+                            <button type="submit" class="btn btn-warning" name="button" id="addLocstion" value="Delete">
+                                Удалить локацию
+                            </button>
                         </form>
+                        <h5 class="text-danger">{{ page.pageBody.errorMessage }}</h5>
                     </div>
-
-                    <div id="game" class="bodyDiv">
-                        <ul id="locations">
-                            <table class="table table-bordered table-hover">
-                                <thead class="thead-light">
-                                    <tr>
-                                        <th>Локация</th>
-                                        <th>Создатель</th>
-                                    </tr>
-                                </thead>
-                                <tbody class="table table-striped">
-                                    {{# page.pageBody.locations}}
-                                    <tr class="table-data">
-                                        <td>{{ locationName }}</td>
-                                        <td>{{ authorLogin }}</td>
-                                    </tr>
-                                    {{/ page.pageBody.locations}}
-                                </tbody>
-                            </table>
-                        </ul>
-                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-md-5 bodyDiv">
+                <h3>Шпион - список локаций</h3>
+                <div id="game" class="bodyDiv">
+                    <table class="table table-bordered table-hover">
+                        <thead class="thead-light">
+                            <tr>
+                                <th>Локация</th>
+                                <th>Создатель</th>
+                            </tr>
+                        </thead>
+                        <tbody class="table table-striped">
+                            {{# page.pageBody.locations}}
+                            <tr class="table-data">
+                                <td>{{ locationName }}</td>
+                                <td>{{ authorLogin }}</td>
+                            </tr>
+                            {{/ page.pageBody.locations}}
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
