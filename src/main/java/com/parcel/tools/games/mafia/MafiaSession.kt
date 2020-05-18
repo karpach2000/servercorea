@@ -3,6 +3,7 @@ package com.parcel.tools.games.mafia
 import com.parcel.tools.games.GamesSession
 import com.parcel.tools.games.GlobalRandomiser
 import com.parcel.tools.games.mafia.voteinformation.VoteInformation
+import net.bytebuddy.implementation.bytecode.Throw
 import java.lang.Exception
 
 
@@ -16,6 +17,12 @@ class MafiaSession(sessionId: Long, sessionPas: Long) :  GamesSession<MafiaUser,
 
 
     private val logger = org.apache.log4j.Logger.getLogger(MafiaSession::class.java!!)
+
+    /**
+     * Пользователя которого выбрал шериф для проверки
+     */
+    private var selectedUserForSherifCheck = ""
+
     private var firstUserAdded = false
 
     private var mafiaSessionState = MafiaSessionState.ADD_USERS
@@ -182,6 +189,9 @@ class MafiaSession(sessionId: Long, sessionPas: Long) :  GamesSession<MafiaUser,
         if(result!="")
             getUser(result).isAlife = false
         openСitizensVoteCountEvent(result)
+
+        checkUserSheriff(userName, this.selectedUserForSherifCheck)
+        this.selectedUserForSherifCheck = ""
         Thread.sleep(100)//AHTUNG KOSTILE
         //обновляем таблицы голосования
         updateVoteTableEvent()
@@ -232,6 +242,23 @@ class MafiaSession(sessionId: Long, sessionPas: Long) :  GamesSession<MafiaUser,
         return maxVoteUser
 
     }
+
+    /**
+     * Выбрать пользователя которого проверяет шериф.
+     */
+    fun selectCheckUserSheriff(userName: String, checkedUserName: String)
+    {
+        logger.info("selectCheckUserSheriff($userName, $checkedUserName)")
+        if(checkedUserName != "" && getUser(userName).role == MafiaUserRoles.SHERIFF)
+        {
+            this.selectedUserForSherifCheck = checkedUserName
+            sheriffCheckSelectEvent(checkedUserName)
+        }
+        else
+            logger.warn("userName not correct or  checkedUserName.lenth ==0")
+    }
+
+
     /******SPESHIAL*******/
     /**
      * Проверить яроль игрока.
@@ -239,18 +266,18 @@ class MafiaSession(sessionId: Long, sessionPas: Long) :  GamesSession<MafiaUser,
      * Метод передает в объект MafiaUser(userName) (если он шериф) информацию  о том пользователе которого он проверил.
      * Метод возвращает роль проверяемого пользователя.
      */
-    fun checkUserSheriff(userName: String, checkedUserName: String): String
+    private fun checkUserSheriff(userName: String, checkedUserName: String)
     {
         logger.info("checkUserSheriff($userName, $checkedUserName")
-        val sheriff = getUser(userName)
-        if(sheriff.role==MafiaUserRoles.SHERIFF)
-        {
+        if(isSheriffExists()) {
+            var sheriff = getSheriff()
             val checkUser = getUser(checkedUserName)
             checkUser.sheriffOptions.checked = true//ставим метку чт оэтот пользователь проверен шерифом
             sheriff.sheriffOptions.checkedUserNames.add(checkedUserName)//даем шерифу список всех провереных пользователей
-            return  checkUser.role.toString()
         }
-        else throw MafiaSessionException("Only sheriff can check roles of users")
+        else
+            logger.warn("Sheriff does not exists.")
+
     }
 
     /**
@@ -274,7 +301,39 @@ class MafiaSession(sessionId: Long, sessionPas: Long) :  GamesSession<MafiaUser,
     }
 
 
+
+
+    /******USER NAVIGATION*****/
+    /**
+     * Есть ли в данной сессии игры Шериф
+     */
+    private fun isSheriffExists():Boolean
+    {
+        for (user in users)
+        {
+            if(user.role == MafiaUserRoles.SHERIFF)
+                return true
+        }
+        return false
+    }
+
+    /**
+     * Получить шерифа.
+     */
+    private fun getSheriff(): MafiaUser
+    {
+        for (user in users)
+        {
+            if(user.role == MafiaUserRoles.SHERIFF)
+                return user
+        }
+        throw MafiaSessionException("There is no sherif in this game.")
+    }
+
+
     /******PRIVATE*******/
+
+
     /**
      * Выбирает из списка игроков, игроков которые будут играть за Мафию.
      */
@@ -300,7 +359,7 @@ class MafiaSession(sessionId: Long, sessionPas: Long) :  GamesSession<MafiaUser,
         return mafiaNames
     }
     /**
-     * Выбирает из списка игроков, игроков которые будут играть за Мафию.
+     * Выбирает из списка игроков, игроков которые будут играть за Шерифа.
      */
     private fun generateSheriff():ArrayList<String>
     {
@@ -360,6 +419,21 @@ class MafiaSession(sessionId: Long, sessionPas: Long) :  GamesSession<MafiaUser,
     {
         gameEvent.forEach { it.leaderChandged(leaderName) }
     }
+    /*******TERGET_EVENTS*******/
+    /**
+     * Для уменьшение ебли с перетиранием данныхпри передачи событий каким либо пользователям
+     * можно послать событие ограниченому количеству пользователей.
+     */
 
+
+    fun sheriffCheckSelectEvent(checkUserName: String)
+    {
+        gameEvent.forEach {
+            if(getUser(it.userName).role==MafiaUserRoles.LEADING)
+            {
+                it.sheriffCheckedUser(checkUserName)
+            }
+        }
+    }
 
 }

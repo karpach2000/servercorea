@@ -238,17 +238,17 @@ class MafiaController {
     /**
      * Шериф проверяет игрока.
      */
-    @RequestMapping("/games/mafia_checkUserSheriff")
+    @RequestMapping("/games/mafia_selectCheckUserSheriff")
     @ResponseBody
     @Throws(IOException::class)
-    internal fun checkUserSheriff(model: Model,
+    internal fun selectCheckUserSheriff(model: Model,
                       @RequestParam("userName") userName: String = "",
                       @RequestParam("sessionId") sessionId: String = "",
                       @RequestParam("sessionPas") sessionPas: String = "",
                       @RequestParam("checkedUserName") checkedUserName: String = ""
     ): String {
         logger.info("checkUserSheriff($userName, $sessionId, $sessionPas, $checkedUserName)")
-        return MafiaSessionManager.checkUserSheriff(sessionId.toLong(),
+        return MafiaSessionManager.selectCheckUserSheriff(sessionId.toLong(),
                 sessionPas.toLong(), userName, checkedUserName).toString()
     }
 
