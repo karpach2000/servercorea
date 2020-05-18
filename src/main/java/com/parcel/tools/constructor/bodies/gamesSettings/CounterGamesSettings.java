@@ -13,7 +13,6 @@ public class CounterGamesSettings extends Counter {
     public List<SpyLocation> locations = new ArrayList<SpyLocation>();
     public CounterGamesSettings()
     {
-        counterMenu.addItem("Шпион.","ropeSlack");
         try {
             locations = SpySessionManager.INSTANCE.getLocationList();
         }
