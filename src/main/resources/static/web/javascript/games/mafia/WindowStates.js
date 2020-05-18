@@ -18,6 +18,11 @@ class WindowStates
         document.getElementById("mafia_voteСitizenButton").hidden = true
         document.getElementById("mafia_voteMafiaButton").hidden = true
     }
+    sheriffPosition() {
+        document.getElementById("mafia_voteСitizenButton").hidden = true
+        document.getElementById("mafia_voteMafiaButton").hidden = true
+        document.getElementById("mafia_checkUserSheriffVariants").hidden = false
+    }
 
     /*****GAME_POSITIONS*****/
 

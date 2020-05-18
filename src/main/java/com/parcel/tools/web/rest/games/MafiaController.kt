@@ -234,4 +234,39 @@ class MafiaController {
         return MafiaSessionManager.vote(sessionId.toLong(), sessionPas.toLong(), userName, voteName).toString()
     }
 
+
+    /**
+     * Шериф проверяет игрока.
+     */
+    @RequestMapping("/games/mafia_selectCheckUserSheriff")
+    @ResponseBody
+    @Throws(IOException::class)
+    internal fun selectCheckUserSheriff(model: Model,
+                      @RequestParam("userName") userName: String = "",
+                      @RequestParam("sessionId") sessionId: String = "",
+                      @RequestParam("sessionPas") sessionPas: String = "",
+                      @RequestParam("checkedUserName") checkedUserName: String = ""
+    ): String {
+        logger.info("checkUserSheriff($userName, $sessionId, $sessionPas, $checkedUserName)")
+        return MafiaSessionManager.selectCheckUserSheriff(sessionId.toLong(),
+                sessionPas.toLong(), userName, checkedUserName).toString()
+    }
+
+
+    /**
+     * Получить список игроков которых может проверить шериф.
+     */
+    @RequestMapping("/games/mafia_getCheckUserSheriffVariants")
+    @ResponseBody
+    @Throws(IOException::class)
+    internal fun getCheckUserSheriffVariants(model: Model,
+                                  @RequestParam("userName") userName: String = "",
+                                  @RequestParam("sessionId") sessionId: String = "",
+                                  @RequestParam("sessionPas") sessionPas: String = ""
+    ): String {
+        logger.info("getCheckUserSheriffVariants($userName, $sessionId, $sessionPas)")
+        return MafiaSessionManager.getCheckUserSheriffVariants(sessionId.toLong(),
+                sessionPas.toLong(), userName).toString()
+    }
+
 }

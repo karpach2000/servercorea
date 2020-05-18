@@ -5,7 +5,7 @@ enum class MafiaUserRoles {
     LEADING,
     MAFIA,
     CITIZEN,
-    POLICEMAN,
+    SHERIFF,
     PROSTITUTE,
     NURSE
 }

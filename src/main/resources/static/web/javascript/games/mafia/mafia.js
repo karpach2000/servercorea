@@ -3,6 +3,10 @@
  * (приводит его в состояние соответсвующее текущей таблицы состояния)
  */
 let ws = new WindowStates()
+/**
+ * Рисует таблицу.
+ */
+let vtg =new VoteTableGenerator()
 
 /**********WEB SOCKETS*******/
 
@@ -54,7 +58,7 @@ function mafia_onConnectionMessage(evt) {
     }
     else if(command=="updateVoteTable") {
         mafiaWebsocketConnection.send("ok")
-        let vtg =new VoteTableGenerator()
+
         document.getElementById("mafia_userVoteTable").innerHTML = vtg.generate(data)
     }
     //STATES...
@@ -73,6 +77,7 @@ function mafia_onConnectionMessage(evt) {
             alert("Игрок:" + data + " мертв!")
         else
             alert("К сожалению все живы.")
+        mafia_getSheriffCheckVariants()
         updateWindowByState("MAFIA_VOTE")
 
     }
@@ -82,7 +87,7 @@ function mafia_onConnectionMessage(evt) {
             alert("Игрок:" + data + " мертв!")
         else
             alert("К сожалению все живы.")
-
+        //mafia_checkUserSheriff()
         updateWindowByState("CITIZEN_VOTE")
     }
     else if(command=="pong")
@@ -91,6 +96,10 @@ function mafia_onConnectionMessage(evt) {
         if(userName.length>0) {
             mafia_login()
         }
+    }
+    else if(command=="sheriffCheckedUser")//КОЛЯ ЗДЕСЬ!!!
+    {
+        alert("Шериф выбрал для проверки  " + data)
     }
 }
 
@@ -170,6 +179,7 @@ function mafia_wanToBeaLeader()
  */
 function mafia_citizenVote() {
     console.log("mafia_citizenVote()")
+    //mafia_getSheriffCheckVariants()
     mafia_request("mafia_getCitizenVoteResult")
 }
 
@@ -178,6 +188,7 @@ function mafia_citizenVote() {
  */
 function mafia_mafiaVote() {
     console.log("mafia_mafiaVote()")
+    //mafia_checkUserSheriff()
     mafia_request("mafia_getMafiaVoteResult")
 }
 
@@ -196,6 +207,24 @@ function mafia_voteVote() {
     xmlHttp.send(null);
 }
 
+/**
+ * Шериф проверяет игрока.
+ */
+function mafia_selectCheckUserSheriff() {
+    console.log("GET TX: mafia_checkUserSheriff")
+    var xmlHttp = new XMLHttpRequest();
+    var userName = document.getElementById("mafia_userName").value
+    var sessionId = document.getElementById("mafia_sessionId").value
+    var sessionPas = document.getElementById("mafia_sessionPas").value
+    var checkUser = document.getElementById("mafia_checkUserSheriffVariants").value
+    if(checkUser.length>0) {
+        xmlHttp.open("GET", "/games/mafia_selectCheckUserSheriff?userName=" + userName + "&sessionId=" + sessionId +
+            "&sessionPas=" + sessionPas + "&checkedUserName=" + checkUser, false); // false for synchronous request
+        xmlHttp.send(null);
+        console.log("GET RX: " + xmlHttp.responseText)
+        return xmlHttp.responseText
+    }
+}
 /******PRIVATE STATES******/
 
 /**
@@ -245,6 +274,7 @@ function mafia_updateWindowByRole()
 {
 
     var role = mafia_request("mafia_getRole")
+    vtg.role = role
     //прописываем роль пользователю
     document.getElementById("mafia_role").textContent = "Роль: " +  role
     //если пользователь не лидер убираем кнопку голосования
@@ -259,6 +289,10 @@ function mafia_updateWindowByRole()
     else if(role=="MAFIA")
     {
         ws.mafiaPosition()
+    }
+    else if(role=="SHERIFF")
+    {
+        ws.sheriffPosition()
     }
 }
 
@@ -328,6 +362,20 @@ function mafia_getСitizenVoteVariants()
     }
 }
 
+/**
+ * Получить варианты за кого можно проголосовать когда голосует город.
+ * (список кандидатов)
+ */
+function mafia_getSheriffCheckVariants()
+{
+    var variants =  mafia_request("mafia_getCheckUserSheriffVariants").split(SEPORATOR)
+    document.getElementById("mafia_checkUserSheriffVariants").innerHTML ="<option></option>"
+    for(var i=0; i< variants.length; i=i+1) {
+        if(variants[i].length>0)
+            document.getElementById("mafia_checkUserSheriffVariants").innerHTML =
+                document.getElementById("mafia_checkUserSheriffVariants").innerHTML + "<option>" + variants[i] + "</option>"
+    }
+}
 
 
 
