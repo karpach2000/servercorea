@@ -29,5 +29,8 @@ function toggleForUser(username) {
 
     document.getElementById("buttonReg").hidden = true;
 
-    document.getElementById("userName").value = username;
+    if (document.getElementById("userName") !== null) {
+        document.getElementById("userName").value = username;
+    }
+
 }
