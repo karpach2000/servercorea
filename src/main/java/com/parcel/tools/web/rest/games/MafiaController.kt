@@ -1,7 +1,7 @@
 package com.parcel.tools.web.rest.games
 
 import com.parcel.tools.constructor.Page
-import com.parcel.tools.constructor.games.CounterGames
+import com.parcel.tools.constructor.bodies.games.CounterGames
 import com.parcel.tools.games.GameSessionException
 import com.parcel.tools.games.GameSessionManagerException
 import com.parcel.tools.games.mafia.MafiaSessionException

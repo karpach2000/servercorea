@@ -5,19 +5,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.parcel.tools.Globals;
+import com.parcel.tools.constructor.bodies.Counter;
 import com.parcel.tools.constructor.database.users.Users;
 
-public class CounterAdmin {
+public class CounterAdmin  extends Counter {
 
-
-    public CounterMenuAdmin counterMenu= new CounterMenuAdmin();
     public String descriptionText="Администрирование пользователей.";
     public List<Users> users = new ArrayList<Users>();
     public CounterAdmin()
     {
-        counterMenu.addItem("Список пользователей", "userList");
-        counterMenu.addItem("Добавить пользователя", "createUser");
-        counterMenu.addItem("Удалить пользователя", "deleteUser");
         getUsers();
     }
 
