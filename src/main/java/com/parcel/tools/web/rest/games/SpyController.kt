@@ -1,13 +1,13 @@
 package com.parcel.tools.web.rest.games
 
 import com.parcel.tools.constructor.Page
-import com.parcel.tools.constructor.games.CounterGames
-import com.parcel.tools.constructor.gamesSettings.CounterGamesSettings
+import com.parcel.tools.constructor.bodies.games.CounterGames
+import com.parcel.tools.constructor.bodies.gamesSettings.CounterGamesSettings
 import com.parcel.tools.games.GameSessionException
 import com.parcel.tools.games.GameSessionManagerException
 import com.parcel.tools.games.spy.SpySessionException
 import com.parcel.tools.games.spy.SpySessionManager
-import com.parcel.tools.games.spy.SpySessionManagerException
+import com.parcel.tools.statistics.StatisticsForGames
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.core.userdetails.User
 import org.springframework.stereotype.Controller
@@ -23,11 +23,12 @@ import javax.servlet.http.HttpSession
 class SpyController {
 
     private val logger = org.apache.log4j.Logger.getLogger(SpyController::class.java!!)
-
+    private val static = StatisticsForGames("Spy")
 
     @RequestMapping("/games/spy")
     @Throws(IOException::class)
     internal fun games(model: Model, session: HttpSession): String {
+        static.openGame()
         val counter = CounterGames()
         val page = Page(counter)
         model.addAttribute("page", page)
@@ -102,6 +103,7 @@ class SpyController {
                            @RequestParam("userName") userName: String = "",
                            @RequestParam("sessionId") sessionId: String = "",
                            @RequestParam("sessionPas") sessionPas: String = ""): String {
+        static.startGame()
         logger.info("startGame($userName, $sessionId, $sessionPas)")
         SpySessionManager.startGame(sessionId.toLong(), sessionPas.toLong())
         val userInformation =

@@ -2,10 +2,8 @@ package com.parcel.tools.web.rest
         //import com.github.mustachejava.DefaultMustacheFactory
 import com.parcel.tools.constructor.Page
 import com.parcel.tools.constructor.bodies.admin.CounterAdmin
-import com.parcel.tools.constructor.bodies.counter.Counter
-import com.parcel.tools.constructor.bodies.mainpage.MainPage
-import com.parcel.tools.constructor.games.CounterGames
-import com.parcel.tools.constructor.gamesSettings.CounterGamesSettings
+import com.parcel.tools.constructor.bodies.games.CounterGames
+import com.parcel.tools.constructor.bodies.gamesSettings.CounterGamesSettings
 
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model

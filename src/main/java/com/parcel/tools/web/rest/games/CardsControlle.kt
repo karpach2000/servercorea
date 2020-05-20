@@ -1,10 +1,11 @@
 package com.parcel.tools.web.rest.games
 
 import com.parcel.tools.constructor.Page
-import com.parcel.tools.constructor.games.CounterGames
+import com.parcel.tools.constructor.bodies.games.CounterGames
 import com.parcel.tools.games.GameSessionException
 import com.parcel.tools.games.GameSessionManagerException
 import com.parcel.tools.games.cards.CardsSessionManager
+import com.parcel.tools.statistics.StatisticsForGames
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.RequestMapping
@@ -18,10 +19,12 @@ import javax.servlet.http.HttpSession
 class CardsController {
 
     private val logger = org.apache.log4j.Logger.getLogger(CardsController::class.java)
+    private val static = StatisticsForGames("Cards")
 
     @RequestMapping("/games/cards")
     @Throws(IOException::class)
     internal fun games(model: Model, session: HttpSession): String {
+        static.openGame()
         val counter = CounterGames()
         val page = Page(counter)
         model.addAttribute("page", page)
@@ -67,6 +70,7 @@ class CardsController {
             @RequestParam("sessionId") sessionId: String = "",
             @RequestParam("sessionPas") sessionPas: String = ""): String {
         logger.info("startGame($userName, $userCard, $sessionId, $sessionPas)")
+        static.startGame()
         CardsSessionManager.startGame(sessionId.toLong(), sessionPas.toLong())
         val userInformation =
                 CardsSessionManager.getUserInformation(sessionId.toLong(), sessionPas.toLong(), userName, userCard)

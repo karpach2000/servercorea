@@ -1,4 +1,4 @@
-package com.parcel.tools.constructor.games.mafia
+package com.parcel.tools.constructor.bodies.games.mafia
 
 class CounterGamesMafia {
 

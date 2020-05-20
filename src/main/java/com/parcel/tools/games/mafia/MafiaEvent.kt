@@ -26,6 +26,11 @@ interface MafiaEvent : GameEvent {
      */
     fun openСitizensVote(deadUser: String)
 
+    /**
+     * Событие о том что шериф выбрал каого пользователя он хочет проверить.
+     */
+    fun sheriffCheckedUser(user: String)
+
     fun leaderChandged(leadername: String)
 
 

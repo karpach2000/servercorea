@@ -1,28 +1,44 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
+
 <head>
-    <title>Парсел</title>
-    <link href="web/css/index.css" rel="stylesheet" tipe="text/css">
-    <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.0/css/bootstrap-combined.min.css" rel="stylesheet">
+        
+    {{>web/html/pattern/headDepend}}
+    <title>Главная страница, которую никто не видит, и которая шаблон</title>
+
 </head>
-<body>
-<header>
-    <div class="header-panel">
 
+<body class="mt-5"  onload="toggleMenu()">
+
+    {{>web/html/pattern/navbar}}
+<!-- Основное "тело" сайта, его упаковываем в контейнер, чтобы применить адаптивность -->
+<main role="main" class="container pt-3">
+    <div class="row">
+
+        <!--Боковое меню - теперь тут будут жить подсказки-->
+        <div class="col-12 col-md-3">
+            <div id="menuCounting" class="leftMenu">
+                <p class="font-weight-bold">
+                    Подсказка: 
+                </p>
+                <p id="leftTip">
+                    постарайтесь получить удовольствие от игры
+                </p>
+            </div>
+        </div>
+
+        <!-- Тушка -->
+        <div id="bodyDiv" class="col-12 col-md-7" >
+            <h2>
+                Локальный заголовок
+            </h2>
+        </div>
     </div>
+</main>
 
-
-    <div id="mainMenu"  class="topMenu">
-        <ul id="mainMenuItems" class="topMenuUl">
-            {{#page.mainMenu.items}}<li class="topMenuLi"><a href="{{link}}" class="topMenuA">{{name}}</a></li> {{/page.mainMenu.items}}
-        </ul>
-        <br>
-    </div>
-
-</header>
-<p>{{ page.pageBody.mainText}}</p>
-<br>
-<p>{{ page.pageBody.contacts}}</p>
+    {{>web/html/pattern/footer}}
+    {{>web/html/pattern/footDepend}}
 
 </body>
+
 </html>

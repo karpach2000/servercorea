@@ -1,4 +1,4 @@
-package com.parcel.tools.constructor.games.spy;
+package com.parcel.tools.constructor.bodies.games.spy;
 
 import com.parcel.tools.games.spy.SpySessionManager;
 import com.parcel.tools.games.spy.database.SpyLocation;

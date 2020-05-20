@@ -1,4 +1,4 @@
-package com.parcel.tools.constructor.games;
+package com.parcel.tools.constructor.bodies.games;
 
 import com.parcel.tools.constructor.Menu;
 

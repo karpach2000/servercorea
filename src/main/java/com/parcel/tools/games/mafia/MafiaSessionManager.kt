@@ -94,6 +94,26 @@ object MafiaSessionManager :
     }
 
 
+
+
+    /******SPESHIAL*******/
+    /**
+     * Выбрать пользователя которого проверяет шериф.
+     */
+    fun selectCheckUserSheriff(sessionId: Long, sessionPas: Long,userName: String, checkedUserName: String)
+    {
+        logger.info("checkUserSheriff($sessionId, $sessionPas $userName, $checkedUserName)")
+        return getSession(sessionId, sessionPas).selectCheckUserSheriff(userName, checkedUserName)
+    }
+
+    /**
+     * Получить список игроков которых может проверить шериф.
+     */
+    fun getCheckUserSheriffVariants(sessionId: Long, sessionPas: Long, userName: String): String {
+        logger.info("getCheckUserSheriffVariants($sessionId, $sessionPas, $userName)")
+        return getSession(sessionId, sessionPas).getCheckUserSheriffVariants(userName)
+    }
+
     /*********УПРАВЛЕНИЕ СЕССИЯМИ**********/
 
     override fun addSession(sessionId: Long, sessionPas: Long)

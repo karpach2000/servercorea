@@ -24,7 +24,7 @@ apply plugin: 'io.spring.dependency-management'
 group = 'ru.parcel'
 
 
-version = '0.0.26-KOLA'
+version = '0.0.30-LOGS'
 
 sourceCompatibility = 1.8
 

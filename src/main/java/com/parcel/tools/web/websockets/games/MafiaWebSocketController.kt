@@ -60,6 +60,10 @@ class MafiaWebSocketController: TextWebSocketHandler()  {
             sendMessage("openСitizensVote$SEPORATOR$deadUser")
         }
 
+        override fun sheriffCheckedUser(user: String) {
+            sendMessage("sheriffCheckedUser$SEPORATOR$user")
+        }
+
 
         override fun addUserEvent(userList: String) {
             sendMessage("addUserEvent$SEPORATOR$userList")
