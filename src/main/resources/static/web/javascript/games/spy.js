@@ -54,30 +54,55 @@ function onConnectionMessage(evt) {
 
 /**********POSITIONS****************/
 function beforGamePosition() {
-    document.getElementById("user").hidden = true
-    document.getElementById("game").hidden = true
-    document.getElementById("beforGame").hidden = false
+    document.getElementById("user").hidden      = true;
+    document.getElementById("game").hidden      = true;
+    document.getElementById("gameInfo").hidden  = true;
+    document.getElementById("beforGame").hidden = false;
 
-    document.getElementById("leftTip").innerHTML = "дождитесь, пока все желающие присоединятся к игре. Вас должно быть не меньше 3 человек";
+    document.getElementById("leftTip").innerHTML =  '<p>Убедитесь, что все желающие знают ID и пароль сессии! '+
+                                                    'дождитесь, пока все присоединятся к игре.</p>'+
+                                                    '<p>После нажатия на кнопку "Начать игру" присоединиться до конца раунда будет невозможно!</p>'+
+                                                    '<p>Для начала игры вас должно быть не меньше 3 человек</p>';
 }
 function stopGamePosition() {
-    document.getElementById("user").hidden = false
-    document.getElementById("game").hidden = true
-    document.getElementById("beforGame").hidden = true
+    document.getElementById("user").hidden      = false;
+    document.getElementById("game").hidden      = true;
+    document.getElementById("gameInfo").hidden  = true;
+    document.getElementById("beforGame").hidden = true;
 
-    document.getElementById("leftTip").innerHTML = "постарайтесь получить удовольствие от игры";
+    document.getElementById("leftTip").innerHTML =  '<p>Для создания новой игры:</p>'+
+                                                    '<ol>' +
+                                                    '    <li>Придумайте свое "Имя пользователя", "ID сессии", "Пароль сессии"</li>' +
+                                                    '    <li>Передайте "Пароль сессии" и "ID сессии" остальным игрокам</li>' +
+                                                    '    <li>Нажмите кнопку "Добавить себя"</li> ' +
+                                                    '</ol> ' +
+                                                    '<p>Для присоединения к существующей игре:</p>' +
+                                                    '<ol> ' +
+                                                    '    <li>Придумайте свое "Имя пользователя"</li> ' +
+                                                    '    <li>Заполните поля "Пароль сессии" и "ID сессии" значениями, получеными от создателя игры</li>' +   
+                                                    '    <li>Нажмите кнопку "Добавить себя"</li>' +   
+                                                    '</ol>';
 }
 
 function gamePosition(location,isSpy) {
-    document.getElementById("user").hidden = true
-    document.getElementById("game").hidden = false
-    document.getElementById("beforGame").hidden = true
+    document.getElementById("user").hidden      = true;
+    document.getElementById("game").hidden      = false;
+    document.getElementById("gameInfo").hidden  = false;
+    document.getElementById("beforGame").hidden = true;
 
     //role
     if (isSpy == true){
-        document.getElementById("leftTip").innerHTML = "поздравляем, вы тот самый шпион! Вам придется очень внимательно отвечать на вопросы, и еще внимательнее их задавать другим - вы ведь не хотите, чтобы Вас раскрыли? Ну и конечно слушать ответы других: давно известно, что болтун - находка для шпиона!";
+        document.getElementById("leftTip").innerHTML =  '<p>поздравляем, вы тот самый шпион!</p>' +
+                                                        '<p>Вам придется очень внимательно отвечать на вопросы, и еще внимательнее '+
+                                                        'их задавать другим - вы ведь не хотите, чтобы Вас раскрыли?'+
+                                                        ' Ну и конечно слушать ответы других: давно известно, что болтун - находка для шпиона!</p>' +
+                                                        '<p>Как только кто-то нажмет кнопку "Закончить игру", все узнают кто был шпионом. ' + 
+                                                        'Назвать локацию нужно раньше, чем за тебя проголосуют!</p>';
     } else {
-        document.getElementById("leftTip").innerHTML = `ваша локация - <strong>${location}</strong>, но кто-то из Вас об этом не знает, но очень хочет узнать. Сохрани ее в тайне, найди злого шпиона, и постарайся не быть слишком подозрительным - а то могут и тебя за шпиона принять.`;
+        document.getElementById("leftTip").innerHTML =  '<p>ваша локация - <strong>'+ location +'</strong>, но кто-то из Вас об этом не знает, но очень хочет узнать. ' +
+                                                        'Сохрани ее в тайне, найди злого шпиона, и постарайся не быть слишком подозрительным - а то могут и тебя за шпиона принять.</p>'+
+                                                        '<p>Как только кто-то нажмет кнопку "Закончить игру", все узнают кто был шпионом. ' + 
+                                                        'Проголосовать за шпиона нужно раньше, чем шпион рассекретит локацию!</p>';
     }
 }
 
