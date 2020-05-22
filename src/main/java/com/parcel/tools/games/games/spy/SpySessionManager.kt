@@ -1,10 +1,10 @@
-package com.parcel.tools.games.spy
+package com.parcel.tools.games.games.spy
 
 import com.parcel.tools.Globals
 import com.parcel.tools.games.GameSessionManagerException
 import com.parcel.tools.games.GamesSessionManager
-import com.parcel.tools.games.spy.database.SpyLocation
-import com.parcel.tools.games.spy.database.SpyLocationManagerException
+import com.parcel.tools.games.games.spy.database.SpyLocation
+import com.parcel.tools.games.games.spy.database.SpyLocationManagerException
 
 class SpySessionManagerException(message: String): GameSessionManagerException(message)
 

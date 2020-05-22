@@ -1,7 +1,7 @@
-package com.parcel.tools.games.spy
+package com.parcel.tools.games.games.spy
 
 import com.parcel.tools.Globals
-import com.parcel.tools.games.GamesSession
+import com.parcel.tools.games.gamesession.GamesSession
 import com.parcel.tools.games.GlobalRandomiser
 import java.lang.Exception
 
@@ -56,7 +56,7 @@ class SpySession(sessionId: Long, sessionPas: Long) : GamesSession<SpyUser, SpyE
     //users
 
     override fun addUser(name: String) =
-            addUser(com.parcel.tools.games.spy.SpyUser(name))
+            addUser(com.parcel.tools.games.games.spy.SpyUser(name))
 
     /**
      * Получить информацию отображаемую пользователю во время игры.

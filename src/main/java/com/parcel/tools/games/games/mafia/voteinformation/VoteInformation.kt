@@ -1,10 +1,10 @@
-package com.parcel.tools.games.mafia.voteinformation
+package com.parcel.tools.games.games.mafia.voteinformation
 
 import com.google.gson.GsonBuilder
 import com.google.gson.annotations.Expose
-import com.parcel.tools.games.mafia.MafiaSessionState
-import com.parcel.tools.games.mafia.MafiaUser
-import com.parcel.tools.games.mafia.MafiaUserRoles
+import com.parcel.tools.games.games.mafia.MafiaSessionState
+import com.parcel.tools.games.games.mafia.MafiaUser
+import com.parcel.tools.games.games.mafia.MafiaUserRoles
 import java.lang.Exception
 
 class MafiaVoteInformationException(message: String): Exception(message)

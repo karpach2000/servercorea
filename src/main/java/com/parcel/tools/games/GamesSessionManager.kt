@@ -1,6 +1,8 @@
 package com.parcel.tools.games
 
-import com.parcel.tools.games.spy.*
+import com.parcel.tools.games.games.spy.*
+import com.parcel.tools.games.gamesession.GamesSession
+import com.parcel.tools.games.gamesuser.GameUser
 
 open class  GameSessionManagerException(message: String):Exception(message)
 

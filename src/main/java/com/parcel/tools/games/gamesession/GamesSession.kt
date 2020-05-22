@@ -1,18 +1,23 @@
-package com.parcel.tools.games
+package com.parcel.tools.games.gamesession
 
-import com.parcel.tools.games.spy.SpySessionException
-import com.parcel.tools.games.spy.SpySessionManagerException
-import com.parcel.tools.games.spy.SpyUser
+import com.parcel.tools.games.GameEvent
+import com.parcel.tools.games.GameSessionManagerException
+import com.parcel.tools.games.gamesuser.GameUser
 
 class GameSessionException(message: String): Exception(message )
 
-abstract class  GamesSession<U : GameUser, E:GameEvent>(val sessionId: Long, val sessionPas: Long) {
+abstract class  GamesSession<U : GameUser, E: GameEvent>(val sessionId: Long, val sessionPas: Long) {
 
     private val logger = org.apache.log4j.Logger.getLogger(GamesSession::class.java!!)
 
     protected val gameEvent = ArrayList<E>()
 
     protected var users = ArrayList<U>()
+
+    /**
+     * Используется как свойство в классе GameSession при голосовани.
+     */
+    val gameSessionVote = GameSessionVote(users)
 
     var startTime = 0L
         private set
@@ -23,6 +28,7 @@ abstract class  GamesSession<U : GameUser, E:GameEvent>(val sessionId: Long, val
 
     init {
         startTime = System.currentTimeMillis()
+
     }
 
 

@@ -2,10 +2,10 @@ package com.parcel.tools.web.rest.games
 
 import com.parcel.tools.constructor.Page
 import com.parcel.tools.constructor.bodies.games.CounterGames
-import com.parcel.tools.games.GameSessionException
+import com.parcel.tools.games.gamesession.GameSessionException
 import com.parcel.tools.games.GameSessionManagerException
-import com.parcel.tools.games.mafia.MafiaSessionException
-import com.parcel.tools.games.mafia.MafiaSessionManager
+import com.parcel.tools.games.games.mafia.MafiaSessionException
+import com.parcel.tools.games.games.mafia.MafiaSessionManager
 import com.parcel.tools.statistics.StatisticsForGames
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model

@@ -1,7 +1,7 @@
 package com.parcel.tools.web.websockets.games
 
-import com.parcel.tools.games.cards.CardsEvent
-import com.parcel.tools.games.cards.CardsSessionManager
+import com.parcel.tools.games.games.cards.CardsEvent
+import com.parcel.tools.games.games.cards.CardsSessionManager
 import org.springframework.stereotype.Component
 import org.springframework.web.socket.CloseStatus
 import org.springframework.web.socket.TextMessage

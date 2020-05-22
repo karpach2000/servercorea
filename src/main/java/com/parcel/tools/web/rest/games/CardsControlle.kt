@@ -2,9 +2,9 @@ package com.parcel.tools.web.rest.games
 
 import com.parcel.tools.constructor.Page
 import com.parcel.tools.constructor.bodies.games.CounterGames
-import com.parcel.tools.games.GameSessionException
+import com.parcel.tools.games.gamesession.GameSessionException
 import com.parcel.tools.games.GameSessionManagerException
-import com.parcel.tools.games.cards.CardsSessionManager
+import com.parcel.tools.games.games.cards.CardsSessionManager
 import com.parcel.tools.statistics.StatisticsForGames
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model

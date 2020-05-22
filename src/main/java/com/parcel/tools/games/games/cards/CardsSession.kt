@@ -1,7 +1,6 @@
-package com.parcel.tools.games.cards
+package com.parcel.tools.games.games.cards
 
-import com.parcel.tools.games.GameSessionException
-import com.parcel.tools.games.GamesSession
+import com.parcel.tools.games.gamesession.GamesSession
 
 
 class CardsSessionException(message: String) : Exception(message)

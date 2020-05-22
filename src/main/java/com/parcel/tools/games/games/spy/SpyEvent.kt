@@ -1,4 +1,4 @@
-package com.parcel.tools.games.spy
+package com.parcel.tools.games.games.spy
 
 import com.parcel.tools.games.GameEvent
 

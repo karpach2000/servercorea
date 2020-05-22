@@ -1,9 +1,8 @@
-package com.parcel.tools.games.mafia
+package com.parcel.tools.games.games.mafia
 
-import com.parcel.tools.games.GamesSession
+import com.parcel.tools.games.gamesession.GamesSession
 import com.parcel.tools.games.GlobalRandomiser
-import com.parcel.tools.games.mafia.voteinformation.VoteInformation
-import net.bytebuddy.implementation.bytecode.Throw
+import com.parcel.tools.games.games.mafia.voteinformation.VoteInformation
 import java.lang.Exception
 
 

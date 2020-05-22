@@ -1,6 +1,6 @@
-package com.parcel.tools.games.mafia
+package com.parcel.tools.games.games.mafia
 
-import com.parcel.tools.games.GameUser
+import com.parcel.tools.games.gamesuser.GameUser
 
 class MafiaUser(name:String) : GameUser(name) {
 

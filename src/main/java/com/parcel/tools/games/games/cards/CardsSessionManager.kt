@@ -1,4 +1,4 @@
-package com.parcel.tools.games.cards
+package com.parcel.tools.games.games.cards
 
 import com.parcel.tools.games.GameSessionManagerException
 import com.parcel.tools.games.GamesSessionManager

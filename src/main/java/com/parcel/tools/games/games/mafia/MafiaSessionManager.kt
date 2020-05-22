@@ -1,4 +1,4 @@
-package com.parcel.tools.games.mafia
+package com.parcel.tools.games.games.mafia
 
 import com.parcel.tools.games.GameSessionManagerException
 import com.parcel.tools.games.GamesSessionManager

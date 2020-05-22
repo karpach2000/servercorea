@@ -1,4 +1,4 @@
-package com.parcel.tools.games.spy.database
+package com.parcel.tools.games.games.spy.database
 
 import com.parcel.tools.Globals
 import org.springframework.beans.factory.annotation.Autowired
