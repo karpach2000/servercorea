@@ -146,9 +146,9 @@ function startGame() {
     xmlHttp.open("GET", "/games/cards_count_users?userName="+userName+"&sessionId="+sessionId+
         "&sessionPas="+sessionPas, false); // false for synchronous request
     xmlHttp.send(null);
-    if(xmlHttp.responseText<3)
+    if(xmlHttp.responseText<2)
     {
-        alert("Минимальное количество игроков 3!")
+        alert("Минимальное количество игроков 2!")
         return
     }
 
