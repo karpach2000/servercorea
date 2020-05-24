@@ -2,7 +2,7 @@
 <html lang="ru">
 
 <head>
-        
+
     {{>web/html/pattern/headDepend}}
     <title>Мафия</title>
     <script src="/web/javascript/games/mafia/WindowStates.js"></script>
@@ -10,85 +10,104 @@
     <script src="/web/javascript/games/mafia/mafia.js"></script>
 </head>
 
-<body class="mt-5"  onload="toggleMenu()">
+<body class="mt-5" onload="toggleMenu()">
 
     {{>web/html/pattern/navbar}}
-<!-- Основное "тело" сайта, его упаковываем в контейнер, чтобы применить адаптивность -->
-<main role="main" class="container pt-3">
-    <div class="row">
+    <!-- Основное "тело" сайта, его упаковываем в контейнер, чтобы применить адаптивность -->
+    <main role="main" class="container pt-3">
+        <div class="row">
 
+            <!--Боковое меню - теперь тут будут жить подсказки-->
+            <div class="col-12 col-md-4 ">
+                <div id="menuCounting" class="leftMenu">
+                    <p class="font-weight-bold">
+                        Подсказка:
+                    </p>
+                    <span id="leftTip">
+                    <p>
+                        Для создания новой игры:
+                    </p>
+                        <ol>
+                            <li>
+                                Придумайте свое "Имя пользователя", "ID сессии", "Пароль сессии". 
+                            </li>
+                            <li>
+                                Передайте "Пароль сессии" и "ID сессии" остальным игрокам.
+                            </li>
+                            <li>
+                                Нажмите кнопку "Добавить себя".
+                            </li>
+                        </ol>
+                    <p>
+                        Для присоединения к существующей игре:
+                    </p>
+                    <ol>
+                        <li>
+                            Придумайте свое "Имя пользователя".
+                        </li>
+                        <li>
+                            Заполните поля "Пароль сессии" и "ID сессии" значениями получеными от создателя игры.
+                        </li>   
+                        <li>
+                            Нажмите кнопку "Добавить себя".
+                        </li>   
+                    </ol>
+                </span>
 
-        <!--Боковое меню - теперь тут будут жить подсказки-->
-        <div class="col-12 col-md-3 ">
-            <div id="menuCounting" class="leftMenu">
-                <p class="font-weight-bold">
-                    Подсказка: 
-                </p>
-                <p id="leftTip">
-                    постарайтесь получить удовольствие от игры
-                </p>
-                
-                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#fullRulesModal">
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#fullRulesModal">
                     Читать полные правила
                 </button>
-                  
-                <!-- Modal -->
-                <div class="modal fade" id="fullRulesModal" tabindex="-1" role="dialog" aria-labelledby="fullRulesModalTitle" aria-hidden="true">
-                    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="fullRulesModalTitle">
-                                    Полные правила игры
-                                </h5>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+
+                    <!-- Modal -->
+                    <div class="modal fade" id="fullRulesModal" tabindex="-1" role="dialog" aria-labelledby="fullRulesModalTitle" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="fullRulesModalTitle">
+                                        Полные правила игры
+                                    </h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                 </button>
-                            </div>
-                            <div class="modal-body">
-                                <p>
-                                    здесь будут полные правила игры
-                                </p>
-                                
+                                </div>
+                                <div class="modal-body">
+                                    {{>web/html/pattern/mafiaRules}}
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <!--Mafia-->
-        <div id="bodyDiv" class="col-12 col-md-7">
-            <h2>
-                Мафия
-            </h2>
+            <!--Mafia-->
+            <div id="user" class="col-12 col-md-8 bodyDiv">
+                <h2>
+                    Мафия
+                </h2>
 
-            <div id="mafia_user" class="mafia">
-                
-               <div class="collapse show" id="shortRulesCollapse">
+
+                <div class="collapse show" id="shortRulesCollapse">
                     <div class="card card-body">
                         <p>
-                            Жители города, обессилевшие от разгула мафии, выносят решение 
-                            пересажать в тюрьму всех мафиози до единого. В ответ мафия объявляет 
-                            войну до полного уничтожения всех мирных горожан. 
-                        </p>    
+                            Жители города, обессилевшие от разгула мафии, выносят решение пересажать в тюрьму всех мафиози до единого. В ответ мафия объявляет войну до полного уничтожения всех мирных горожан.
+                        </p>
                         <p>
                             Кто победит в этой классической ролевой игре - зависит от тебя!
-                        </p>  
+                        </p>
                     </div>
                 </div>
+
                 <p>
                     <button class="btn btn-secondary btn-sm" type="button" data-toggle="collapse" data-target="#shortRulesCollapse" aria-expanded="false" aria-controls="shortRulesCollapse">
-                        Скрыть/показать краткие правила
-                    </button>
+                    Скрыть/показать краткие правила
+                </button>
                 </p>
 
                 <form>
                     <div class="form-group row">
                         <label for="userName" class="col-sm-4 col-form-label">Имя пользователя</label>
                         <div class="col-sm-6">
-                            <input type="text" id="userName" size="10" class="textboxWithLinck form-control"
-                                   onkeyup="this.value = this.value.replace(/[^A-Za-zА-Яа-яЁё0-9]/,'');"
-                                   required placeholder="Введите отображаемое имя"/>
+                            <input type="text" id="userName" size="10" class="textboxWithLinck form-control" onkeyup="this.value = this.value.replace(/[^A-Za-zА-Яа-яЁё0-9]/,'');" required placeholder="Введите отображаемое имя" />
                         </div>
                     </div>
                     <div class="form-group row">
@@ -104,82 +123,73 @@
                         </div>
                     </div>
                     <button type="button" class="btn btn-primary" onclick="mafia_login()" name="mafia_addUser" id="mafia_addUser">
-                        Добавить себя
-                    </button>
-                    <div>
-                        <br>
-                        Для создания новой игры:<br>
-                        1)Придумайте свое "Имя пользователя", "ID сессии", "Пароль сессии". <br>
-                        2)Передайте "Пароль сессии" и "ID сессии" остальным игрокам.
-                        3)Нажмите кнопку "Добавить себя".<br>
-                        Для присоединения к существующей игре:<br>
-                        1)Придумайте свое "Имя пользователя".<br>
-                        2)Заполните поля "Пароль сессии" и "ID сессии" значениями получеными от создателя игры.<br>
-                        3)Нажмите кнопку "Добавить себя".<br>
+                    Добавить себя
+                </button>
 
-                    </div>
                 </form>
             </div>
 
-            <div id="mafia_beforGame" class="mafia_beforGame" hidden>
-                {{page.pageBody.counterGamesMafia.tooltipWhenAddingUsers}}
-                <label for="mafia_startGame">
-                    <h5>
-                        !!!Дождитесь пока зайдут все пользователи!!!
-                    </h5>
-                </label>
-                <br />
-                <button type="button" class="btn btn-primary" onclick="mafia_startGame()" id="mafia_startGame" name="mafia_startGame">Начать игру</button>
+            <div id="beforGame" class="col-12 col-md-8 bodyDiv" hidden>
 
-                <!-- <label for="mafia_wanToBeaLeader">
-                    <h5>Хочу быть ведущим</h5>
-                </label> -->
-                <button type="button" class="btn btn-warning" onclick="mafia_wanToBeaLeader()" id="mafia_wanToBeaLeader"
-                        name="mafia_wanToBeaLeader">Хочу быть ведущим</button>
-                <br />
+                <p>
+                    <button type="button" class="btn btn-primary" onclick="mafia_startGame()" id="mafia_startGame" name="mafia_startGame">
+                        Начать игру
+                    </button>
+
+                    <button type="button" class="btn btn-warning" onclick="mafia_wanToBeaLeader()" id="mafia_wanToBeaLeader" name="mafia_wanToBeaLeader">
+                        Хочу быть ведущим
+                    </button>
+                </p>
+
                 <h5 id="mafia_leader"></h5>
-                <br /><br />
+
                 <textarea id="mafia_users" rows="17"> </textarea>
             </div>
 
-            <div id="mafia_game" class="mafia_game" hidden>
-                <p>{{page.pageBody.counterGamesMafia.tooltipDuringTheGame}}</p>
+            <div id="game" class="col-12 col-md-4 bodyDiv" hidden>
+
                 <h5 id="mafia_role"></h5>
-                <!-- старая голосовалка -->
+
+                <span id="inGameTip">
+                    <p>Этот текст не должен появиться</p>
+                </span>
 
                 <!-- новая голосовалка - шаблон -->
-                <form>
+                <form id='mafia_voter'>
                     <div class="form-group row">
-                        <label for="mafia_voteVariants"class="col-form-label">Выберете против кого голосовать: </label>
+                        <label for="mafia_voteVariants" class="col-sm-6 col-form-label">
+                            Выберете против кого голосовать: 
+                        </label>
                         <select class="form-control-sm col-6" id="mafia_voteVariants" onchange="mafia_voteVote()">
-
                         </select>
                     </div>
                 </form>
-                <br />
-
-                <div id="mafia_userVoteTable"></div>
 
                 <div id="mafia_citizenVote">
                     <h3>Голосование горожан.</h3>
-                    <button type="button" class="btn btn-warning" id="mafia_voteСitizenButton" onclick="mafia_citizenVote()">Засчитать голоса горожан</button>
+                    <button type="button" class="btn btn-warning" id="mafia_voteСitizenButton" onclick="mafia_citizenVote()">
+                        Засчитать голоса горожан
+                    </button>
                 </div>
+
                 <div id="mafia_mafiaVote" hidden>
                     <h3>Голосование мафии.</h3>
                     <select class="form-control-sm col-6" onchange="mafia_selectCheckUserSheriff()" id="mafia_checkUserSheriffVariants" hidden>
-
                     </select>
                     <button type="button" class="btn btn-warning" id="mafia_voteMafiaButton" onclick="mafia_mafiaVote()">Засчитать голоса мафии</button>
                 </div>
-                <br />
+
                 <button type="button" class="btn btn-danger" onclick="mafia_stopGame()" name="stopGame">Закончить игру</button>
             </div>
-        </div>
-    </div>
-</main>
 
-    {{>web/html/pattern/footer}}
-    {{>web/html/pattern/footDepend}}
+            <div id="gameInfo" class="col-12 col-md-4 bodyDiv" hidden>
+                <div id="mafia_userVoteTable"></div>
+            </div>
+
+        </div>
+    </main>
+
+    {{>web/html/pattern/footer}} {{>web/html/pattern/footDepend}}
 
 </body>
 

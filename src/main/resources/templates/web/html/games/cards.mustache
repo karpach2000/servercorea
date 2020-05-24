@@ -7,80 +7,100 @@
     <script src="/web/javascript/games/cards.js"></script>
 </head>
 
-<body class="mt-5"  onload="toggleMenu()">
+<body class="mt-5" onload="toggleMenu()">
 
     {{>web/html/pattern/navbar}}
 
-<!-- Основное "тело" сайта, его упаковываем в контейнер, чтобы применить адаптивность -->
-<main role="main" class="container pt-3">
-    <div class="row">
+    <!-- Основное "тело" сайта, его упаковываем в контейнер, чтобы применить адаптивность -->
+    <main role="main" class="container pt-3">
+        <div class="row">
 
 
-        <!--Боковое меню - теперь тут будут жить подсказки-->
-        <div class="col-12 col-md-3 ">
-            <div id="menuCounting" class="leftMenu">
-                <p class="font-weight-bold">
-                    Подсказка: 
-                </p>
-                <p id="leftTip">
-                    постарайтесь получить удовольствие от игры
-                </p>
-                
-                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#fullRulesModal">
+            <!--Боковое меню - теперь тут будут жить подсказки-->
+            <div class="col-12 col-md-4 ">
+                <div id="menuCounting" class="leftMenu">
+                    <p class="font-weight-bold">
+                        Подсказка:
+                    </p>
+                    <span id="leftTip">
+                        <p>
+                            Для создания новой игры:
+                        </p>
+                            <ol>
+                                <li>
+                                    Придумайте свое "Имя пользователя", "ID сессии", "Пароль сессии". 
+                                </li>
+                                <li>
+                                    Передайте "Пароль сессии" и "ID сессии" остальным игрокам.
+                                </li>
+                                <li>
+                                    Нажмите кнопку "Добавить себя".
+                                </li>
+                            </ol>
+                        <p>
+                            Для присоединения к существующей игре:
+                        </p>
+                        <ol>
+                            <li>
+                                Придумайте свое "Имя пользователя".
+                            </li>
+                            <li>
+                                Заполните поля "Пароль сессии" и "ID сессии" значениями получеными от создателя игры.
+                            </li>   
+                            <li>
+                                Нажмите кнопку "Добавить себя".
+                            </li>   
+                        </ol>
+                    </span>
+
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#fullRulesModal">
                     Читать полные правила
                 </button>
-                  
-                <!-- Modal -->
-                <div class="modal fade" id="fullRulesModal" tabindex="-1" role="dialog" aria-labelledby="fullRulesModalTitle" aria-hidden="true">
-                    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="fullRulesModalTitle">
-                                    Полные правила игры
-                                </h5>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+
+                    <!-- Modal -->
+                    <div class="modal fade" id="fullRulesModal" tabindex="-1" role="dialog" aria-labelledby="fullRulesModalTitle" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="fullRulesModalTitle">
+                                        Полные правила игры
+                                    </h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                 </button>
-                            </div>
-                            <div class="modal-body">
-                                <p>
-                                    Здесь будут полные правила игры
-                                </p>
-                                
+                                </div>
+                                <div class="modal-body">
+                                    {{>web/html/pattern/cardsRules}}
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <!-- Cards -->
-        <div id="bodyDiv" class="col-12 col-md-7" >
-            <h2>
-                Карточки
-            </h2>
+            <!-- Cards -->
+            <div id="user" class="col-12 col-md-8 bodyDiv">
+                <h2>
+                    Карточки
+                </h2>
 
-            <div id="user" class="cards">
                 <div class="collapse show" id="shortRulesCollapse">
                     <div class="card card-body">
-                        <p>Игрок придумывает некий объект, передает его другому игроку, который не знает,
-                            что это за объект, но все остальные знают (вроде карточки с надписью на лбу). 
-                            Задача игрока раньше других догадаться, что написано в его карточке.
-                        </p>    
+                        <p>Игрок придумывает некий объект, передает его другому игроку, который не знает, что это за объект, но все остальные знают (вроде карточки с надписью на лбу). Задача игрока раньше других догадаться, что написано в его карточке.
+                        </p>
                     </div>
                 </div>
+
                 <p>
                     <button class="btn btn-secondary btn-sm" type="button" data-toggle="collapse" data-target="#shortRulesCollapse" aria-expanded="false" aria-controls="shortRulesCollapse">
-                        Скрыть/показать краткие правила
-                    </button>
+                    Скрыть/показать краткие правила
+                </button>
                 </p>
                 <form>
                     <div class="form-group row">
                         <label for="userName" class="col-sm-4 col-form-label">Имя пользователя</label>
                         <div class="col-sm-6">
-                            <input type="text" id="userName" size="10" class="textboxWithLinck form-control"
-                                   onkeyup="this.value = this.value.replace(/[^A-Za-zА-Яа-яЁё0-9 ]/,'');"
-                                   required placeholder="Введите отображаемое имя"/>
+                            <input type="text" id="userName" size="10" class="textboxWithLinck form-control" onkeyup="this.value = this.value.replace(/[^A-Za-zА-Яа-яЁё0-9 ]/,'');" required placeholder="Введите отображаемое имя" />
                         </div>
                     </div>
                     <div class="form-group row">
@@ -98,47 +118,30 @@
                     <div class="form-group row">
                         <label for="userCard" class="col-sm-4 col-form-label">Карточка соседа</label>
                         <div class="col-sm-6">
-                            <input type="text" id="userCard" size="10" class="textboxWithLinck form-control"
-                                   onkeyup="this.value = this.value.replace(/[^A-Za-zА-Яа-яЁё0-9 ]/,'');"
-                                   required placeholder="Введите карточку"/>
+                            <input type="text" id="userCard" size="10" class="textboxWithLinck form-control" onkeyup="this.value = this.value.replace(/[^A-Za-zА-Яа-яЁё0-9 ]/,'');" required placeholder="Введите карточку" />
                         </div>
                     </div>
                     <button type="button" class="btn btn-primary" onclick="login()" name="addUser" id="addUser">
-                        Добавить себя
+                    Добавить себя
                     </button>
-                    <div>
-                        <br>
-                        Для создания новой игры:<br>
-                        1)Придумайте свое "Имя пользователя", "ID сессии", "Пароль сессии". <br>
-                        2)Передайте "Пароль сессии" и "ID сессии" остальным игрокам.
-                        3)Нажмите кнопку "Добавить себя".<br>
-                        Для присоединения к существующей игре:<br>
-                        1)Придумайте свое "Имя пользователя".<br>
-                        2)Заполните поля "Пароль сессии" и "ID сессии" значениями получеными от создателя игры.<br>
-                        3)Нажмите кнопку "Добавить себя".<br>
 
-                    </div>
                 </form>
             </div>
 
-            <div id="beforGame" class="beforGame" hidden>
-
-                <label for="startGame">
-                    <h5>
-                        !!!Дождитесь пока зайдут все пользователи!!!
-                    </h5>
-                </label>
+            <div id="beforGame" class="col-12 col-md-8 bodyDiv" hidden>
+                <h5>
+                    !!!Дождитесь пока зайдут все пользователи!!!
+                </h5>
+                
                 <p>
-                    <button type="button" class="btn btn-primary" onclick="startGame()" id="startGame"
-                            name="startGame">
+                    <button type="button" class="btn btn-primary" onclick="startGame()" id="startGame" name="startGame">
                         Начать игру
                     </button>
-                    <!-- <input type="button" onclick="startGame()" id="startGame" name="startGame" value="Начать игру"> -->
                 </p>
                 <textarea id="users" rows="17"></textarea>
             </div>
 
-            <div id="game" class="game" hidden>
+            <div id="game" class="col-12 col-md-8 bodyDiv" hidden>
                 <div class="card-group">
                     <div class="card">
                         <div class="card-body">
@@ -150,8 +153,8 @@
                             </p>
                             <br><br>
                             <button type="button" class="btn btn-danger" onclick="stopGame()" name="stopGame">
-                                Закончить игру
-                            </button>
+                            Закончить игру
+                        </button>
                         </div>
                     </div>
 
@@ -159,11 +162,10 @@
                 </div>
             </div>
         </div>
-    </div>
-</main>
+    </main>
 
-{{>web/html/pattern/footer}}
-{{>web/html/pattern/footDepend}}
+    {{>web/html/pattern/footer}} 
+    {{>web/html/pattern/footDepend}}
 
 </body>
 
