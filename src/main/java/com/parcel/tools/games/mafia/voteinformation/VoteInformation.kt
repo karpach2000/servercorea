@@ -119,7 +119,7 @@ class VoteInformation(
             /****РОЛИ*****/
             //горожане не видят ролей пользователей
             if (user.role == MafiaUserRoles.CITIZEN) {
-                if(it.isAlife && it.role!=MafiaUserRoles.LEADING)
+                if(it.isAlife && it.role!=MafiaUserRoles.LEADING && it.name!=user.name)
                     tr.role = "SECRET"
                 else
                     tr.role = it.role.toString()
@@ -129,7 +129,7 @@ class VoteInformation(
             else if(user.role == MafiaUserRoles.SHERIFF || it.role== MafiaUserRoles.LEADING)
             {
                 //но если он проверил пользователя то видит
-                if(user.sheriffOptions.checkedUserNames.contains(it.name)||it.role==MafiaUserRoles.LEADING)
+                if(user.sheriffOptions.checkedUserNames.contains(it.name)||it.role==MafiaUserRoles.LEADING || it.name==user.name)
                     tr.role = it.role.toString()
                 else
                     tr.role = "SECRET"
