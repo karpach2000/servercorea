@@ -22,14 +22,15 @@ class VoteTableGenerator {
             for (var i = 0; i < rows.rows.length; i++) {
                 let status = "Мертв";
                 if (rows.rows[i].isAlife == 'true') status = "Живой";
-
+                let strongify = '';
+                if (rows.rows[i].isItMe == 'true') strongify = '<strong>';
                 var line =
                     '                    <tr   class="table-data">\n' +
-                    '                        <td class="tableLogin" >' + rows.rows[i].name + '</td>\n' +
-                    '                        <td class="tableRole"  >' + rows.rows[i].role + '</td>\n' +
-                    '                        <td class="tableStatus">' + status + '</td>\n' +
-                    '                        <td class="tableVotes" >' + rows.rows[i].voteCount + '</td>\n' +
-                    '                        <td class="tableCheck" >' + rows.rows[i].sheriffChecked + '</td>\n' +
+                    '                        <td class="tableLogin" >' + strongify + rows.rows[i].name + '</td>\n' +
+                    '                        <td class="tableRole"  >' + strongify + rows.rows[i].role + '</td>\n' +
+                    '                        <td class="tableStatus">' + strongify + status + '</td>\n' +
+                    '                        <td class="tableVotes" >' + strongify + rows.rows[i].voteCount + '</td>\n' +
+                    '                        <td class="tableCheck" >' + strongify + rows.rows[i].sheriffChecked + '</td>\n' +
                     '                    </tr>\n'
                 html = html + line
             }
