@@ -19,6 +19,7 @@ class TableRow
     var isAlife = ""
     var voteCount = ""
     var sheriffChecked = "SECRET"
+    var isItMe = "false"
 }
 /**
  * Таблица пользователей и ролей, отображаемая игрокам.
@@ -92,6 +93,11 @@ class VoteInformation(
             tr.name = it.name
             tr.isAlife = it.isAlife.toString()
 
+            //маркер что строка относится к пользователю
+            if(user.name==it.name)
+                tr.isItMe = true.toString()
+
+
             /*****ИНФА ДЛЯ ВЕДУЩЕГО*****/
             if(user.role==MafiaUserRoles.LEADING)
             {
@@ -113,17 +119,17 @@ class VoteInformation(
             /****РОЛИ*****/
             //горожане не видят ролей пользователей
             if (user.role == MafiaUserRoles.CITIZEN) {
-                if(it.isAlife)
+                if(it.isAlife && it.role!=MafiaUserRoles.LEADING)
                     tr.role = "SECRET"
                 else
                     tr.role = it.role.toString()
 
             }
             //шериф не видит ролей пользователей
-            else if(user.role == MafiaUserRoles.SHERIFF)
+            else if(user.role == MafiaUserRoles.SHERIFF || it.role== MafiaUserRoles.LEADING)
             {
                 //но если он проверил пользователя то видит
-                if(user.sheriffOptions.checkedUserNames.contains(it.name))
+                if(user.sheriffOptions.checkedUserNames.contains(it.name)||it.role==MafiaUserRoles.LEADING)
                     tr.role = it.role.toString()
                 else
                     tr.role = "SECRET"
