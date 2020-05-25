@@ -64,23 +64,27 @@ class WindowStates {
         document.getElementById("beforGame").hidden = true
         document.getElementById("game").hidden = false
         document.getElementById("gameInfo").hidden = false
-        document.getElementById("mafia_citizenVote").hidden = false
-        document.getElementById("mafia_mafiaVote").hidden = true
+        document.getElementById("mafia_voteСitizenButton").disabled = false
+        document.getElementById("mafia_voteMafiaButton").disabled = true
 
         document.getElementById("inGameTip").innerHTML = '<p>В этом городе все знают Вас как <strong>' + myUserName + ' </strong></p><p>Сейчас в городе день</p>';
         document.getElementById("leftTip").innerHTML = '<p>В городе день, и все горожане занимаются своими ' +
-            'обычными делами - ищут, кто из этих обычных горожан не выспался, потому что ночью ходил убивать</p>';
+            'обычными делами - ищут, кто из окружающих не выспался, потому что ночью ходил убивать</p>';
+
+        document.getElementById("mafia_SheriffVote").hidden = true;
     }
     gamePositionMafiaVote() {
         document.getElementById("user").hidden = true
         document.getElementById("beforGame").hidden = true
         document.getElementById("game").hidden = false
         document.getElementById("gameInfo").hidden = false
-        document.getElementById("mafia_citizenVote").hidden = true
-        document.getElementById("mafia_mafiaVote").hidden = false
+        document.getElementById("mafia_voteСitizenButton").disabled = true
+        document.getElementById("mafia_voteMafiaButton").disabled = false
 
         document.getElementById("inGameTip").innerHTML = '<p>В этом городе все знают Вас как <strong>' + myUserName + ' </strong></p><p>Сейчас в городе ночь</p>';
         document.getElementById("leftTip").innerHTML = '<p>В городе наступает ночь, город засыпает, просыпается мафия...</p>';
+
+        if (role == 'SHERIFF') document.getElementById("mafia_SheriffVote").hidden = false
     }
 
 }

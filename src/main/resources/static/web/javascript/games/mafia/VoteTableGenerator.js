@@ -21,9 +21,9 @@ class VoteTableGenerator {
             const rows = JSON.parse(data);
             for (var i = 0; i < rows.rows.length; i++) {
                 let status = "Мертв";
-                if (rows.rows[i].isAlife == 'true') status = "Живой";
                 let strongify = '';
-                if (rows.rows[i].isItMe == 'true') strongify = '<strong>';
+                if (rows.rows[i].isAlife == 'true') status = "Живой";
+                if (rows.rows[i].isItMe == 'true') strongify = '<b><i>';
                 var line =
                     '                    <tr   class="table-data">\n' +
                     '                        <td class="tableLogin" >' + strongify + rows.rows[i].name + '</td>\n' +

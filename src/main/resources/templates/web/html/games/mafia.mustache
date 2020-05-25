@@ -130,6 +130,9 @@
             </div>
 
             <div id="beforGame" class="col-12 col-md-8 bodyDiv" hidden>
+                <h2>
+                    Мафия - лобби
+                </h2>
 
                 <p>
                     <button type="button" class="btn btn-primary" onclick="mafia_startGame()" id="mafia_startGame" name="mafia_startGame">
@@ -165,21 +168,26 @@
                     </div>
                 </form>
 
-                <div id="mafia_citizenVote">
-                    <h3>Голосование горожан.</h3>
+                <div id="mafia_leader" class="btn-group" role="group">
                     <button type="button" class="btn btn-warning" id="mafia_voteСitizenButton" onclick="mafia_citizenVote()">
                         Засчитать голоса горожан
                     </button>
+                    <button type="button" class="btn btn-warning" id="mafia_voteMafiaButton" onclick="mafia_mafiaVote()">
+                        Засчитать голоса мафии
+                    </button>
                 </div>
 
-                <div id="mafia_mafiaVote" hidden>
-                    <h3>Голосование мафии.</h3>
+                <div id="mafia_SheriffVote">
+                    <h5>Проверка Шерифа</h5>
                     <select class="form-control-sm col-6" onchange="mafia_selectCheckUserSheriff()" id="mafia_checkUserSheriffVariants" hidden>
                     </select>
-                    <button type="button" class="btn btn-warning" id="mafia_voteMafiaButton" onclick="mafia_mafiaVote()">Засчитать голоса мафии</button>
                 </div>
 
-                <button type="button" class="btn btn-danger" onclick="mafia_stopGame()" name="stopGame">Закончить игру</button>
+                <p>
+                    <button type="button" class="btn btn-danger" onclick="mafia_stopGame()" name="stopGame">
+                        Закончить игру
+                    </button>
+                </p>
             </div>
 
             <div id="gameInfo" class="col-12 col-md-4 bodyDiv" hidden>
