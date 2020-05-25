@@ -76,6 +76,7 @@ class ThirtyYearsSession(sessionId: Long, sessionPas: Long) :
     {
         logger.info("setRealExcute($userName, $excute)")
         getUser(userName).excute = excute
+        excuteThirtyYearsUserIndex++
         return true
     }
 
@@ -86,6 +87,7 @@ class ThirtyYearsSession(sessionId: Long, sessionPas: Long) :
     {
         logger.info("setFalshExcute($userName, $falshExcute)")
         getUser(userName).falshExcute = falshExcute
+        excuteThirtyYearsUserIndex++
         return true
     }
 
@@ -97,11 +99,19 @@ class ThirtyYearsSession(sessionId: Long, sessionPas: Long) :
     {
         if(gameState == GameState.ENTER_REAL_EXCUTE)
         {
-
+            if(excuteThirtyYearsUserIndex>= users.size)
+            {
+                excuteThirtyYearsUserIndex = 0
+                gameState = GameState.ENTER_FALSH_EXCUTE
+            }
         }
         else if(gameState == GameState.ENTER_FALSH_EXCUTE)
         {
-
+            if(excuteThirtyYearsUserIndex>= users.size)
+            {
+                excuteThirtyYearsUserIndex = 0
+                gameState = GameState.ENTER_REAL_EXCUTE
+            }
         }
         else if(gameState == GameState.VOTE)
         {
