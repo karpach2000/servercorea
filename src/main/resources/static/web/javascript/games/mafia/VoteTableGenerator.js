@@ -19,7 +19,7 @@ class VoteTableGenerator {
                 '                <tbody class="table table-striped">';
 
             const rows = JSON.parse(data);
-            for (var i = 0; i < rows.rows.length; i++) {
+            for (let i = 0; i < rows.rows.length; i++) {
                 let status = "Мертв";
                 let strongify = '';
                 if (rows.rows[i].isAlife == 'true') status = "Живой";

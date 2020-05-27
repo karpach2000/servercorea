@@ -10,12 +10,41 @@ let vtg = new VoteTableGenerator()
 /* Немножко глобальных переменных */
 let myUserName;
 let role;
+let currentLeader;
+// объекты HTML превращаем в константы, чтобы потом с ними работать как с объектами js
+const field_userName = document.getElementById("userName");
+const field_sessionId = document.getElementById("sessionId");
+const field_SessionPas = document.getElementById("sessionPas");
+const field_VoteVariants = document.getElementById("mafia_voteVariants");
+const field_SheriffVariants = document.getElementById("mafia_checkUserSheriffVariants");
 
+const textArea_mafiaUsers = document.getElementById("mafia_users");
+const text_mafiaLeader = document.getElementById("mafia_leader");
+const text_mafiaRole = document.getElementById("mafia_role");
+const table_mafiaUserVoteTable = document.getElementById("mafia_userVoteTable");
+
+const button_voteCitizen = document.getElementById("mafia_voteСitizenButton");
+const button_voteMafia = document.getElementById("mafia_voteMafiaButton");
+const button_startGame = document.getElementById("mafia_startGame");
+const button_becameLeader = document.getElementById("mafia_wanToBeaLeader");
+
+const div_controls = document.getElementById("mafia_controller");
+const div_mainVoter = document.getElementById("mafia_voter");
+const div_sherifVoter = document.getElementById("mafia_SheriffVote");
+
+const frame_user = document.getElementById("user");
+const frame_beforGame = document.getElementById("beforGame");
+const frame_game = document.getElementById("game");
+const frame_gameInfo = document.getElementById("gameInfo");
+
+const span_leftTip = document.getElementById("leftTip");
+const span_inGameTip = document.getElementById("inGameTip");
+const span_inLobbyTip = document.getElementById("inLobbyTip");
 /**********WEB SOCKETS*******/
 
-var SEPORATOR = "_"
-var mafiaWsConnectionUri = "ws://" + document.location.host + "/games/mafia/ws";
-var mafiaWebsocketConnection = new WebSocket(mafiaWsConnectionUri);
+let SEPORATOR = "_"
+let mafiaWsConnectionUri = "ws://" + document.location.host + "/games/mafia/ws";
+let mafiaWebsocketConnection = new WebSocket(mafiaWsConnectionUri);
 mafiaWebsocketConnection.onerror = function(evt) { mafia_onConnectionError(evt) };
 mafiaWebsocketConnection.onopen = function(evt) { mafia_onConnectionOpen(evt) };
 mafiaWebsocketConnection.onmessage = function(evt) { mafia_onConnectionMessage(evt) };
@@ -30,7 +59,7 @@ function mafia_onConnectionError(evt) {
 function mafia_onConnectionOpen() {
     console.log("mafia_onConnectionOpen()")
     mafiaWebsocketConnection.send("ping")
-        //var userName = document.getElementById("userName").value
+        //var userName = field_userName.value
         //if(userName.length>0) {
         //    mafia_addUser()
         //}
@@ -48,21 +77,23 @@ function mafia_onclose() {
 
 function mafia_onConnectionMessage(evt) {
     console.log("received: " + evt.data);
-    var command = evt.data.split(SEPORATOR)[0]
-    var data = evt.data.split(SEPORATOR)[1]
+    let command = evt.data.split(SEPORATOR)[0]
+    let data = evt.data.split(SEPORATOR)[1]
         //DATA...
     if (command == "addUserEvent") {
-        mafiaWebsocketConnection.send("ok_" + document.getElementById("userName").value)
-        document.getElementById("mafia_users").textContent = data
+        mafiaWebsocketConnection.send("ok_" + field_userName.value)
+        textArea_mafiaUsers.textContent = data
 
     } else if (command == "leaderChandged") {
         mafiaWebsocketConnection.send("ok")
-        document.getElementById("mafia_leader").textContent = "Ведущий: " + data
+        text_mafiaLeader.textContent = "Ведущий: " + data
+        ws.whoIsLeader();
     } else if (command == "updateVoteTable") {
         mafiaWebsocketConnection.send("ok")
 
-        document.getElementById("mafia_userVoteTable").innerHTML = vtg.generate(data)
-        if ((role != "LEADING") && (role != "SHERIFF")) document.querySelectorAll(".tableCheck").forEach(element => element.hidden = true);
+        table_mafiaUserVoteTable.innerHTML = vtg.generate(data)
+        if ((role != "LEADING") && (role != "SHERIFF"))
+            document.querySelectorAll(".tableCheck").forEach(element => element.hidden = true);
     }
     //STATES...
     else if (command == "startGameEvent") {
@@ -80,6 +111,9 @@ function mafia_onConnectionMessage(evt) {
             alert("К сожалению все живы.")
         mafia_getSheriffCheckVariants()
         updateWindowByState("MAFIA_VOTE")
+        table_mafiaUserVoteTable.innerHTML = vtg.generate(data)
+        if ((role != "LEADING") && (role != "SHERIFF"))
+            document.querySelectorAll(".tableCheck").forEach(element => element.hidden = true);
 
     } else if (command == "openСitizensVote") {
         mafiaWebsocketConnection.send("ok")
@@ -89,11 +123,11 @@ function mafia_onConnectionMessage(evt) {
             alert("К сожалению все живы.")
             //mafia_checkUserSheriff()
         updateWindowByState("CITIZEN_VOTE")
+        table_mafiaUserVoteTable.innerHTML = vtg.generate(data)
+        if ((role != "LEADING") && (role != "SHERIFF"))
+            document.querySelectorAll(".tableCheck").forEach(element => element.hidden = true);
     } else if (command == "pong") {
-        var userName = document.getElementById("userName").value
-        var sessionId = document.getElementById("sessionId").value
-        var sessionPas = document.getElementById("sessionPas").value
-        if ((userName.length > 0) && (sessionId.length > 0) && (sessionPas.length > 0)) {
+        if ((field_userName.value.length > 0) && (field_sessionId.value.length > 0) && (field_SessionPas.value.length > 0)) {
             mafia_login()
         }
     } else if (command == "sheriffCheckedUser") //КОЛЯ ЗДЕСЬ!!!
@@ -107,7 +141,7 @@ function mafia_onConnectionMessage(evt) {
 
 function mafia_startGame() {
     console.log("mafia_startGame()")
-    var count = mafia_request("mafia_count_users")
+    let count = mafia_request("mafia_count_users")
     if (count < 5) {
         alert("Минимальное количество игроков 5!")
         return
@@ -117,8 +151,11 @@ function mafia_startGame() {
 
 
 function mafia_stopGame() {
-    console.log("mafia_stopGame()")
-    mafia_request("mafia_stopGame")
+    if (confirm("Вы действительно хотите завершить игру для всех? Возможно, не все с этим согласны, а кнопка только одна")) {
+        console.log("mafia_stopGame()")
+        mafia_request("mafia_stopGame")
+    }
+
 }
 
 
@@ -130,17 +167,14 @@ function mafia_stopGame() {
  */
 function mafia_login() {
     console.log("mafia_login()")
-    myUserName = document.getElementById("userName").value
-    var sessionId = document.getElementById("sessionId").value
-    var sessionPas = document.getElementById("sessionPas").value
 
-    if (myUserName == "") {
+    if (field_userName.value == "") {
         alert("Заполните поле \"Имя пользователя\"")
         return
-    } else if (sessionId == "") {
+    } else if (field_sessionId.value == "") {
         alert("Заполните поле \"ID сессии\"")
         return
-    } else if (sessionPas == "") {
+    } else if (field_SessionPas.value == "") {
         alert("Заполните поле \"Пароль сессии\"")
         return
     }
@@ -150,7 +184,7 @@ function mafia_login() {
         //Add user
     ans = addUserIfNotExist()
     if (ans == "true") {
-        var gameState = mafia_getGameState()
+        let gameState = mafia_getGameState()
         updateWindowByState(gameState)
     } else {
         alert(ans)
@@ -186,13 +220,10 @@ function mafia_mafiaVote() {
  */
 function mafia_voteVote() {
     console.log("mafia_voteVote()")
-    var xmlHttp = new XMLHttpRequest();
-    // var userName = document.getElementById("userName").value
-    var sessionId = document.getElementById("sessionId").value
-    var sessionPas = document.getElementById("sessionPas").value
-    var vote = document.getElementById("mafia_voteVariants").value
-    xmlHttp.open("GET", "/games/mafia_voteVote?userName=" + myUserName + "&sessionId=" + sessionId +
-        "&sessionPas=" + sessionPas + "&vote=" + vote, false); // false for synchronous request
+    let xmlHttp = new XMLHttpRequest();
+
+    xmlHttp.open("GET", "/games/mafia_voteVote?userName=" + field_userName.value + "&sessionId=" + field_SessionPas.value +
+        "&sessionPas=" + field_VoteVariants.value + "&vote=" + vote, false); // false for synchronous request
     xmlHttp.send(null);
 }
 
@@ -201,14 +232,11 @@ function mafia_voteVote() {
  */
 function mafia_selectCheckUserSheriff() {
     console.log("GET TX: mafia_checkUserSheriff")
-    var xmlHttp = new XMLHttpRequest();
-    // var userName = document.getElementById("userName").value
-    var sessionId = document.getElementById("sessionId").value
-    var sessionPas = document.getElementById("sessionPas").value
-    var checkUser = document.getElementById("mafia_checkUserSheriffVariants").value
-    if (checkUser.length > 0) {
-        xmlHttp.open("GET", "/games/mafia_selectCheckUserSheriff?userName=" + myUserName + "&sessionId=" + sessionId +
-            "&sessionPas=" + sessionPas + "&checkedUserName=" + checkUser, false); // false for synchronous request
+    let xmlHttp = new XMLHttpRequest();
+
+    if (field_SheriffVariants.value.length > 0) {
+        xmlHttp.open("GET", "/games/mafia_selectCheckUserSheriff?userName=" + field_userName.value + "&sessionId=" +
+            field_sessionId.value + "&sessionPas=" + field_SessionPas.value + "&checkedUserName=" + field_SheriffVariants.value, false); // false for synchronous request
         xmlHttp.send(null);
         console.log("GET RX: " + xmlHttp.responseText)
         return xmlHttp.responseText
@@ -222,8 +250,8 @@ function mafia_selectCheckUserSheriff() {
  */
 function updateWindowByState(gameState) {
     if (gameState == "ADD_USERS") {
-        ws.beforGamePosition()
         mafia_getLeader()
+        ws.beforGamePosition()
     } else if (gameState == "CITIZEN_VOTE") {
         ws.gamePositionCitizenVote()
         mafia_getСitizenVoteVariants()
@@ -258,7 +286,7 @@ function mafia_updateWindowByRole() {
     role = mafia_request("mafia_getRole")
     vtg.role = role
         //прописываем роль пользователю
-    document.getElementById("mafia_role").textContent = "Роль: " + role
+    text_mafiaRole.textContent = "Роль: " + role
         //если пользователь не лидер убираем кнопку голосования
     if (role == "LEADING") {
         ws.leaderPosition()
@@ -278,15 +306,13 @@ function addUserIfNotExist() {
 }
 
 function createSessionIfNotExists() {
-    // var userName = document.getElementById("userName").value
-    var sessionId = document.getElementById("sessionId").value
-    var sessionPas = document.getElementById("sessionPas").value
+
     var ans = mafia_request("mafia_add_session")
     if (ans == "true") {
-        mafiaWebsocketConnection.send("init" + SEPORATOR + sessionId + " " + sessionPas + " " + myUserName)
+        mafiaWebsocketConnection.send("init" + SEPORATOR + field_sessionId.value + " " + field_SessionPas.value + " " + field_userName.value)
             //lert("Игра создана.")
     } else if (ans == "false") {
-        mafiaWebsocketConnection.send("init" + SEPORATOR + sessionId + " " + sessionPas + " " + myUserName)
+        mafiaWebsocketConnection.send("init" + SEPORATOR + field_sessionId.value + " " + field_SessionPas.value + " " + field_userName.value)
             //alert("Ничего не делаем.")
     } else {
 
@@ -297,8 +323,9 @@ function createSessionIfNotExists() {
 
 
 function mafia_getLeader() {
-    var ans = mafia_request("mafia_getLeader")
-    document.getElementById("mafia_leader").textContent = "Ведущий: " + ans
+    currentLeader = mafia_request("mafia_getLeader");
+    text_mafiaLeader.textContent = "Ведущий: " + currentLeader;
+
 }
 
 
@@ -307,12 +334,11 @@ function mafia_getLeader() {
  * (список кандидатов)
  */
 function mafia_getMafiaVoteVariants() {
-    var voteVariants = mafia_request("mafia_getUsersForVoteMafia").split(SEPORATOR)
-    document.getElementById("mafia_voteVariants").innerHTML = "<option></option>"
-    for (var i = 0; i < voteVariants.length; i = i + 1) {
+    let voteVariants = mafia_request("mafia_getUsersForVoteMafia").split(SEPORATOR)
+    field_VoteVariants.innerHTML = "<option></option>"
+    for (let i = 0; i < voteVariants.length; i = i + 1) {
         if (voteVariants[i].length > 0)
-            document.getElementById("mafia_voteVariants").innerHTML =
-            document.getElementById("mafia_voteVariants").innerHTML + "<option>" + voteVariants[i] + "</option>"
+            field_VoteVariants.innerHTML = field_VoteVariants.innerHTML + "<option>" + voteVariants[i] + "</option>"
     }
 }
 
@@ -321,12 +347,12 @@ function mafia_getMafiaVoteVariants() {
  * (список кандидатов)
  */
 function mafia_getСitizenVoteVariants() {
-    var voteVariants = mafia_request("mafia_getUsersForVoteСitizen").split(SEPORATOR)
-    document.getElementById("mafia_voteVariants").innerHTML = "<option></option>"
-    for (var i = 0; i < voteVariants.length; i = i + 1) {
+    let voteVariants = mafia_request("mafia_getUsersForVoteСitizen").split(SEPORATOR)
+    field_VoteVariants.innerHTML = "<option></option>"
+    for (let i = 0; i < voteVariants.length; i = i + 1) {
         if (voteVariants[i].length > 0)
-            document.getElementById("mafia_voteVariants").innerHTML =
-            document.getElementById("mafia_voteVariants").innerHTML + "<option>" + voteVariants[i] + "</option>"
+            field_VoteVariants.innerHTML =
+            field_VoteVariants.innerHTML + "<option>" + voteVariants[i] + "</option>"
     }
 }
 
@@ -335,12 +361,12 @@ function mafia_getСitizenVoteVariants() {
  * (список кандидатов)
  */
 function mafia_getSheriffCheckVariants() {
-    var variants = mafia_request("mafia_getCheckUserSheriffVariants").split(SEPORATOR)
-    document.getElementById("mafia_checkUserSheriffVariants").innerHTML = "<option></option>"
-    for (var i = 0; i < variants.length; i = i + 1) {
+    let variants = mafia_request("mafia_getCheckUserSheriffVariants").split(SEPORATOR)
+    field_SheriffVariants.innerHTML = "<option></option>"
+    for (let i = 0; i < variants.length; i = i + 1) {
         if (variants[i].length > 0)
-            document.getElementById("mafia_checkUserSheriffVariants").innerHTML =
-            document.getElementById("mafia_checkUserSheriffVariants").innerHTML + "<option>" + variants[i] + "</option>"
+            field_SheriffVariants.innerHTML =
+            field_SheriffVariants.innerHTML + "<option>" + variants[i] + "</option>"
     }
 }
 
@@ -348,12 +374,10 @@ function mafia_getSheriffCheckVariants() {
 
 function mafia_request(command) {
     console.log("GET TX: " + command)
-    var xmlHttp = new XMLHttpRequest();
-    // var userName = document.getElementById("userName").value
-    var sessionId = document.getElementById("sessionId").value
-    var sessionPas = document.getElementById("sessionPas").value
-    xmlHttp.open("GET", "/games/" + command + "?userName=" + myUserName + "&sessionId=" + sessionId +
-        "&sessionPas=" + sessionPas, false); // false for synchronous request
+    let xmlHttp = new XMLHttpRequest();
+
+    xmlHttp.open("GET", "/games/" + command + "?userName=" + field_userName.value + "&sessionId=" + field_sessionId.value +
+        "&sessionPas=" + field_SessionPas.value, false); // false for synchronous request
     xmlHttp.send(null);
     console.log("GET RX: " + xmlHttp.responseText)
     return xmlHttp.responseText

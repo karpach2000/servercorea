@@ -5,36 +5,35 @@
 class WindowStates {
     /*****ROLE_POSITIONS*****/
     leaderPosition() {
-        document.getElementById("mafia_voteСitizenButton").hidden = false
-        document.getElementById("mafia_voteMafiaButton").hidden = false
-        document.getElementById("mafia_voter").hidden = true
-
+        div_controls.hidden = false
+        div_mainVoter.hidden = true
+        div_sherifVoter.hidden = true
     }
     mafiaPosition() {
-        document.getElementById("mafia_voteСitizenButton").hidden = true
-        document.getElementById("mafia_voteMafiaButton").hidden = true
-        document.querySelectorAll(".tableCheck").forEach(element => element.hidden = true);
+        div_controls.hidden = true
+        div_sherifVoter.hidden = true
+        div_mainVoter.hidden = false
     }
     citizenPosition() {
-        document.getElementById("mafia_voteСitizenButton").hidden = true
-        document.getElementById("mafia_voteMafiaButton").hidden = true
-        document.querySelectorAll(".tableCheck").forEach(element => element.hidden = true);
+        div_controls.hidden = true
+        div_sherifVoter.hidden = true
+        div_mainVoter.hidden = false
     }
     sheriffPosition() {
-        document.getElementById("mafia_voteСitizenButton").hidden = true
-        document.getElementById("mafia_voteMafiaButton").hidden = true
-        document.getElementById("mafia_checkUserSheriffVariants").hidden = false
+        div_controls.hidden = true
+            // div_sherifVoter.hidden = false
+        div_mainVoter.hidden = false
     }
 
     /*****GAME_POSITIONS*****/
 
     stopGamePosition() {
-        document.getElementById("user").hidden = false
-        document.getElementById("beforGame").hidden = true
-        document.getElementById("game").hidden = true
-        document.getElementById("gameInfo").hidden = true
+        frame_user.hidden = false
+        frame_beforGame.hidden = true
+        frame_game.hidden = true
+        frame_gameInfo.hidden = true
 
-        document.getElementById("leftTip").innerHTML = '<p>Для создания новой игры:</p>' +
+        span_leftTip.innerHTML = '<p>Для создания новой игры:</p>' +
             '<ol>' +
             '    <li>Придумайте свое "Имя пользователя", "ID сессии", "Пароль сессии"</li>' +
             '    <li>Передайте "Пароль сессии" и "ID сессии" остальным игрокам</li>' +
@@ -49,42 +48,61 @@ class WindowStates {
     }
 
     beforGamePosition() {
-        document.getElementById("user").hidden = true
-        document.getElementById("beforGame").hidden = false
-        document.getElementById("game").hidden = true
-        document.getElementById("gameInfo").hidden = true
+        frame_user.hidden = true
+        frame_beforGame.hidden = false
+        frame_game.hidden = true
+        frame_gameInfo.hidden = true
 
-        document.getElementById("leftTip").innerHTML = '<p>Убедитесь, что все желающие знают ID и пароль сессии! ' +
+        this.whoIsLeader();
+
+        span_inLobbyTip.innerHTML = '<p>Вы представились как <strong>' + field_userName.value + ' </strong></p>';
+
+        span_leftTip.innerHTML = '<p>Убедитесь, что все желающие знают ID и пароль сессии! ' +
             'дождитесь, пока все присоединятся к игре.</p>' +
             '<p>После нажатия на кнопку "Начать игру" присоединиться до конца раунда будет невозможно!</p>' +
             '<p>Для начала игры вас должно быть не меньше 5 человек</p>';
     }
-    gamePositionCitizenVote() {
-        document.getElementById("user").hidden = true
-        document.getElementById("beforGame").hidden = true
-        document.getElementById("game").hidden = false
-        document.getElementById("gameInfo").hidden = false
-        document.getElementById("mafia_voteСitizenButton").disabled = false
-        document.getElementById("mafia_voteMafiaButton").disabled = true
 
-        document.getElementById("inGameTip").innerHTML = '<p>В этом городе все знают Вас как <strong>' + myUserName + ' </strong></p><p>Сейчас в городе день</p>';
-        document.getElementById("leftTip").innerHTML = '<p>В городе день, и все горожане занимаются своими ' +
+    whoIsLeader() {
+
+        mafia_getLeader();
+        if (currentLeader == field_userName.value) {
+            button_startGame.disabled = false;
+            button_becameLeader.disabled = true;
+        } else {
+            button_startGame.disabled = true;
+            button_becameLeader.disabled = false;
+        }
+    }
+
+    gamePositionCitizenVote() {
+        frame_user.hidden = true
+        frame_beforGame.hidden = true
+        frame_game.hidden = false
+        frame_gameInfo.hidden = false
+
+        button_voteCitizen.disabled = false
+        button_voteMafia.disabled = true
+
+        span_inGameTip.innerHTML = '<p>В этом городе все знают Вас как <strong>' + field_userName.value + ' </strong></p><p>Сейчас в городе день</p>';
+        span_leftTip.innerHTML = '<p>В городе день, и все горожане занимаются своими ' +
             'обычными делами - ищут, кто из окружающих не выспался, потому что ночью ходил убивать</p>';
 
-        document.getElementById("mafia_SheriffVote").hidden = true;
+        div_sherifVoter.hidden = true;
     }
     gamePositionMafiaVote() {
-        document.getElementById("user").hidden = true
-        document.getElementById("beforGame").hidden = true
-        document.getElementById("game").hidden = false
-        document.getElementById("gameInfo").hidden = false
-        document.getElementById("mafia_voteСitizenButton").disabled = true
-        document.getElementById("mafia_voteMafiaButton").disabled = false
+        frame_user.hidden = true
+        frame_beforGame.hidden = true
+        frame_game.hidden = false
+        frame_gameInfo.hidden = false
 
-        document.getElementById("inGameTip").innerHTML = '<p>В этом городе все знают Вас как <strong>' + myUserName + ' </strong></p><p>Сейчас в городе ночь</p>';
-        document.getElementById("leftTip").innerHTML = '<p>В городе наступает ночь, город засыпает, просыпается мафия...</p>';
+        button_voteCitizen.disabled = true
+        button_voteMafia.disabled = false
 
-        if (role == 'SHERIFF') document.getElementById("mafia_SheriffVote").hidden = false
+        span_inGameTip.innerHTML = '<p>В этом городе все знают Вас как <strong>' + field_userName.value + ' </strong></p><p>Сейчас в городе ночь</p>';
+        span_leftTip.innerHTML = '<p>В городе наступает ночь, город засыпает, просыпается мафия...</p>';
+
+        if (role == 'SHERIFF') div_sherifVoter.hidden = false
     }
 
 }
