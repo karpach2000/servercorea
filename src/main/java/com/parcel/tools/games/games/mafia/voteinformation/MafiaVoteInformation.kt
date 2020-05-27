@@ -30,7 +30,7 @@ class Table {
 /**
  * Класс предназначен для работы с информацией отображаемой пользователю в таблице при голосовании.
  */
-class VoteInformation(
+class MafiaVoteInformation(
         @Expose(serialize = false, deserialize = false) private val user: MafiaUser,
         @Expose(serialize = false, deserialize = false) private val users: ArrayList<MafiaUser>,
         @Expose(serialize = false, deserialize = false) private val mafiaSessionState: MafiaSessionState) {

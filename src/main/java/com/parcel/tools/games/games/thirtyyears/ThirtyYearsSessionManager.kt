@@ -30,6 +30,12 @@ object ThirtyYearsSessionManager :
         return getSession(sessionId, sessionPas).setFalshExcute(userName, excute)
     }
 
+    fun vote(sessionId: Long, sessionPas: Long, userName: String, anser: String): Boolean
+    {
+        logger.info("setFalshExcute($sessionId, $sessionPas)")
+        return getSession(sessionId, sessionPas).vote(userName, anser)
+    }
+
 
 
 

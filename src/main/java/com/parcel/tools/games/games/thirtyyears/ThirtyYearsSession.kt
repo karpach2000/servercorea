@@ -2,8 +2,7 @@ package com.parcel.tools.games.games.thirtyyears
 
 import com.parcel.tools.Globals
 import com.parcel.tools.games.GlobalRandomiser
-import com.parcel.tools.games.games.spy.SpyEvent
-import com.parcel.tools.games.games.spy.SpyUser
+import com.parcel.tools.games.games.thirtyyears.comunicateinformation.ThirtyYearsVoteInformation
 import com.parcel.tools.games.gamesession.GamesSession
 
 class ThirtyYearsSessionException(message: String):Exception(message)
@@ -21,8 +20,6 @@ class ThirtyYearsSessionException(message: String):Exception(message)
     *   - угадал +1
     *   - тебя отгадали 5 человек, тебе + 5 очков
     *   - тебя угадали все, ты остался без очков
-    *   таймер прикручивать правда придется
-    *   голосовалка вроде есть уже, я ее вынесу из мафии в родителя
  */
 class ThirtyYearsSession(sessionId: Long, sessionPas: Long) :
         GamesSession<ThirtyYearsUser, ThirtyYearsEvent>(sessionId, sessionPas) {
@@ -49,9 +46,22 @@ class ThirtyYearsSession(sessionId: Long, sessionPas: Long) :
      * Игдекс пользователя который отмазывается в данный момент времени.
      */
     private var excuteThirtyYearsUserIndex = 0
+    /**
+     * Количество пользователей которое проголосовало.
+     */
+    private var countThirtyYearsUserVote = 0
+    /**
+     * Количество пользователей которое написавшее отмазку.
+     */
+    private var countThirtyYearsUserExcute = 0
 
     init {
         updateEvents()
+    }
+
+    override fun addUser(name: String): Boolean {
+       val user = ThirtyYearsUser(name)
+        return super.addUser(user)
     }
 
     override fun startGame()
@@ -69,6 +79,27 @@ class ThirtyYearsSession(sessionId: Long, sessionPas: Long) :
         }
     }
 
+
+
+    /**
+     * Проголосовать
+     * @param userName имя голосующего пользователя
+     * @param anser стринговый ответ за который голосует пользователь
+     */
+    fun vote(userName: String, anser: String): Boolean
+    {
+        logger.info("vote($userName, $anser)")
+        var voteName = ""
+        users.forEach {
+            if(it.falshExcute==anser || it.excute==anser)
+            {
+                voteName=it.name
+            }
+        }
+        countThirtyYearsUserVote++
+        return super.gameSessionVote.vote(userName, voteName)
+    }
+
     /**
      * Ввести честную отмазку.
      */
@@ -76,10 +107,10 @@ class ThirtyYearsSession(sessionId: Long, sessionPas: Long) :
     {
         logger.info("setRealExcute($userName, $excute)")
         getUser(userName).excute = excute
-        excuteThirtyYearsUserIndex++
+        countThirtyYearsUserExcute++
+        updateByStateMashine()
         return true
     }
-
     /**
      * Ввести фальшивую отмазку.
      */
@@ -87,7 +118,8 @@ class ThirtyYearsSession(sessionId: Long, sessionPas: Long) :
     {
         logger.info("setFalshExcute($userName, $falshExcute)")
         getUser(userName).falshExcute = falshExcute
-        excuteThirtyYearsUserIndex++
+        countThirtyYearsUserExcute++
+        updateByStateMashine()
         return true
     }
 
@@ -101,22 +133,70 @@ class ThirtyYearsSession(sessionId: Long, sessionPas: Long) :
         {
             if(excuteThirtyYearsUserIndex>= users.size)
             {
-                excuteThirtyYearsUserIndex = 0
-                gameState = GameState.ENTER_FALSH_EXCUTE
+                countThirtyYearsUserExcute = 0
+                goTo_ENTER_FALSH_EXCUTE_event()
             }
         }
         else if(gameState == GameState.ENTER_FALSH_EXCUTE)
         {
-            if(excuteThirtyYearsUserIndex>= users.size)
+            if(excuteThirtyYearsUserIndex>= users.size-1)
             {
-                excuteThirtyYearsUserIndex = 0
-                gameState = GameState.ENTER_REAL_EXCUTE
+                countThirtyYearsUserExcute = 0
+                goTo_VOTE_event()
             }
         }
         else if(gameState == GameState.VOTE)
         {
+            //Обновляет очки после голосования
+            updatePoints(users[excuteThirtyYearsUserIndex].name)
+            if(countThirtyYearsUserVote <users.size) {
+                goTo_SHOW_RESULTS_event()
+            }
+            else
+                goTo_SHOW_FINAL_RESULTS_event()
+        }
+        else if(gameState == GameState.SHOW_RESULTS)
+        {
 
         }
+    }
+
+    /**
+     * Обновляет очки после голосования.
+     * @param trueTellerName имя пользователя который честно отвечал
+     */
+    private fun updatePoints(trueTellerName: String)
+    {
+        /**
+         * Считаем правильно ли ты проголосовал.
+         */
+        fun myVoteTrue() {
+            //var pointsCount = 0
+            for (user in users) {
+                //если проголосавал за правдивый ответ от создателя
+                if (user.gameUserVote.voteName == trueTellerName) {
+                    user.points = user.points + user.gameUserVote.votedCount
+                } //if
+            }//for
+        }//fun
+
+        /**
+         * считаем проголосовали ли за тебя
+         */
+        fun myVotesCount()
+        {
+            for(user in users)
+            {
+                var points = 0
+                users.forEach {
+                    if(it.gameUserVote.voteName==user.name)
+                        points++
+                }
+                user.points = points
+            }
+        }
+        myVoteTrue()
+        myVotesCount()
     }
 
 
@@ -150,4 +230,68 @@ class ThirtyYearsSession(sessionId: Long, sessionPas: Long) :
         Globals.thirtyYearsEventManager.getAllEventsAsString().forEach { events.add(it) }
         return true
     }
+
+    /********EVENTS *********/
+
+    //STATE MASHINE
+
+    /**
+     * Событие ввведения реальной отмазки.
+     */
+    private fun goTo_ENTER_REAL_EXCUTE_event()
+    {
+        gameState = GameState.ENTER_REAL_EXCUTE
+        gameEvent.forEach {
+            it.ENTER_REAL_EXCUTE_event()
+        }
+
+    }
+    /**
+     * Событие введение фальшивой отмазки.
+     */
+    private fun goTo_ENTER_FALSH_EXCUTE_event()
+    {
+        gameState = GameState.ENTER_FALSH_EXCUTE
+        gameEvent.forEach {
+            it.ENTER_FALSH_EXCUTE_event()
+        }
+    }
+    /**
+     * Событие голосования.
+     */
+    private fun goTo_VOTE_event()
+    {
+        gameState = GameState.VOTE
+        gameEvent.forEach { it.VOTE_event() }
+    }
+    /**
+     * Событие Показываения пользователю результаты всей игры.
+     */
+    private fun  goTo_SHOW_FINAL_RESULTS_event()
+    {
+        gameState = GameState.SHOW_FINAL_RESULTS
+        gameEvent.forEach {
+            val table = ThirtyYearsVoteInformation(getUser(it.userName),
+                    users[excuteThirtyYearsUserIndex],users).toJson()
+            it.SHOW_FINAL_RESULTS_event(table)
+
+        }
+        excuteThirtyYearsUserIndex++
+    }
+    /**
+     * События демонстрации результатов голосования пользователям.
+     */
+    private fun  goTo_SHOW_RESULTS_event()
+    {
+        gameState = GameState.SHOW_RESULTS
+        gameEvent.forEach {
+            val table = ThirtyYearsVoteInformation(getUser(it.userName),
+                    users[excuteThirtyYearsUserIndex],users).toJson()
+            it.SHOW_RESULTS_event(table)
+
+        }
+        excuteThirtyYearsUserIndex++
+        gameSessionVote.clear()
+    }
+
 }

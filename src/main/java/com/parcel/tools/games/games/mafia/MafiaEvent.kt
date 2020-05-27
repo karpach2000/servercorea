@@ -4,10 +4,7 @@ import com.parcel.tools.games.GameEvent
 
 interface MafiaEvent : GameEvent {
 
-    /**
-     * Имя пользователяя которому должен прилететь Event.
-     */
-    var userName : String
+
 
     /**
      * Обновляет таблицу в web интерфейсе, в которой прописываются мертвые и живые игроки.

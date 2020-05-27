@@ -20,4 +20,9 @@ class ThirtyYearsUser (name:String) : GameUser(name) {
      * Псевдоотмазка которую придумывает пользователь за место своего соперника.
      */
     var falshExcute = ""
+
+    /**
+     * Количество очков набраное пользователем.
+     */
+    var points = 0
 }
