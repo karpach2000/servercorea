@@ -21,7 +21,7 @@ class SpyWebSocketController : TextWebSocketHandler()  {
     class SpyEventHandler(private var session: WebSocketSession,private var name: String): SpyEvent
     {
 
-
+        override var userName = ""
 
         override fun addUserEvent(userList: String) {
             sendMessage("addUserEvent$SEPORATOR$userList")
