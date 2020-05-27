@@ -6,6 +6,7 @@ import org.springframework.security.core.Authentication
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
+import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.ResponseBody
@@ -15,9 +16,6 @@ import javax.servlet.http.HttpServletRequest
 
 @Controller
 class UserController {
-
-
-
 
     /**
      * Разлогинится.
@@ -31,7 +29,7 @@ class UserController {
     }
 
     /**
-     * Разлогинится.
+     * Залогинится
      */
     @RequestMapping("/session/getCurrentLogin")
     @Throws(IOException::class)
@@ -42,10 +40,6 @@ class UserController {
         val name: String = auth.getName() //get logged in username
         return name
     }
-
-
-
-
 
     /**
      * Добавить пользователя.
@@ -112,11 +106,25 @@ class UserController {
      */
     @RequestMapping("/users/reg")
     @Throws(IOException::class)
-    internal fun reg(model: Model, request: HttpServletRequest) : String {
+    internal fun signUp(model: Model, request: HttpServletRequest) : String {
         val counter = CounterAdmin()
         val page = Page(counter)
         model.addAttribute("page", page)
         return "web/html/reg"
     }
 
+
+    //Добавление возможности изменения пароля
+    @RequestMapping("/settings/account/{login},{password}")
+    @Throws(IOException::class)
+    internal fun myAccount(@PathVariable login:String, @PathVariable password:String, model: Model):String{
+        com.parcel.tools.Globals.userManager.updatePassword(login, password)
+
+        model.addAttribute("user",com.parcel.tools.Globals.userManager)
+//        val counter = CounterAdmin()
+//        val page = Page(counter)
+//        model.addAttribute("page", page)
+
+        return "web/html/account"
+    }
 }

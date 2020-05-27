@@ -4,6 +4,9 @@ import com.parcel.tools.Globals
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.jdbc.core.RowMapper
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource
+import org.springframework.jdbc.core.namedparam.SqlParameterSource
+import org.springframework.jdbc.core.simple.SimpleJdbcCall
 import org.springframework.stereotype.Component
 import java.lang.Exception
 import java.sql.ResultSet
@@ -20,13 +23,8 @@ class UserManagerException(message: String): Exception(message)
 @Component
 open class UserManager {
 
-
-
-
     @Autowired
     var jdbcTemplate: JdbcTemplate? = null
-
-
 
     private val logger = org.apache.log4j.Logger.getLogger(UserManager::class.java!!)
 
@@ -62,6 +60,13 @@ open class UserManager {
         @Throws(SQLException::class)
         override fun mapRow(rs: ResultSet, rowNum: Int): String {
             return rs.getString("user_role")
+        }
+    }
+    //-------
+    internal inner class UpdatePasswordRowMapper: RowMapper<String> {
+        @Throws(SQLException::class)
+        override fun mapRow(rs: ResultSet, rowNum: Int): String {
+            return rs.getString("update_password")
         }
     }
 
@@ -109,6 +114,18 @@ open class UserManager {
         }
     }
 
+    fun updatePassword(login:String, password:String){
+        logger.info("updatePassword($login, $password)")
+        val dbAns = jdbcTemplate!!.query("SELECT * FROM update_user('$login, $password')",
+                    UpdatePasswordRowMapper())[0]
+        if(dbAns == "OK")
+            return
+        else {
+            logger.warn("Data base ansered: $dbAns")
+            throw UserManagerException(dbAns)
+        }
+    }
+
     fun dellUser(login: String)
     {
         logger.info("dellUser($login)")
@@ -125,6 +142,7 @@ open class UserManager {
     fun getUserRoles(login: String) :ArrayList<String>
     {
         logger.info("getUserRoles($login)")
+
         val dbAns = jdbcTemplate!!.query("SELECT * FROM get_user_and_role('$login')",
                 GetUserRoles()) as ArrayList<String>
         return dbAns

@@ -41,6 +41,7 @@ open class WebSecurityConfig : WebSecurityConfigurerAdapter() {
                 .antMatchers("/users/**").permitAll()
 
                 .antMatchers("/admin").hasAuthority("ADMIN")
+                .antMatchers("/settings/**").hasAnyAuthority("USER")
                 .antMatchers("/games_settings", "/games_settings/*").hasAnyAuthority("ADMIN", "USER")
                 .anyRequest().authenticated()
                 .and()

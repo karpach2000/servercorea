@@ -27,10 +27,6 @@ class MainController {
         return "web/html/games"
     }
 
-
-
-
-
     @RequestMapping("/admin")
     @Throws(IOException::class)
     internal fun admin(model: Model, session: HttpSession): String {

@@ -25,6 +25,7 @@ class Users {
    //@Transient
     fun setRole(role: String)
     {
+
         Role.values().forEach {
             if(it.user_role == role) {
                 this.role = it
@@ -33,11 +34,6 @@ class Users {
         }
         this.role = Role.NC
     }
-
-
-
-
-
     override fun equals(cashRequest: Any?): Boolean {
         try {
             val user = cashRequest as Users
