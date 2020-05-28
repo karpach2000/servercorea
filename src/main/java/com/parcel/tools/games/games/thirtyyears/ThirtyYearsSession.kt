@@ -45,7 +45,7 @@ class ThirtyYearsSession(sessionId: Long, sessionPas: Long) :
     /**
      * Игдекс пользователя который отмазывается в данный момент времени.
      */
-    private var excuteThirtyYearsUserIndex = 0
+    private var indexThirtyYearsUserExcute = 0
     /**
      * Количество пользователей которое проголосовало.
      */
@@ -131,7 +131,7 @@ class ThirtyYearsSession(sessionId: Long, sessionPas: Long) :
     {
         if(gameState == GameState.ENTER_REAL_EXCUTE)
         {
-            if(excuteThirtyYearsUserIndex>= users.size)
+            if(indexThirtyYearsUserExcute>= users.size)
             {
                 countThirtyYearsUserExcute = 0
                 goTo_ENTER_FALSH_EXCUTE_event()
@@ -139,7 +139,7 @@ class ThirtyYearsSession(sessionId: Long, sessionPas: Long) :
         }
         else if(gameState == GameState.ENTER_FALSH_EXCUTE)
         {
-            if(excuteThirtyYearsUserIndex>= users.size-1)
+            if(indexThirtyYearsUserExcute>= users.size-1)
             {
                 countThirtyYearsUserExcute = 0
                 goTo_VOTE_event()
@@ -148,7 +148,7 @@ class ThirtyYearsSession(sessionId: Long, sessionPas: Long) :
         else if(gameState == GameState.VOTE)
         {
             //Обновляет очки после голосования
-            updatePoints(users[excuteThirtyYearsUserIndex].name)
+            updatePoints(users[indexThirtyYearsUserExcute].name)
             if(countThirtyYearsUserVote <users.size) {
                 goTo_SHOW_RESULTS_event()
             }
@@ -236,61 +236,63 @@ class ThirtyYearsSession(sessionId: Long, sessionPas: Long) :
     //STATE MASHINE
 
     /**
-     * Событие ввведения реальной отмазки.
+     * Событие перевода в статус ввведения реальной отмазки.
      */
     private fun goTo_ENTER_REAL_EXCUTE_event()
     {
         gameState = GameState.ENTER_REAL_EXCUTE
         gameEvent.forEach {
-            it.ENTER_REAL_EXCUTE_event()
+            it.ENTER_REAL_EXCUTE_event(getUser(it.userName).event)
         }
 
     }
     /**
-     * Событие введение фальшивой отмазки.
+     * Событие перевода в статус введение фальшивой отмазки.
      */
     private fun goTo_ENTER_FALSH_EXCUTE_event()
     {
         gameState = GameState.ENTER_FALSH_EXCUTE
         gameEvent.forEach {
-            it.ENTER_FALSH_EXCUTE_event()
+            it.ENTER_FALSH_EXCUTE_event(users[this.indexThirtyYearsUserExcute].event)
         }
     }
     /**
-     * Событие голосования.
+     * Событие перевода в статус голосования.
      */
     private fun goTo_VOTE_event()
     {
         gameState = GameState.VOTE
-        gameEvent.forEach { it.VOTE_event() }
+        gameEvent.forEach { it.VOTE_event(
+                it.userName == users[this.indexThirtyYearsUserExcute].name
+        ) }
     }
     /**
-     * Событие Показываения пользователю результаты всей игры.
+     * Событие перевода в статус Показываения пользователю результаты всей игры.
      */
     private fun  goTo_SHOW_FINAL_RESULTS_event()
     {
         gameState = GameState.SHOW_FINAL_RESULTS
         gameEvent.forEach {
             val table = ThirtyYearsVoteInformation(getUser(it.userName),
-                    users[excuteThirtyYearsUserIndex],users).toJson()
+                    users[indexThirtyYearsUserExcute],users).toJson()
             it.SHOW_FINAL_RESULTS_event(table)
 
         }
-        excuteThirtyYearsUserIndex++
+        indexThirtyYearsUserExcute++
     }
     /**
-     * События демонстрации результатов голосования пользователям.
+     * События перевода в статус демонстрации результатов голосования пользователям.
      */
     private fun  goTo_SHOW_RESULTS_event()
     {
         gameState = GameState.SHOW_RESULTS
         gameEvent.forEach {
             val table = ThirtyYearsVoteInformation(getUser(it.userName),
-                    users[excuteThirtyYearsUserIndex],users).toJson()
+                    users[indexThirtyYearsUserExcute],users).toJson()
             it.SHOW_RESULTS_event(table)
 
         }
-        excuteThirtyYearsUserIndex++
+        indexThirtyYearsUserExcute++
         gameSessionVote.clear()
     }
 

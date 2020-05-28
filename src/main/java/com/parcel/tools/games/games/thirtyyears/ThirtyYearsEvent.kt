@@ -5,17 +5,18 @@ import com.parcel.tools.games.GameEvent
 interface ThirtyYearsEvent : GameEvent {
 
     /**
-     * Событие ввведения реальной отмазки.
+     *   Событие перевода в статус ввведения реальной отмазки.
      */
-    fun ENTER_REAL_EXCUTE_event()
+    fun ENTER_REAL_EXCUTE_event(event: String)
     /**
      * Событие введение фальшивой отмазки.
      */
-    fun ENTER_FALSH_EXCUTE_event()
+    fun ENTER_FALSH_EXCUTE_event(event: String)
     /**
      * Событие голосования.
+     * @param enable значит данный пользователь может голосоватью
      */
-    fun VOTE_event()
+    fun VOTE_event(enable: Boolean)
     /**
      * Событие Показываения пользователю результаты всей игры.
      */
