@@ -22,6 +22,6 @@ abstract class WebSocketMessageInterface {
         val td = message.toJson()
         val sec = Date(System.currentTimeMillis()).seconds
         println("$sec TX(server):$td")
-        userSession!!.getAsyncRemote().sendText(td)
+        userSession!!.asyncRemote.sendText(td)
     }
 }

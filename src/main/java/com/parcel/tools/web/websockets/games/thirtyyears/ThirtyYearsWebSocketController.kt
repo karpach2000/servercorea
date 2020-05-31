@@ -37,7 +37,7 @@ class ThirtyYearsWebSocketController : TextWebSocketHandler() {
         /**
          *Таймаут ожидания ответа от страницы.
          */
-        val wateAnserTimeout = 60000L
+        val wateAnserTimeout = 10000L
 
         /**
          * Кэш хранения входящего сообщения
@@ -106,7 +106,7 @@ class ThirtyYearsWebSocketController : TextWebSocketHandler() {
                 Thread.sleep(1000)
                 timer = timer-1000
             }
-            logger.info("inMessageCash = $inMessageCash")
+            //logger.info("inMessageCash = $inMessageCash")
             return inMessageCash
         }
 
@@ -152,7 +152,10 @@ class ThirtyYearsWebSocketController : TextWebSocketHandler() {
         if (!inMessage.isAnserOnRequest)
         {
             logger.info("RX(server):${rx} ")
-            webPageRequestsParser(session, inMessage)
+            //тебе все дальнейшие действия необходимо запустить в в отдельном потоке т.к.
+            //они создают реквеств которые ожидают ответы улавливаемые этим методом,
+            //который сука синхронизирован
+            Thread(Runnable { webPageRequestsParser(session, inMessage)}).start()
         }
         //Если я сделал реквес веб странице
         else
@@ -162,9 +165,6 @@ class ThirtyYearsWebSocketController : TextWebSocketHandler() {
                     inMessage.sessionId, inMessage.sessionPas, inMessage.userName)
             event.setInMessage(message.payload)
         }
-
-
-
     }
 
     /**

@@ -46,11 +46,12 @@ class WebPage(val sessionId: Long,val sessionPass: Long,val name: String)
             }
         }
 
-    }
+    }//class
 
 
 
-    private val webSocketClient = WebsocketClientEndpoint("ws://127.0.0.1:8080/games/thirtyyears/ws")
+
+    private var webSocketClient = WebsocketClientEndpoint("ws://127.0.0.1:8080/games/thirtyyears/ws")
 
 
     /**
@@ -86,10 +87,18 @@ class WebPage(val sessionId: Long,val sessionPass: Long,val name: String)
     private val inRequestEvent = InRequestEvent(webPageState)
 
 
-
+    //сначало вызывается инит
     init {
         webSocketClient.addMessageHandler(inRequestEvent)
     }
+    //затем конструкор
+    constructor(sessionId: Long,sessionPass: Long,name: String,webSocketClient: WebsocketClientEndpoint)
+            :this(sessionId,sessionPass,name)
+    {
+        this.webSocketClient = webSocketClient
+        this.webSocketClient.addMessageHandler(inRequestEvent)
+    }
+
 
 
     /**

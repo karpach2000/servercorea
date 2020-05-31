@@ -2,6 +2,7 @@ package ru.parcel.sitemqtt.websocket
 
 import com.parcel.tools.web.websockets.games.thirtyyears.json.ThirtyYearsMessage
 import java.net.URI;
+import java.util.*
 import javax.websocket.ClientEndpoint;
 import javax.websocket.CloseReason;
 import javax.websocket.ContainerProvider;
@@ -87,8 +88,10 @@ open class WebsocketClientEndpoint(endpointURI: URI?) {
 
         //если нам прислали реквест
         if (!message.isAnserOnRequest) {
-            println("RX(server):$messageLine")
-            messageHandler!!.handleMessage(message)
+            val sec = Date(System.currentTimeMillis()).seconds
+            println("$sec RX(server):$messageLine")
+            Thread(Runnable { messageHandler!!.handleMessage(message) }).start()
+
         }
         //если ответ на реквест
         else
@@ -118,7 +121,7 @@ open class WebsocketClientEndpoint(endpointURI: URI?) {
     fun sendRequest(message: ThirtyYearsMessage) :ThirtyYearsMessage{
         val td = message.toJson()
         println("TX(client):$td")
-        userSession!!.getAsyncRemote().sendText(td)
+        userSession!!.asyncRemote.sendText(td)
         wateAnser = true
         var timer = TIMEOUT
         while (timer>0 && wateAnser)
