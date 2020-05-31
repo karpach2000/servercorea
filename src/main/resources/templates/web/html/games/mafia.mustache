@@ -5,9 +5,7 @@
 
     {{>web/html/pattern/headDepend}}
     <title>Мафия</title>
-    <script src="/web/javascript/games/mafia/WindowStates.js"></script>
-    <script src="/web/javascript/games/mafia/VoteTableGenerator.js"></script>
-    <script src="/web/javascript/games/mafia/mafia.js"></script>
+
 </head>
 
 <body class="mt-5" onload="toggleMenu()">
@@ -130,6 +128,13 @@
             </div>
 
             <div id="beforGame" class="col-12 col-md-8 bodyDiv" hidden>
+                <h2>
+                    Мафия - лобби
+                </h2>
+
+                <span id="inLobbyTip">
+                    <p>Этот текст не должен появиться</p>
+                </span>
 
                 <p>
                     <button type="button" class="btn btn-primary" onclick="mafia_startGame()" id="mafia_startGame" name="mafia_startGame">
@@ -165,21 +170,30 @@
                     </div>
                 </form>
 
-                <div id="mafia_citizenVote">
-                    <h3>Голосование горожан.</h3>
-                    <button type="button" class="btn btn-warning" id="mafia_voteСitizenButton" onclick="mafia_citizenVote()">
-                        Засчитать голоса горожан
-                    </button>
+                <div id="mafia_controller">
+                    <div class="btn-group" role="group">
+                        <button type="button" class="btn btn-warning" id="mafia_voteСitizenButton" onclick="mafia_citizenVote()">
+                            Засчитать голоса горожан
+                        </button>
+                        <button type="button" class="btn btn-warning" id="mafia_voteMafiaButton" onclick="mafia_mafiaVote()">
+                            Засчитать голоса мафии
+                        </button>
+                    </div>
+                    <br>
+                    <p>
+                        <button type="button" class="btn btn-danger btn-block" onclick="mafia_stopGame()" name="stopGame">
+                            Закончить игру
+                        </button>
+                    </p>
                 </div>
 
-                <div id="mafia_mafiaVote" hidden>
-                    <h3>Голосование мафии.</h3>
-                    <select class="form-control-sm col-6" onchange="mafia_selectCheckUserSheriff()" id="mafia_checkUserSheriffVariants" hidden>
+                <div id="mafia_SheriffVote" hidden>
+                    <h5>Проверка Шерифа</h5>
+                    <select class="form-control-sm col-6" onchange="mafia_selectCheckUserSheriff()" id="mafia_checkUserSheriffVariants">
                     </select>
-                    <button type="button" class="btn btn-warning" id="mafia_voteMafiaButton" onclick="mafia_mafiaVote()">Засчитать голоса мафии</button>
                 </div>
 
-                <button type="button" class="btn btn-danger" onclick="mafia_stopGame()" name="stopGame">Закончить игру</button>
+
             </div>
 
             <div id="gameInfo" class="col-12 col-md-4 bodyDiv" hidden>
@@ -190,7 +204,12 @@
     </main>
 
     {{>web/html/pattern/footer}} {{>web/html/pattern/footDepend}}
-
+    <!-- скрипты переезжают сюда, чтобы загружались после готовности DOM -->
+    <script src="/web/javascript/games/mafia/voteTable.js"></script>
+    <script src="/web/javascript/games/mafia/actions.js"></script>
+    <script src="/web/javascript/games/mafia/dictionary.js"></script>
+    <script src="/web/javascript/games/mafia/webSocket.js"></script>
+    <script src="/web/javascript/games/mafia/stateMachine.js"></script>
 </body>
 
 </html>
