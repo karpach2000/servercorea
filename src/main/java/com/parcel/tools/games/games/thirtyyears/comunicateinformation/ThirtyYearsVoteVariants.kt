@@ -3,28 +3,20 @@ package com.parcel.tools.games.games.thirtyyears.comunicateinformation
 import com.google.gson.GsonBuilder
 import com.google.gson.annotations.Expose
 import com.parcel.tools.games.games.thirtyyears.ThirtyYearsUser
+import com.parcel.tools.web.websockets.games.thirtyyears.json.ThirtyYearsMessage
 
 
+class ThirtyYearsVoteVariants() {
 
-
-class ThirtyYearsVoteInformation(
-        @Expose(serialize = false, deserialize = false) private val user: ThirtyYearsUser,
-        @Expose(serialize = false, deserialize = false) private val trueTeller: ThirtyYearsUser,
-        @Expose(serialize = false, deserialize = false) private val users: ArrayList<ThirtyYearsUser>
-) {
-
+    constructor(user: ThirtyYearsUser, trueTeller: ThirtyYearsUser, users: ArrayList<ThirtyYearsUser>):this()
+    {
+        this.user = user
+        this.trueTeller = trueTeller
+        this.users = users
+    }
 
     class TableRow
     {
-        /**
-         * Имя игрока.
-         */
-        var name = ""
-        /**
-         * Данное событие предназначалось для этого игрока.
-         */
-        var trueTeller = false
-
         /**
          * Ответ пользователя на вопрос
          */
@@ -33,24 +25,34 @@ class ThirtyYearsVoteInformation(
          * Это строка принадлежит пользователю, которому передали страницу
          */
         var itsMe = false
-
-        /**
-         * Количество очков за этот раунд.
-         */
-        var pointsCount = 0
-        /**
-         * Количество очков всего.
-         */
-        var totalPointsCount = 0
     }
 
     /**
      * Данные таблицы отображаемой пользователям.
      */
     class Table{
+        /**
+         * Событие от которого все отмазываются.
+         */
         var event = ""
+
+        /**
+         * Я автор данного вопроса.
+         */
+        var myQuestion = false
+
+        /**
+         * Строки таблицы с вариантами голосования.
+         */
         val rows = ArrayList<TableRow>()
     }
+
+    @Expose(serialize = false, deserialize = false)
+    private lateinit var user: ThirtyYearsUser
+    @Expose(serialize = false, deserialize = false)
+    private lateinit var trueTeller: ThirtyYearsUser
+    @Expose(serialize = false, deserialize = false)
+    private lateinit var users: ArrayList<ThirtyYearsUser>
 
     var table = Table()
 
@@ -66,7 +68,7 @@ class ThirtyYearsVoteInformation(
     fun fromJson(json: String)
     {
         val builder = GsonBuilder()
-        val thirtyYearsMessage = builder.create().fromJson(json, ThirtyYearsVoteInformation::class.java)
+        val thirtyYearsMessage = builder.create().fromJson(json, ThirtyYearsVoteVariants::class.java)
         table = thirtyYearsMessage.table
     }
 
@@ -75,21 +77,13 @@ class ThirtyYearsVoteInformation(
         table.event = trueTeller.event
         users.forEach {
             val tr = TableRow()
-            tr.name = it.name
-            if(it.name == trueTeller.name) {
-                tr.trueTeller = true
-            }
-            else
-            {
-                tr.anser = it.excute
-            }
+            tr.anser = it.excute
+
             if(it.name==user.name)
             {
                 tr.itsMe = true
             }
             //голоса
-            tr.pointsCount = it.gameUserVote.votedCount
-            tr.totalPointsCount = it.points
             table.rows.add(tr)
         }
     }

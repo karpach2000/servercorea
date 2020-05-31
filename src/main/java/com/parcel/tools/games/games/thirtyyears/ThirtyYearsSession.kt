@@ -3,6 +3,7 @@ package com.parcel.tools.games.games.thirtyyears
 import com.parcel.tools.Globals
 import com.parcel.tools.games.GlobalRandomiser
 import com.parcel.tools.games.games.thirtyyears.comunicateinformation.ThirtyYearsVoteInformation
+import com.parcel.tools.games.games.thirtyyears.comunicateinformation.ThirtyYearsVoteVariants
 import com.parcel.tools.games.gamesession.GamesSession
 
 class ThirtyYearsSessionException(message: String):Exception(message)
@@ -253,7 +254,9 @@ class ThirtyYearsSession(sessionId: Long, sessionPas: Long) :
     {
         gameState = GameState.ENTER_FALSH_EXCUTE
         gameEvent.forEach {
-            it.ENTER_FALSH_EXCUTE_event(users[this.indexThirtyYearsUserExcute].event)
+            val table = ThirtyYearsVoteVariants(getUser(it.userName),
+                    users[indexThirtyYearsUserExcute],users).toJson()
+            it.ENTER_FALSH_EXCUTE_event(table)
         }
     }
     /**

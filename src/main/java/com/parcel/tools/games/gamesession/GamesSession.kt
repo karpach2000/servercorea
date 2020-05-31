@@ -12,6 +12,7 @@ abstract class  GamesSession<U : GameUser, E: GameEvent>(val sessionId: Long, va
 
     protected val gameEvent = ArrayList<E>()
 
+
     protected var users = ArrayList<U>()
 
     /**
@@ -116,6 +117,14 @@ abstract class  GamesSession<U : GameUser, E: GameEvent>(val sessionId: Long, va
     {
         this.gameEvent.add(gameEvent)
     }
+
+    fun getGameEvents(name: String) : E
+    {
+        var ans = gameEvent[0]
+        gameEvent.forEach { if(it.userName==name) ans=it }
+        return ans
+    }
+
 
     fun deSubscribeGameEvents(gameEvent: E)
     {

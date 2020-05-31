@@ -27,4 +27,8 @@ interface ThirtyYearsEvent : GameEvent {
     fun SHOW_RESULTS_event(table: String)
 
 
+    /***КОММУНИКАЦИЯ****/
+    fun setInMessage(message: String)
+
+
 }

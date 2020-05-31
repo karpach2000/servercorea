@@ -126,6 +126,11 @@ abstract class GamesSessionManager<U : GameUser, E:GameEvent, GS: GamesSession<U
         getSession(sessionId, sessionPas).subscribeGameEvents(event)
     }
 
+    fun getGameSessionEvents(sessionId: Long, sessionPas: Long, userName: String): E
+    {
+        return getSession(sessionId, sessionPas).getGameEvents(userName)
+    }
+
     fun deSubscribeGameSessionEvent(sessionId: Long, sessionPas: Long, event: E)
     {
         if(SpySessionManager.isSessionExists(sessionId))

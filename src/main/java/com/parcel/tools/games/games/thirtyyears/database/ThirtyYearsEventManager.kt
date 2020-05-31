@@ -56,14 +56,14 @@ open class ThirtyYearsEventManager {
     fun getAllEventsAsString(): List<String>
     {
         logger.info("getAllEventsAsString()")
-        return jdbcTemplate!!.query("SELECT event FROM get_thirty_years_events_and_login()",
+        return jdbcTemplate!!.query("SELECT event FROM get_thirty_years_event_and_login()",
                 StringRowMapper())
     }
 
     fun getAllEvents(): List<ThirtyYearsEvent>
     {
         logger.info("getAllEvents()")
-        return jdbcTemplate!!.query("SELECT * FROM get_thirty_years_events_and_login()",
+        return jdbcTemplate!!.query("SELECT * FROM get_thirty_years_event_and_login()",
                 GetEventRowMapper())
     }
 

@@ -18,7 +18,7 @@ class ThirtyYearsMessage() {
     constructor(sessionId: Long, sessionPass: Long, userName: String):this()
     {
         this.sessionId = sessionId
-        this.sessionPas = sessionPas
+        this.sessionPas = sessionPass
         this.userName = userName
     }
 
@@ -28,6 +28,12 @@ class ThirtyYearsMessage() {
 
     var command = Commands.PING
     var data = ""
+
+    /**
+     * Является ли это сообщение ответом на реквест
+     */
+    var isAnserOnRequest = false
+
 
     private fun fromJson(json: String)
     {
@@ -39,6 +45,8 @@ class ThirtyYearsMessage() {
 
         command = thirtyYearsMessage.command
         data = thirtyYearsMessage.data
+
+        isAnserOnRequest = thirtyYearsMessage.isAnserOnRequest
     }
 
 

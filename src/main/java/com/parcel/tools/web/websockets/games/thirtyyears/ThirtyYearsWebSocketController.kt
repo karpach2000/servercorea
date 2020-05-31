@@ -8,7 +8,6 @@ import org.springframework.web.socket.CloseStatus
 import org.springframework.web.socket.TextMessage
 import org.springframework.web.socket.WebSocketSession
 import org.springframework.web.socket.handler.TextWebSocketHandler
-import javax.print.attribute.standard.JobOriginatingUserName
 
 
 //логгер
@@ -30,48 +29,86 @@ class ThirtyYearsWebSocketController : TextWebSocketHandler() {
         var sessionPas = 0L
 
         /**
+         * Флаг ожидания ответва от веб страницы.
+         */
+        var wateAnser = false
+        private  set
+
+        /**
+         *Таймаут ожидания ответа от страницы.
+         */
+        val wateAnserTimeout = 60000L
+
+        /**
+         * Кэш хранения входящего сообщения
+         */
+        var inMessageCash = ""
+
+        /**
          * Событие перевода в статус ввведения реальной отмазки.
          */
         override fun ENTER_REAL_EXCUTE_event(event: String) {
-            sendMessage(Commands.ENTER_REAL_EXCUTE_EVENT, event)
+            request(Commands.ENTER_REAL_EXCUTE_EVENT, event)
         }
         /**
          * Событие перевода в статус фальшивой отмазки.
          */
         override fun ENTER_FALSH_EXCUTE_event(event: String) {
-            sendMessage(Commands.ENTER_FALSH_EXCUTE_EVENT, event)
+            request(Commands.ENTER_FALSH_EXCUTE_EVENT, event)
         }
         /**
          * Событие перевода в статус голосования.
          */
         override fun VOTE_event(enable: Boolean) {
-            sendMessage(Commands.VOTE_EVENT, enable.toString())
+            request(Commands.VOTE_EVENT, enable.toString())
         }
         /**
          * Событие Показываения пользователю результаты всей игры.
          */
         override fun SHOW_FINAL_RESULTS_event(table: String) {
-            sendMessage(Commands.SHOW_FINAL_RESULTS_EVENT, table)
+            request(Commands.SHOW_FINAL_RESULTS_EVENT, table)
         }
         /**
          * События демонстрации результатов голосования пользователям.
          */
         override fun SHOW_RESULTS_event(table: String) {
-            sendMessage(Commands.SHOW_RESULTS_EVENT, table)
+            request(Commands.SHOW_RESULTS_EVENT, table)
         }
 
         override fun addUserEvent(userList: String) {
-            sendMessage(Commands.ADD_USER)
+            request(Commands.ADD_USER, userList)
         }
 
         override fun startGameEvent() {
-            sendMessage(Commands.START_GAME)
+            request(Commands.START_GAME)
         }
 
         override fun stopGameEvent(spyName: String) {
-            sendMessage(Commands.STOP_GAME)
+            request(Commands.STOP_GAME)
         }
 
+        /**
+         * Опускает в данный класс входящее сообщение.
+         */
+        override  fun setInMessage(message: String)
+        {
+            inMessageCash = message
+            wateAnser = false
+        }
+
+        private fun request(command: Commands, data: String= ""): String
+        {
+            sendMessage(command, data)
+            wateAnser = true
+            var timer = wateAnserTimeout
+            while(timer>0 && wateAnser)
+            {
+                Thread.sleep(1000)
+                timer = timer-1000
+            }
+            logger.info("inMessageCash = $inMessageCash")
+            return inMessageCash
+        }
 
         private fun sendMessage(command: Commands, data: String= "")
         {
@@ -107,13 +144,37 @@ class ThirtyYearsWebSocketController : TextWebSocketHandler() {
 
     @Override
     override fun handleTextMessage(session: WebSocketSession, message: TextMessage) {
-
+        super.handleTextMessage(session, message)
         val rx = message.payload
-        logger.info("RX :${rx} ")
+
         val inMessage = ThirtyYearsMessage(rx)
+        //Если Веб страница сделала реквест мне
+        if (!inMessage.isAnserOnRequest)
+        {
+            logger.info("RX(server):${rx} ")
+            webPageRequestsParser(session, inMessage)
+        }
+        //Если я сделал реквес веб странице
+        else
+        {
+            logger.info("RX(client):${rx} ")
+            val event = ThirtyYearsSessionManager.getGameSessionEvents(
+                    inMessage.sessionId, inMessage.sessionPas, inMessage.userName)
+            event.setInMessage(message.payload)
+        }
+
+
+
+    }
+
+    /**
+     * Обрабатываем реквесты пришедшие от WEB страницы.
+     */
+    private fun webPageRequestsParser(session: WebSocketSession, inMessage: ThirtyYearsMessage)
+    {
         if(inMessage.command==Commands.PING)
         {
-            sendMessage(session, Commands.PONG)
+            sendMessage(session, Commands.PONG, "", true)
         }
         else if(inMessage.command == Commands.CONNECT)
         {
@@ -125,43 +186,48 @@ class ThirtyYearsWebSocketController : TextWebSocketHandler() {
             thirtyYearsEventHandler.userName = name
             thirtyYearsEventHandler.sessionPas = pas
             thirtyYearsEventHandler.sessionId = id
-           ThirtyYearsSessionManager.subscribeGameSessionEvent(id, pas, thirtyYearsEventHandler)
-            sendMessage(session, Commands.CONNECT)
+            ThirtyYearsSessionManager.addSession(id, pas)
+            ThirtyYearsSessionManager.subscribeGameSessionEvent(id, pas, thirtyYearsEventHandler)
+            sendMessage(session, Commands.CONNECT,"", true)
         }
         else if(inMessage.command == Commands.ADD_USER)
         {
             ThirtyYearsSessionManager.addUser(inMessage.sessionId, inMessage.sessionPas, inMessage.userName)
-            sendMessage(session, Commands.ADD_USER)
+            sendMessage(session, Commands.ADD_USER,"", true)
         }
         else if(inMessage.command == Commands.SET_REAL_EXCUTE)
         {
             ThirtyYearsSessionManager.setRealExcude(inMessage.sessionId, inMessage.sessionPas,
                     inMessage.userName, inMessage.data)
-            sendMessage(session, Commands.SET_REAL_EXCUTE)
+            sendMessage(session, Commands.SET_REAL_EXCUTE,"", true)
         }
         else if(inMessage.command == Commands.SET_FALSH_EXCUTE)
         {
             ThirtyYearsSessionManager.setFalshExcute(inMessage.sessionId, inMessage.sessionPas,
                     inMessage.userName, inMessage.data)
-            sendMessage(session, Commands.SET_FALSH_EXCUTE)
+            sendMessage(session, Commands.SET_FALSH_EXCUTE,"", true)
         }
         else if(inMessage.command == Commands.SET_VOTE)
         {
             ThirtyYearsSessionManager.vote(inMessage.sessionId, inMessage.sessionPas,
                     inMessage.userName, inMessage.data)
-            sendMessage(session, Commands.SET_VOTE)
+            sendMessage(session, Commands.SET_VOTE,"", true)
         }
-
-        super.handleTextMessage(session, message)
     }
 
+
+
     private fun sendMessage(session: WebSocketSession,
-                             command: Commands, data: String ="")
+                             command: Commands, data: String ="", isAnserOnRequest :Boolean = false)
     {
+
         val message = ThirtyYearsMessage(-1, -1, "")
         message.command = command
         message.data=data
-        session.sendMessage(TextMessage(message.toJson()))
+        message.isAnserOnRequest = isAnserOnRequest
+        val tx = message.toJson()
+        logger.info("TX(server):${tx} ")
+        session.sendMessage(TextMessage(tx))
 
     }
 
