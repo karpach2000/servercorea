@@ -35,7 +35,5 @@ const span_leftTip = document.getElementById("leftTip");
 const span_inGameTip = document.getElementById("inGameTip");
 const span_inLobbyTip = document.getElementById("inLobbyTip");
 
-
-const dictionary = {
-
-}
+const dayBecome = ' </strong>, город просыпается - наступил <strong>ДЕНЬ</strong>.</p>';
+const nightBecome = ' </strong>, город засыпает - наступила <strong>НОЧЬ</strong>.</p>';

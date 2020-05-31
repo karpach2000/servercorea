@@ -96,18 +96,18 @@ let GameState = {
                     case "CITIZEN":
                         div_controls.hidden = true
                         div_sherifVoter.hidden = true
-                        div_mainVoter.hidden = false
+                            // div_mainVoter.hidden = false
                         break;
 
                     case "SHERIFF":
                         div_controls.hidden = true
-                        div_mainVoter.hidden = false
+                            // div_mainVoter.hidden = false
                         break;
 
                     case "MAFIA":
                         div_controls.hidden = true
                         div_sherifVoter.hidden = true
-                        div_mainVoter.hidden = false
+                            // div_mainVoter.hidden = false
                         break;
 
                     case "DEAD":
@@ -184,7 +184,8 @@ let GameState = {
                     button_voteMafia.disabled = true
 
                     mafia_getСitizenVoteVariants();
-
+                    if (this.myRole != 'DEAD')
+                        div_mainVoter.hidden = false;
                     div_sherifVoter.hidden = true;
                 }
                 if (GameState.currentTime == "NIGHT") {
@@ -194,8 +195,13 @@ let GameState = {
                     mafia_getMafiaVoteVariants();
                     mafia_getSheriffCheckVariants();
                     // mafia_startGame()
-
-                    if (this.myRole == 'SHERIFF') div_sherifVoter.hidden = false
+                    if (this.myRole == 'CITIZEN') {
+                        div_mainVoter.hidden = true;
+                    }
+                    if (this.myRole == 'SHERIFF') {
+                        div_mainVoter.hidden = true;
+                        div_sherifVoter.hidden = false;
+                    }
                 }
                 this.showIngameHints();
                 break;
@@ -221,81 +227,98 @@ let GameState = {
         if (GameState.currentTime == "NIGHT") {
             switch (GameState.myRole) {
                 case 'LEADING':
-                    span_inGameTip.innerHTML = '<p>Господин <strong> Ведущий ' + field_userName.value + ' </strong>, в городе наступила ночь. Вы знаете, что сейчас произойдет.</p>';
+                    span_inGameTip.innerHTML = '<p>Господин <strong> Ведущий ' + field_userName.value + nightBecome;
                     span_leftTip.innerHTML = '<p>Убедитесь, что:</p>' +
                         '<ul>\n' +
                         '<li>все мирные жители мирно спят, или по крайней мере правдоподобно притворяются,</li>\n' +
                         '<li>мафия не забыла, что она мафия, и отправилась убивать,</li>\n' +
                         '<li>шериф не забыл что он шериф, и пытается посмотреть, кто есть кто в этом городишке.</li>\n' +
                         '</ul>\n' +
-                        '<p>Когда все сделали свой выбор, нажмите кнопку "Засчитать голоса мафии". Голоса будут обработаны ' +
-                        'движком игры, засчитаны, и в игре наступит новый день.</p>\n';
+                        '<p>Когда все сделали свой выбор, нажмите кнопку "Засчитать голоса мафии". Голоса будут' +
+                        ' обработаны движком игры, засчитаны, и в игре наступит новый день.</p>\n';
                     break;
 
                 case 'SHERIFF':
-                    span_inGameTip.innerHTML = '<p>Господин <strong> Шериф ' + field_userName.value + ' </strong>, в городе наступила ночь.</p>';
-                    span_leftTip.innerHTML = '<p>Ночная подсказка для шерифа</p>';
+                    span_inGameTip.innerHTML = '<p>Господин <strong> Шериф ' + field_userName.value + nightBecome;
+                    span_leftTip.innerHTML = '<p>Вы - единственный из мирных жителей, кто не спит этой ночью. ' +
+                        'Это Ваш шанс - можно тихонько заглянуть к кому-то в окно, и узнать - спит ли он в своей кровати. ' +
+                        'Если этот кто-то не спит - поздравляем, Вы обнаружили мафиози! </p>' +
+                        '<p>Это все, что Вы можете сделать для своего города этой ночью. Но поверьте, это уже немало.</p>';
                     break;
 
                 case 'CITIZEN':
-                    span_inGameTip.innerHTML = '<p>Гражданин <strong>' + field_userName.value + ' </strong>, в городе наступила ночь. Город засыпает, просыпается мафия.</p>';
-                    span_leftTip.innerHTML = '<p>Ночная подсказка для мирного</p>';
+                    span_inGameTip.innerHTML = '<p>Гражданин <strong>' + field_userName.value + nightBecome;
+                    span_leftTip.innerHTML = '<p>Ночь - время мафии, не время для мирных жителей. ' +
+                        'Все что Вам остается - тревожно спать и надеяться утром проснуться.</p>';
                     break;
 
                 case 'MAFIA':
-                    span_inGameTip.innerHTML = '<p>Господин <strong> Мафиози ' + field_userName.value + ' </strong>, в городе наступила ночь - время мафии.</p>';
-                    span_leftTip.innerHTML = '<p>Ночная подсказка для мафии</p>';
+                    span_inGameTip.innerHTML = '<p>Господин <strong> Мафиози ' + field_userName.value + nightBecome;
+                    span_leftTip.innerHTML = '<p>Ночь - это Ваше время, здесь вы почти всесильны. Выберете, кто из ' +
+                        'мирных граждан не проснется утром.</p>' +
+                        '<p>Будте внимательны! Иногда стоит проголосовать против другого Мафиози или даже против себя, ' +
+                        'чтобы подставить Шерифа. Дело Мафии должно жить любой ценой, даже ценой жизни.</p>';
                     break;
 
                 case 'DEAD':
-                    span_inGameTip.innerHTML = '<p>В этом городе все знали Вас как <strong>' + field_userName.value + ' </strong>. Но теперь Вы труп, и этой ночью можете спать спокойно.</p>';
-                    span_leftTip.innerHTML = '<p>В городе наступает ночь, город засыпает, просыпается мафия... А Вы не просыпаетесь, Вы уже труп.</p>';
+                    span_inGameTip.innerHTML = '<p>В этом городе все знали Вас как <strong>' + field_userName.value +
+                        ' </strong>. Но теперь Вы труп, и этой ночью можете спать спокойно.</p>';
+                    span_leftTip.innerHTML = '<p>В городе наступает ночь, город засыпает, просыпается мафия... ' +
+                        'А Вам остается только наблюдать за всем этим происходящим, как бестелесный призрак.</p>';
                     break;
 
                 default:
-                    span_inGameTip.innerHTML = '<p>Хер <strong> ' + field_userName.value + ' </strong>, в городе наступила ночь.</p>';
+                    span_inGameTip.innerHTML = '<p>Хер <strong> ' + field_userName.value + nightBecome;
                     span_leftTip.innerHTML = '<p>Ночная подсказка для неведомого хера</p>';
                     break;
             }
         } else if (GameState.currentTime == "DAY") {
             switch (GameState.myRole) {
                 case 'LEADING':
-                    span_inGameTip.innerHTML = '<p>Господин <strong> Ведущий ' + field_userName.value + ' </strong>, в городе наступил день. Вы знаете, что сейчас произойдет.</p>';
-                    span_leftTip.innerHTML = '<p>Убедитесь, что:</p>' +
-                        '<ol>\n' +
+                    span_inGameTip.innerHTML = '<p>Господин <strong> Ведущий ' + field_userName.value + dayBecome;
+                    span_leftTip.innerHTML = '<p>Убедитесь, что:</p>' + '<ol>\n' +
                         '<li>Все жители проснулись. Если кто-то не проснулся, расскажите об этом. Смерть надо уважать.</li>\n' +
                         '<li>Все жители получили свою минутку на высказаться. Демократия и свобода слова - наше все.</li>\n' +
-                        '<li>Жители сделали демократический выбор, кого сегодя они хотят убить. Если вдруг никого не хотят - ничего страшного, еще успеют.</li>\n' +
-                        '</ol>\n' +
+                        '<li>Жители сделали демократический выбор, кого сегодя они хотят убить. Если вдруг никого не хотят ' +
+                        '- ничего страшного, еще успеют.</li>\n' + '</ol>\n' +
                         '<p>Когда все сделали свой выбор, приговоренный сказал свое последнее ' +
                         'слово, и никто больше не собирается менять своего мнения,  нажмите кнопку ' +
                         '"Засчитать голоса мафии". Голоса будут обработаны ' +
-                        'движком игры, засчитаны, и в игре наступит новый день.</p>\n';
+                        'движком игры, засчитаны, и в игре наступит новая ночь.</p>\n';
                     break;
 
                 case 'SHERIFF':
-                    span_inGameTip.innerHTML = '<p>Господин <strong> Шериф ' + field_userName.value + ' </strong>, в городе наступил день.</p>';
-                    span_leftTip.innerHTML = '<p>Дневная подсказка для шерифа</p>';
+                    span_inGameTip.innerHTML = '<p>Господин <strong> Шериф ' + field_userName.value + dayBecome;
+                    span_leftTip.innerHTML = '<p>Сейчас Вы голосуете за того, кого сегодня днем казнят. ' +
+                        'Подумайте хорошенько, стоит ли раскрыть себя городу, ведь Вас могут после этого убить. ' +
+                        'Но иногда стоит пожертвовать собой ради искоренения Мафии, если данная Вами информация ' +
+                        'гарантирует победу города.</p>';
                     break;
 
                 case 'CITIZEN':
-                    span_inGameTip.innerHTML = '<p>Гражданин <strong>' + field_userName.value + ' </strong>, в городе наступил день.</p>';
-                    span_leftTip.innerHTML = '<p>Дневная подсказка для мирного</p>';
+                    span_inGameTip.innerHTML = '<p>Гражданин <strong>' + field_userName.value + dayBecome;
+                    span_leftTip.innerHTML = '<p>Сейчас Вы голосуете за того, кого сегодня днем казнят. ' +
+                        'Подумайте хорошенько - стоит ли рисковать жизнью невинных ради призрачного ' +
+                        'шанса убить виновного?</p>';
                     break;
 
                 case 'MAFIA':
-                    span_inGameTip.innerHTML = '<p>Господин <strong> Мафиози ' + field_userName.value + ' </strong>, в городе наступил день.</p>';
-                    span_leftTip.innerHTML = '<p>Дневная подсказка для мафии</p>';
+                    span_inGameTip.innerHTML = '<p>Господин <strong> Мафиози ' + field_userName.value + dayBecome;
+                    span_leftTip.innerHTML = '<p>Сейчас Вы голосуете за того, кого сегодня днем казнят. ' +
+                        'Подумайте хорошенько - никто (или почти никто) не знает, что Вы - Мафиози, это ' +
+                        'Ваш шанс избавиться законным путем от кого-то неугодного Мафии. Но будьте ' +
+                        'внимательны - не делайте это слишком явно, не компрометируйте себя!</p>';
                     break;
 
                 case 'DEAD':
-                    span_inGameTip.innerHTML = '<p>В этом городе все знали Вас как <strong>' + field_userName.value + ' </strong>. Но теперь Вы труп, и не каждый вообще о Вас вспомнит.</p>';
+                    span_inGameTip.innerHTML = '<p>В этом городе все знали Вас как <strong>' + field_userName.value +
+                        ' </strong>. Но теперь Вы труп, город просыпается, а Вы - нет.</p>';
                     span_leftTip.innerHTML = '<p>В городе день, и все горожане занимаются своими ' +
                         'обычными делами - ищут, кто из окружающих не выспался, потому что ночью ходил ' +
                         'убивать. Но Вас такие мелочи уже не волнуют. Мертвецов вообще мало что волнует.</p>';
                     break;
                 default:
-                    span_inGameTip.innerHTML = '<p>Хер <strong> ' + field_userName.value + ' </strong>, в городе наступил день.</p>';
+                    span_inGameTip.innerHTML = '<p>Хер <strong> ' + field_userName.value + dayBecome;
                     span_leftTip.innerHTML = '<p>Дневная подсказка для неведомого хера</p>';
                     break;
             }

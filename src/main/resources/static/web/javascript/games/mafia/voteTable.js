@@ -62,6 +62,28 @@ let voteTable = {
                 parsedArray[i].isAlife = "Живой";
             else
                 parsedArray[i].isAlife = "Мертв";
+
+            switch (parsedArray[i].role) {
+                case "LEADING":
+                    parsedArray[i].role = 'Ведущий';
+                    break;
+                case "CITIZEN":
+                    parsedArray[i].role = 'Мирный';
+                    break;
+                case "SHERIFF":
+                    parsedArray[i].role = 'Шериф';
+                    break;
+                case "MAFIA":
+                    parsedArray[i].role = 'Мафиози';
+                    break;
+                case "SECRET":
+                    parsedArray[i].role = 'Неизвестно';
+                    break;
+                default:
+                    parsedArray[i].role = 'Хер с горы';
+                    break;
+            }
+
             // меняем форматирование строки, относящейся к данному игроку
             if (parsedArray[i].isItMe == 'true') { // эта строчка относится к данному игроку
                 for (let key in parsedArray[i]) {
@@ -74,5 +96,11 @@ let voteTable = {
 
     show() {
         table_mafiaUserVoteTable.innerHTML = this.table;
+        if (GameState.myRole != "LEADING") {
+            let checkCol = document.querySelectorAll(".tableCheck");
+            checkCol.forEach(element => {
+                element.hidden = true;
+            });
+        }
     }
 }
