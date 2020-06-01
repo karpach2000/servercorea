@@ -1,7 +1,7 @@
 package com.parcel.tools.web.websockets.games
 
-import com.parcel.tools.games.spy.SpyEvent
-import com.parcel.tools.games.spy.SpySessionManager
+import com.parcel.tools.games.games.spy.SpyEvent
+import com.parcel.tools.games.games.spy.SpySessionManager
 import org.springframework.stereotype.Component
 import org.springframework.web.socket.CloseStatus
 import org.springframework.web.socket.TextMessage
@@ -21,7 +21,7 @@ class SpyWebSocketController : TextWebSocketHandler()  {
     class SpyEventHandler(private var session: WebSocketSession,private var name: String): SpyEvent
     {
 
-
+        override var userName = ""
 
         override fun addUserEvent(userList: String) {
             sendMessage("addUserEvent$SEPORATOR$userList")

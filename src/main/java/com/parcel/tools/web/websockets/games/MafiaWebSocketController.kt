@@ -1,8 +1,7 @@
 package com.parcel.tools.web.websockets.games
 
-import com.parcel.tools.games.mafia.MafiaEvent
-import com.parcel.tools.games.mafia.MafiaSessionManager
-import com.parcel.tools.web.websockets.games.SpyWebSocketController
+import com.parcel.tools.games.games.mafia.MafiaEvent
+import com.parcel.tools.games.games.mafia.MafiaSessionManager
 import org.springframework.stereotype.Component
 import org.springframework.web.socket.CloseStatus
 import org.springframework.web.socket.TextMessage

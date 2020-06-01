@@ -3,10 +3,10 @@ package com.parcel.tools.web.rest.games
 import com.parcel.tools.constructor.Page
 import com.parcel.tools.constructor.bodies.games.CounterGames
 import com.parcel.tools.constructor.bodies.gamesSettings.CounterGamesSettings
-import com.parcel.tools.games.GameSessionException
+import com.parcel.tools.games.gamesession.GameSessionException
 import com.parcel.tools.games.GameSessionManagerException
-import com.parcel.tools.games.spy.SpySessionException
-import com.parcel.tools.games.spy.SpySessionManager
+import com.parcel.tools.games.games.spy.SpySessionException
+import com.parcel.tools.games.games.spy.SpySessionManager
 import com.parcel.tools.statistics.StatisticsForGames
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.core.userdetails.User

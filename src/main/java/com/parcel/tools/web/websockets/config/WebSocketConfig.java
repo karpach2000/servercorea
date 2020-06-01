@@ -4,6 +4,7 @@ package com.parcel.tools.web.websockets.config;
 import com.parcel.tools.web.websockets.games.CardsWebSocketController;
 import com.parcel.tools.web.websockets.games.MafiaWebSocketController;
 import com.parcel.tools.web.websockets.games.SpyWebSocketController;
+import com.parcel.tools.web.websockets.games.thirtyyears.ThirtyYearsWebSocketController;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.socket.config.annotation.*;
 
@@ -17,6 +18,7 @@ public class WebSocketConfig implements  WebSocketConfigurer {
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
         registry.addHandler(new SpyWebSocketController(), "/games/spy/ws").setAllowedOrigins("*");
         registry.addHandler(new MafiaWebSocketController(), "/games/mafia/ws").setAllowedOrigins("*");
-        registry.addHandler(new CardsWebSocketController(), "/games/cards/ws").setAllowedOrigins("*");
+        registry.addHandler(new CardsWebSocketController(), "/games/cards/ws").setAllowedOrigins("*");//ThirtyYearsWebSocketController
+        registry.addHandler(new ThirtyYearsWebSocketController(), "/games/thirtyyears/ws").setAllowedOrigins("*");
     }
 }
