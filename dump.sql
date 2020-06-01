@@ -672,6 +672,9 @@ COPY public.thirty_years_events (id, event, users_id, available) FROM stdin;
 1	Полет на параплане	2	t
 2	Поход в туалет	2	t
 3	Фоткать голых баб на забросе	3	t
+4	Поход в пещеры	2	t
+5	Частится в зуме	2	t
+6	Кальянная на яблочково	2	t
 \.
 
 
@@ -717,7 +720,7 @@ SELECT pg_catalog.setval('public.spy_locations_id_seq', 4, true);
 -- Name: thirty_years_events_id_seq; Type: SEQUENCE SET; Schema: public; Owner: developer
 --
 
-SELECT pg_catalog.setval('public.thirty_years_events_id_seq', 3, true);
+SELECT pg_catalog.setval('public.thirty_years_events_id_seq', 6, true);
 
 
 --
