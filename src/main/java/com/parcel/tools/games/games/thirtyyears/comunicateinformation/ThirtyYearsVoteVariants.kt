@@ -3,7 +3,6 @@ package com.parcel.tools.games.games.thirtyyears.comunicateinformation
 import com.google.gson.GsonBuilder
 import com.google.gson.annotations.Expose
 import com.parcel.tools.games.games.thirtyyears.ThirtyYearsUser
-import com.parcel.tools.web.websockets.games.thirtyyears.json.ThirtyYearsMessage
 
 
 class ThirtyYearsVoteVariants() {
@@ -68,25 +67,49 @@ class ThirtyYearsVoteVariants() {
     fun fromJson(json: String)
     {
         val builder = GsonBuilder()
-        val thirtyYearsMessage = builder.create().fromJson(json, ThirtyYearsVoteVariants::class.java)
-        table = thirtyYearsMessage.table
+        val table = builder.create().fromJson(json, Table::class.java)
+        this.table = table
+    }
+
+    override fun toString(): String {
+        var ans = ""
+        table.rows.forEach {
+            if(!it.itsMe)
+                ans = "$ans${it.anser},"
+            else
+                ans = "$ans${it.anser}(itsMe),"
+        }
+        return ans
     }
 
     private fun putDataToTable()
     {
         table.event = trueTeller.event
-        users.forEach {
-            val tr = TableRow()
-            tr.anser = it.excute
+        if(checkCanIVote())
+            users.forEach {
+                val tr = TableRow()
 
-            if(it.name==user.name)
-            {
-                tr.itsMe = true
+                //У всех берем фальшотмазку у атора вопроса реальную
+                if(it.name==trueTeller.name)
+                    tr.anser = it.excute
+                else
+                    tr.anser = it.falshExcute
+
+                //помечаем автора ответа
+                if(it.name==user.name)
+                {
+                    tr.itsMe = true
+                }
+                //голоса
+                table.rows.add(tr)
             }
-            //голоса
-            table.rows.add(tr)
-        }
     }
+
+    /**
+     * Может ли пользователь которому принадлежит таблица голосовать.
+     * (если таблица принадлежит автору вопроса, он не голосует)
+     */
+    private fun checkCanIVote() = user.event!=table.event
 
 
 }

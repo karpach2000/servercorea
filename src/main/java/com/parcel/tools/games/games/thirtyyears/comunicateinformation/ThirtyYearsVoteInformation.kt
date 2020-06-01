@@ -3,16 +3,18 @@ package com.parcel.tools.games.games.thirtyyears.comunicateinformation
 import com.google.gson.GsonBuilder
 import com.google.gson.annotations.Expose
 import com.parcel.tools.games.games.thirtyyears.ThirtyYearsUser
+import dnl.utils.text.table.TextTable
 
 
+class ThirtyYearsVoteInformation() {
 
-
-class ThirtyYearsVoteInformation(
-        @Expose(serialize = false, deserialize = false) private val user: ThirtyYearsUser,
-        @Expose(serialize = false, deserialize = false) private val trueTeller: ThirtyYearsUser,
-        @Expose(serialize = false, deserialize = false) private val users: ArrayList<ThirtyYearsUser>
-) {
-
+    constructor(user: ThirtyYearsUser, trueTeller: ThirtyYearsUser, users: ArrayList<ThirtyYearsUser>)
+            :this()
+    {
+        this.user = user
+        this.trueTeller = trueTeller
+        this.users = users
+    }
 
     class TableRow
     {
@@ -42,6 +44,15 @@ class ThirtyYearsVoteInformation(
          * Количество очков всего.
          */
         var totalPointsCount = 0
+
+        /**
+         * Получить строку для вывода всей этой срани в таблицу
+         */
+        fun getDataRow(): Array<String?>
+        {
+            return arrayOf(name, trueTeller.toString(), anser, itsMe.toString(),
+                    pointsCount.toString(), totalPointsCount.toString())
+        }
     }
 
     /**
@@ -51,6 +62,14 @@ class ThirtyYearsVoteInformation(
         var event = ""
         val rows = ArrayList<TableRow>()
     }
+
+    @Expose(serialize = false, deserialize = false)
+    private lateinit var user: ThirtyYearsUser
+    @Expose(serialize = false, deserialize = false)
+    private lateinit var trueTeller: ThirtyYearsUser
+    @Expose(serialize = false, deserialize = false)
+    private lateinit var users: ArrayList<ThirtyYearsUser>
+
 
     var table = Table()
 
@@ -66,8 +85,21 @@ class ThirtyYearsVoteInformation(
     fun fromJson(json: String)
     {
         val builder = GsonBuilder()
-        val thirtyYearsMessage = builder.create().fromJson(json, ThirtyYearsVoteInformation::class.java)
-        table = thirtyYearsMessage.table
+        val table = builder.create().fromJson(json, Table::class.java)
+        this.table = table
+    }
+
+    fun toTextTable(): TextTable {
+        val columnNames =
+        arrayOf<String>("name","trueTeller", "anser", "itsMe", "pointsCount", "totalPointsCount", "totalPointsCount")
+        val rows = Array(table.rows.size) { arrayOfNulls<String>(columnNames.size) }
+        for(i in 0 until table.rows.size)
+        {
+            rows[i]=table.rows[i].getDataRow()
+        }
+        val tt = TextTable(columnNames, rows)
+        tt.setAddRowNumbering(true)
+        return tt
     }
 
     private fun putDataToTable()

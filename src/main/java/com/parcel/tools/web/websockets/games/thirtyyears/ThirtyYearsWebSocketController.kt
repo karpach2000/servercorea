@@ -59,8 +59,8 @@ class ThirtyYearsWebSocketController : TextWebSocketHandler() {
         /**
          * Событие перевода в статус голосования.
          */
-        override fun VOTE_event(enable: Boolean) {
-            request(Commands.VOTE_EVENT, enable.toString())
+        override fun VOTE_event(variants: String) {
+            request(Commands.VOTE_EVENT, variants)
         }
         /**
          * Событие Показываения пользователю результаты всей игры.
@@ -103,8 +103,8 @@ class ThirtyYearsWebSocketController : TextWebSocketHandler() {
             var timer = wateAnserTimeout
             while(timer>0 && wateAnser)
             {
-                Thread.sleep(1000)
-                timer = timer-1000
+                Thread.sleep(10)
+                timer = timer-10
             }
             //logger.info("inMessageCash = $inMessageCash")
             return inMessageCash
@@ -194,6 +194,11 @@ class ThirtyYearsWebSocketController : TextWebSocketHandler() {
         {
             ThirtyYearsSessionManager.addUser(inMessage.sessionId, inMessage.sessionPas, inMessage.userName)
             sendMessage(session, Commands.ADD_USER,"", true)
+        }
+        else if(inMessage.command == Commands.START_GAME)
+        {
+            ThirtyYearsSessionManager.startGame(inMessage.sessionId, inMessage.sessionPas)
+            sendMessage(session, Commands.START_GAME,"", true)
         }
         else if(inMessage.command == Commands.SET_REAL_EXCUTE)
         {

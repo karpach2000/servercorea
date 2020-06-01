@@ -16,7 +16,7 @@ interface ThirtyYearsEvent : GameEvent {
      * Событие голосования.
      * @param enable значит данный пользователь может голосоватью
      */
-    fun VOTE_event(enable: Boolean)
+    fun VOTE_event(variants: String)
     /**
      * Событие Показываения пользователю результаты всей игры.
      */
