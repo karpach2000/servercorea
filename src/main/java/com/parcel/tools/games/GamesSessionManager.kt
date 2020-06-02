@@ -142,6 +142,7 @@ abstract class GamesSessionManager<U : GameUser, E:GameEvent, GS: GamesSession<U
 
     private fun destructorAction()
     {
+        logger.info("START DESTRUCTOR!")
         while (true)
         {
             removeOldGames()
@@ -153,10 +154,11 @@ abstract class GamesSessionManager<U : GameUser, E:GameEvent, GS: GamesSession<U
     {
         logger.debug("Removing old games.")
         val current = System.currentTimeMillis()
-        gameSessions.forEach {
-            if(current- it.startTime> this.gameLifeTime) {
-                logger.info("Removing game: ${it.sessionId}")
-                gameSessions.remove(it)
+        for(gs in gameSessions)
+        {
+            if(current- gs.startTime> this.gameLifeTime) {
+                logger.info("Removing game: ${gs.sessionId}")
+                gameSessions.remove(gs)
             }
         }
     }
