@@ -138,6 +138,10 @@ abstract class GamesSessionManager<U : GameUser, E:GameEvent, GS: GamesSession<U
     }
 
 
+    /******СТАТИСТИКА************/
+    fun countSessions() = gameSessions.size
+
+
     /********СБОРЩИКИ МУСОРА*******/
 
     private fun destructorAction()

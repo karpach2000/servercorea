@@ -52,7 +52,7 @@ class CardsSession(sessionId: Long, sessionPas: Long) : GamesSession<CardsUser, 
      * Получить информацию отображаемую пользователю во время игры.
      */
     fun getUserInformation(userName: String): UserInformation {
-        logger.info("getUserInformation($userName)")
+        logger.debug("getUserInformation($userName)")
         users.forEach {
             if (it.name == userName) {
                 return UserInformation(it, users.size, getAllCardsUsers(userName))
@@ -62,7 +62,7 @@ class CardsSession(sessionId: Long, sessionPas: Long) : GamesSession<CardsUser, 
     }
 
     fun stopCardsGame() {
-        logger.info("stopGame()")
+        logger.debug("stopGame()")
         users.clear()
         started = false
         stopGameEvent(gameResult)
@@ -76,7 +76,7 @@ class CardsSession(sessionId: Long, sessionPas: Long) : GamesSession<CardsUser, 
 
     @Synchronized
     private fun updateCards(): Boolean {
-        logger.info("updateCards()")
+        logger.debug("updateCards()")
         val buffer = users[0].userCard
         for (i in 0..(users.size - 2)) {
             users[i].userCard = users[i + 1].userCard
@@ -87,7 +87,7 @@ class CardsSession(sessionId: Long, sessionPas: Long) : GamesSession<CardsUser, 
     }
 
     fun addUser(name: String, card: String): Boolean {
-        logger.info("addUser(${name},${card})...")
+        logger.debug("addUser(${name},${card})...")
         val user = CardsUser(name)
         user.userCard = card
         return addUser(user)
