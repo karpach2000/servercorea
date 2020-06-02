@@ -66,7 +66,7 @@ open class UserManager {
     internal inner class UpdatePasswordRowMapper: RowMapper<String> {
         @Throws(SQLException::class)
         override fun mapRow(rs: ResultSet, rowNum: Int): String {
-            return rs.getString("update_password")
+            return rs.getString("update_passwordn")
         }
     }
 
@@ -116,7 +116,7 @@ open class UserManager {
 
     fun updatePassword(login:String, password:String){
         logger.info("updatePassword($login, $password)")
-        val dbAns = jdbcTemplate!!.query("SELECT * FROM update_user('$login, $password')",
+        val dbAns = jdbcTemplate!!.query("SELECT * FROM update_passwordn('$login', '$password')",
                     UpdatePasswordRowMapper())[0]
         if(dbAns == "OK")
             return

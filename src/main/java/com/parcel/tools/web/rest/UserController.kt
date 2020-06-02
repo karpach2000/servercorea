@@ -2,14 +2,13 @@ package com.parcel.tools.web.rest
 
 import com.parcel.tools.constructor.Page
 import com.parcel.tools.constructor.bodies.admin.CounterAdmin
+import com.parcel.tools.constructor.database.users.UserManager
+import com.parcel.tools.constructor.database.users.Users
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RequestParam
-import org.springframework.web.bind.annotation.ResponseBody
+import org.springframework.web.bind.annotation.*
 import java.io.IOException
 import javax.servlet.http.HttpServletRequest
 
@@ -106,7 +105,7 @@ class UserController {
      */
     @RequestMapping("/users/reg")
     @Throws(IOException::class)
-    internal fun signUp(model: Model, request: HttpServletRequest) : String {
+    internal fun reg(model: Model, request: HttpServletRequest) : String {
         val counter = CounterAdmin()
         val page = Page(counter)
         model.addAttribute("page", page)
@@ -115,16 +114,28 @@ class UserController {
 
 
     //Добавление возможности изменения пароля
-    @RequestMapping("/settings/account/{login},{password}")
+    @RequestMapping("/settings/account/update")
+    @ResponseBody
     @Throws(IOException::class)
-    internal fun myAccount(@PathVariable login:String, @PathVariable password:String, model: Model):String{
-        com.parcel.tools.Globals.userManager.updatePassword(login, password)
+    internal fun update(model: Model, request: HttpServletRequest,
+                           @RequestParam("login") login: String,
+                           @RequestParam("password") password: String):String{
+        try {
+            com.parcel.tools.Globals.userManager.updatePassword(login, password)
+            return "true"
+        }
+        catch (ex: Exception)
+        {
+            return ex.message.toString()
+        }
+    }
 
-        model.addAttribute("user",com.parcel.tools.Globals.userManager)
-//        val counter = CounterAdmin()
-//        val page = Page(counter)
-//        model.addAttribute("page", page)
-
+    @RequestMapping("/settings/account")
+    @Throws(IOException::class)
+    internal fun account(model: Model, request: HttpServletRequest) : String {
+        val counter = CounterAdmin()
+        val page = Page(counter)
+        model.addAttribute("page", page)
         return "web/html/account"
     }
 }

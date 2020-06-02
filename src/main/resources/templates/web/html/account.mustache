@@ -1,0 +1,94 @@
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+    <title>Мой аккаунт</title>
+    <script src="/web/javascript/account.js"></script>
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css"
+          integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous" />
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
+</head>
+</head>
+<body>
+<main role="main" class="container pt-3">
+    <!-- <div id="createUser" class="createUser" class="bodyDiv"> -->
+    <!-- <form method="GET" class="bodyDiv" action="/users/addUser">
+      document.getElementById("buttonUser").textContent = username;-->
+    <form >
+        <div class="container">
+            <div class="alert alert-dark">
+                <strong>Аккаунт</strong>
+            </div>
+            <div class="card" style="width:400px">
+                <img class="card-img-top" src="https://w7.pngwing.com/pngs/400/768/png-transparent-laptop-computer-icons-user-drawing-computer-user-miscellaneous-blue-rectangle-thumbnail.png"
+                     alt="Card image" style="width:100%">
+                <div class="card-body" id="buttonUser">
+                    <h4 class="card-title">User</h4>
+                </div>
+
+                <div class="form-group row">
+                    <label for="login" class="col-sm-4 col-form-label"
+                    >Введите логин</label
+                    >
+                    <div class="col-sm-6">
+                        <input
+                                type="text"
+                                id="login"
+                                size="10"
+                                class="form-control"
+                                onkeyup="this.value = this.value.replace(/[^A-Za-zА-Яа-яЁё0-9]/,'');"
+                                required
+                                placeholder="Введите отображаемое имя"
+                        />
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label for="password" class="col-sm-4 col-form-label"
+                    >Новый пароль</label>
+                    <div class="col-sm-6">
+                        <input
+                                type="password"
+                                id="password"
+                                class="form-control"
+                                required
+                                placeholder="Новый пароль"/>
+                    </div>
+                </div>
+                <button
+                        type="button"
+                        class="btn btn-primary"
+                        onclick="account()"
+                        name="updatePassword"
+                        id="updatePassword"
+                >
+                    Обновить
+                </button>
+            </div>
+    </form>
+</main>
+<script
+        src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"
+></script>
+<script
+        src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"
+        integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut"
+        crossorigin="anonymous"
+></script>
+<script
+        src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"
+        integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k"
+        crossorigin="anonymous"
+></script>
+
+</body>
+</html>
