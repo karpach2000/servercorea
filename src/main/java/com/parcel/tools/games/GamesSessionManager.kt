@@ -155,7 +155,7 @@ abstract class GamesSessionManager<U : GameUser, E:GameEvent, GS: GamesSession<U
         val current = System.currentTimeMillis()
         gameSessions.forEach {
             if(current- it.startTime> this.gameLifeTime) {
-                logger.debug("Removing game: ${it.sessionId}")
+                logger.info("Removing game: ${it.sessionId}")
                 gameSessions.remove(it)
             }
         }

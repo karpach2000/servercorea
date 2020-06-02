@@ -218,6 +218,12 @@ class ThirtyYearsWebSocketController : TextWebSocketHandler() {
                     inMessage.userName, inMessage.data)
             sendMessage(session, Commands.SET_VOTE,"", true)
         }
+        else if(inMessage.command == Commands.ROUND)
+        {
+            ThirtyYearsSessionManager.round(inMessage.sessionId, inMessage.sessionPas,
+                    inMessage.userName)
+            sendMessage(session, Commands.ROUND,"", true)
+        }
     }
 
 
