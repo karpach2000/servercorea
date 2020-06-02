@@ -35,7 +35,11 @@ object ThirtyYearsSessionManager :
         logger.info("setFalshExcute($sessionId, $sessionPas)")
         return getSession(sessionId, sessionPas).vote(userName, anser)
     }
-
+    fun round(sessionId: Long, sessionPas: Long, userName: String): Boolean
+    {
+        logger.info("round($sessionId, $sessionPas, $userName)")
+        return getSession(sessionId, sessionPas).round()
+    }
 
 
 

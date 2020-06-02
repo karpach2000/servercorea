@@ -37,6 +37,7 @@ class WebPage(val sessionId: Long,val sessionPass: Long,val name: String)
             }
             else if(message.command==Commands.ENTER_FALSH_EXCUTE_EVENT)
             {
+                webPage.round()
                 webPage.currentEvent = message.data
                 webPage.webPageState=WebPageStates.ENTER_FALSH_EXCUTE_EVENT
             }
@@ -185,6 +186,14 @@ class WebPage(val sessionId: Long,val sessionPass: Long,val name: String)
     {
         request(Commands.SET_VOTE, anser)
     }
+    /**
+     * Завершить раунд
+     */
+    fun setRound()
+    {
+        request(Commands.ROUND)
+    }
+
 
 
     /**
@@ -197,8 +206,14 @@ class WebPage(val sessionId: Long,val sessionPass: Long,val name: String)
     }
 
 
-
-
+    /**
+     * Методл вызывается после перехода в состояние ENTER_FALSH_EXCUTE (конец раунда)
+     * применяется для отчистки ВЕБ страницы от информации от прошлого раунда.
+     */
+    private fun round()
+    {
+        currentExcude = ""
+    }
 
 
     /**

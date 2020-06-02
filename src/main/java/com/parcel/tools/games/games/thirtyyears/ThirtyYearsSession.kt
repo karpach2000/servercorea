@@ -70,7 +70,7 @@ class ThirtyYearsSession(sessionId: Long, sessionPas: Long) :
         if(!started)
         {
             started = true
-            logger.info("startGame()...")
+            logger.debug("startGame()...")
             //обновляем список локаций
             updateEvents()
             //Присвоить каждому пользователю локацию.
@@ -93,7 +93,7 @@ class ThirtyYearsSession(sessionId: Long, sessionPas: Long) :
      */
     fun vote(userName: String, anser: String): Boolean
     {
-        logger.info("vote($userName, $anser)")
+        logger.debug("vote($userName, $anser)")
 
         var voteName = ""
         //аходим пользователя, которому принадлежит ответ
@@ -114,7 +114,7 @@ class ThirtyYearsSession(sessionId: Long, sessionPas: Long) :
      */
     fun setRealExcute(userName: String, excute: String):Boolean
     {
-        logger.info("setRealExcute($userName, $excute)")
+        logger.debug("setRealExcute($userName, $excute)")
         getUser(userName).excute = excute
         countThirtyYearsUserExcute++
         updateByStateMashine()
@@ -125,10 +125,24 @@ class ThirtyYearsSession(sessionId: Long, sessionPas: Long) :
      */
     fun setFalshExcute(userName: String, falshExcute: String):Boolean
     {
-        logger.info("setFalshExcute($userName, $falshExcute)")
+        logger.debug("setFalshExcute($userName, $falshExcute)")
         getUser(userName).falshExcute = falshExcute
         countThirtyYearsUserExcute++
         updateByStateMashine()
+        return true
+    }
+
+    /**
+     * Закончить раунд.
+     */
+    fun round(): Boolean
+    {
+        logger.debug("round()")
+        users[indexThirtyYearsUserExcute].isExcuting = false
+        indexThirtyYearsUserExcute++
+        users[indexThirtyYearsUserExcute].isExcuting = true
+        users.forEach { it.clear() }
+        goTo_ENTER_FALSH_EXCUTE_event()
         return true
     }
 
@@ -160,7 +174,7 @@ class ThirtyYearsSession(sessionId: Long, sessionPas: Long) :
             updatePoints(users[indexThirtyYearsUserExcute].name)
             //если все проголосовали
             if(countThirtyYearsUserVote>=users.size-1) {
-                if (countThirtyYearsUserVote < users.size) {
+                if (indexThirtyYearsUserExcute < users.size-1) {
                     goTo_SHOW_RESULTS_event()
                 } else
                     goTo_SHOW_FINAL_RESULTS_event()
@@ -169,7 +183,7 @@ class ThirtyYearsSession(sessionId: Long, sessionPas: Long) :
         }
         else if(gameState == GameState.SHOW_RESULTS)
         {
-
+            //ничего не делаем, выход из этого состояния происходит от внешней команды ROUND
         }
     }
 
@@ -237,7 +251,7 @@ class ThirtyYearsSession(sessionId: Long, sessionPas: Long) :
      */
     @Synchronized
     private fun updateEvents() : Boolean{
-        logger.info("updateEvents()")
+        logger.debug("updateEvents()")
         events.clear()
         Globals.thirtyYearsEventManager.getAllEventsAsString().forEach { events.add(it) }
         return true
@@ -292,7 +306,6 @@ class ThirtyYearsSession(sessionId: Long, sessionPas: Long) :
             it.SHOW_FINAL_RESULTS_event(table)
 
         }
-        indexThirtyYearsUserExcute++
     }
     /**
      * События перевода в статус демонстрации результатов голосования пользователям.
@@ -306,7 +319,6 @@ class ThirtyYearsSession(sessionId: Long, sessionPas: Long) :
             it.SHOW_RESULTS_event(table)
 
         }
-        indexThirtyYearsUserExcute++
         gameSessionVote.clear()
     }
 

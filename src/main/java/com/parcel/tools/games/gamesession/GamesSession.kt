@@ -39,7 +39,7 @@ abstract class  GamesSession<U : GameUser, E: GameEvent>(val sessionId: Long, va
 
     fun stopGame()
     {
-        logger.info("stopGame()")
+        logger.debug("stopGame()")
         users.clear()
         started = false
         stopGameEvent(gameResult)
@@ -51,7 +51,7 @@ abstract class  GamesSession<U : GameUser, E: GameEvent>(val sessionId: Long, va
 
     protected fun addUser(user: U): Boolean
     {
-        logger.info("addUser(${user.name})...")
+        logger.debug("addUser(${user.name})...")
         val userExist = isUserExist(user.name)
         if(started && !userExist)
         {

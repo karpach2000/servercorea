@@ -60,7 +60,7 @@ class MafiaSession(sessionId: Long, sessionPas: Long) :  GamesSession<MafiaUser,
     /*******USERS******/
     fun getRole(userName: String): String
     {
-        logger.info("getRole($userName)")
+        logger.debug("getRole($userName)")
         return getUser(userName).role.toString()
     }
 
@@ -84,7 +84,7 @@ class MafiaSession(sessionId: Long, sessionPas: Long) :  GamesSession<MafiaUser,
      */
     fun getUsersForVoteСitizen(userName: String):String
     {
-        logger.info("getUsersForVoteСitizen($userName)")
+        logger.debug("getUsersForVoteСitizen($userName)")
         var ans = ""
         if(getUser(userName).role!=MafiaUserRoles.LEADING && getUser(userName).isAlife) {
             val SEPORATOR = "_"
@@ -102,7 +102,7 @@ class MafiaSession(sessionId: Long, sessionPas: Long) :  GamesSession<MafiaUser,
      */
     fun getUsersForVoteMafia(userName: String):String
     {
-        logger.info("getUsersForVoteMafia($userName)")
+        logger.debug("getUsersForVoteMafia($userName)")
         var ans = ""
         if(getUser(userName).role==MafiaUserRoles.MAFIA && getUser(userName).isAlife) {
             val SEPORATOR = "_"
@@ -139,7 +139,7 @@ class MafiaSession(sessionId: Long, sessionPas: Long) :  GamesSession<MafiaUser,
 
     fun getGameState(userName: String):String
     {
-        logger.info("getGameState($userName)")
+        logger.debug("getGameState($userName)")
         return this.mafiaSessionState.toString()
     }
 
@@ -150,14 +150,14 @@ class MafiaSession(sessionId: Long, sessionPas: Long) :  GamesSession<MafiaUser,
 
     fun getSitizenVoteTable(userName: String):String
     {
-        logger.info("getSitizenVoteTable($userName)")
+        logger.debug("getSitizenVoteTable($userName)")
         return MafiaVoteInformation(getUser(userName), users, this.mafiaSessionState).toJson()
     }
 
 
    fun vote(userName: String, voteName: String) :Boolean
     {
-        logger.info("vote($userName, $voteName)")
+        logger.debug("vote($userName, $voteName)")
         getUser(userName).voteName = voteName
         users.forEach { it.votedCount = 0 }
         users.forEach {
@@ -177,7 +177,7 @@ class MafiaSession(sessionId: Long, sessionPas: Long) :  GamesSession<MafiaUser,
      */
     fun mafiaVoteResult(userName: String):String
     {
-        logger.info("mafiaVoteResult($userName)")
+        logger.debug("mafiaVoteResult($userName)")
         if(getUser(userName).role!=MafiaUserRoles.LEADING)
         {
             throw MafiaSessionException("Only leader can end vote.")
@@ -202,7 +202,7 @@ class MafiaSession(sessionId: Long, sessionPas: Long) :  GamesSession<MafiaUser,
      */
     fun cityzenVoteResult(userName: String):String
     {
-        logger.info("cityzenVoteResult($userName)")
+        logger.debug("cityzenVoteResult($userName)")
         if(getUser(userName).role!=MafiaUserRoles.LEADING)
         {
             throw MafiaSessionException("Only leader can end vote.")
@@ -247,7 +247,7 @@ class MafiaSession(sessionId: Long, sessionPas: Long) :  GamesSession<MafiaUser,
      */
     fun selectCheckUserSheriff(userName: String, checkedUserName: String)
     {
-        logger.info("selectCheckUserSheriff($userName, $checkedUserName)")
+        logger.debug("selectCheckUserSheriff($userName, $checkedUserName)")
         if(checkedUserName != "" && getUser(userName).role == MafiaUserRoles.SHERIFF)
         {
             this.selectedUserForSherifCheck = checkedUserName
@@ -267,7 +267,7 @@ class MafiaSession(sessionId: Long, sessionPas: Long) :  GamesSession<MafiaUser,
      */
     private fun checkUserSheriff(userName: String, checkedUserName: String)
     {
-        logger.info("checkUserSheriff($userName, $checkedUserName")
+        logger.debug("checkUserSheriff($userName, $checkedUserName")
         if(isSheriffExists()) {
             var sheriff = getSheriff()
             val checkUser = getUser(checkedUserName)
@@ -284,7 +284,7 @@ class MafiaSession(sessionId: Long, sessionPas: Long) :  GamesSession<MafiaUser,
      */
     fun getCheckUserSheriffVariants(userName: String): String
     {
-        logger.info("getCheckUserSheriffVariants($userName")
+        logger.debug("getCheckUserSheriffVariants($userName")
         val sheriff = getUser(userName)
         return if(sheriff.role==MafiaUserRoles.SHERIFF)
         {

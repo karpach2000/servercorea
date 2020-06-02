@@ -32,7 +32,7 @@ class SpySession(sessionId: Long, sessionPas: Long) : GamesSession<SpyUser, SpyE
     {
         if (!started) {
             started = true
-            logger.info("startGame()...")
+            logger.debug("startGame()...")
             updateLocations()
 
             //делаем локацию
@@ -63,7 +63,7 @@ class SpySession(sessionId: Long, sessionPas: Long) : GamesSession<SpyUser, SpyE
      */
     fun getUserInformation(userName: String): UserInformation
     {
-        logger.info("getUserInformation($userName)")
+        logger.debug("getUserInformation($userName)")
         users.forEach {
             if(it.name == userName)
             {
@@ -78,7 +78,7 @@ class SpySession(sessionId: Long, sessionPas: Long) : GamesSession<SpyUser, SpyE
 
     fun getSpy(userName: String): String
     {
-        logger.info("getSpy($userName):$gameResult")
+        logger.debug("getSpy($userName):$gameResult")
         spyIsNotSecretEvent(gameResult)
         return gameResult
 
@@ -96,7 +96,7 @@ class SpySession(sessionId: Long, sessionPas: Long) : GamesSession<SpyUser, SpyE
     @Synchronized
     private fun updateLocations() : Boolean
     {
-        logger.info("updateLocations()")
+        logger.debug("updateLocations()")
         locations.clear()
         Globals.spyLocationManager.getAllLocationsAsString().forEach { locations.add(it) }
         return true

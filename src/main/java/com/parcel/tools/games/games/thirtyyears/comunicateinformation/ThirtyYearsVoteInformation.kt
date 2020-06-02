@@ -28,9 +28,13 @@ class ThirtyYearsVoteInformation() {
         var trueTeller = false
 
         /**
-         * Ответ пользователя на вопрос
+         * Отмазка пользователя
          */
-        var anser = ""
+        var excude = ""
+        /**
+         * Пользователь за которого проголосовал пользователь.
+         */
+        var selectedAuthor = ""
         /**
          * Это строка принадлежит пользователю, которому передали страницу
          */
@@ -50,7 +54,7 @@ class ThirtyYearsVoteInformation() {
          */
         fun getDataRow(): Array<String?>
         {
-            return arrayOf(name, trueTeller.toString(), anser, itsMe.toString(),
+            return arrayOf(name, trueTeller.toString(), excude,selectedAuthor, itsMe.toString(),
                     pointsCount.toString(), totalPointsCount.toString())
         }
     }
@@ -91,7 +95,7 @@ class ThirtyYearsVoteInformation() {
 
     fun toTextTable(): TextTable {
         val columnNames =
-        arrayOf<String>("name","trueTeller", "anser", "itsMe", "pointsCount", "totalPointsCount", "totalPointsCount")
+        arrayOf<String>("name","trueTeller", "excude", "selectedAuthor","itsMe", "pointsCount", "totalPointsCount")
         val rows = Array(table.rows.size) { arrayOfNulls<String>(columnNames.size) }
         for(i in 0 until table.rows.size)
         {
@@ -108,17 +112,20 @@ class ThirtyYearsVoteInformation() {
         users.forEach {
             val tr = TableRow()
             tr.name = it.name
+
             if(it.name == trueTeller.name) {
                 tr.trueTeller = true
+                tr.excude = it.excute
             }
             else
             {
-                tr.anser = it.excute
+                tr.excude = it.falshExcute
             }
             if(it.name==user.name)
             {
                 tr.itsMe = true
             }
+            tr.selectedAuthor=it.gameUserVote.voteName
             //голоса
             tr.pointsCount = it.gameUserVote.votedCount
             tr.totalPointsCount = it.points
