@@ -2,124 +2,105 @@
 <html lang="ru">
 
 <head>
-    <!-- Required meta tags -->
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
-    <title>Игры</title>
-
+    {{>web/html/pattern/headDepend}}
+    <title>Карточки</title>
     <script src="/web/javascript/games/cards.js"></script>
-    <!-- Управление видимостью объектов - общий файл для всех страниц -->
-    <script src="/web/javascript/styleToggler.js"></script>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css"
-          integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous" />
 </head>
 
-<body class="mt-5"  onload="toggleMenu()">
-    <!-- новая панель навигации. Прикреплена к верху, сворачивается в кнопку на мелких (медиум) экранах-->
-<nav class="navbar navbar-expand-md fixed-top navbar-dark bg-dark">
-    <div class="container">
-        <!-- логотип-эмблема -->
-        <a class="navbar-brand" href="#">НЁХ</a>
-        <!-- Кнопка, в которую сворачивается меню на мелких экранах -->
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
-                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <!-- контейнер, содержимое которого сворачивается в кнопку на мелких экранах -->
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul id="mainMenuItems" class="navbar-nav mr-auto topMenuUl">
-                <li class="nav-item">
-                    <a class="nav-link disabled" href="/index"> Главная </a>
-                </li>
-                <li class="nav-item dropdown active">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Игры
-                    </a>
-                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        {{# page.pageBody.counterMenu.items}}
-                        <a class="dropdown-item" href="{{link}}">{{name}}</a>
-                        {{/ page.pageBody.counterMenu.items}}
+<body class="mt-5" onload="toggleMenu()">
 
-                        <div class="dropdown-divider"></div>
-                        <a class="dropdown-item active" href="/games"> Все игры</a>
+    {{>web/html/pattern/navbar}}
+
+    <!-- Основное "тело" сайта, его упаковываем в контейнер, чтобы применить адаптивность -->
+    <main role="main" class="container pt-3">
+        <div class="row">
+
+
+            <!--Боковое меню - теперь тут будут жить подсказки-->
+            <div class="col-12 col-md-4 ">
+                <div id="menuCounting" class="leftMenu">
+                    <p class="font-weight-bold">
+                        Подсказка:
+                    </p>
+                    <span id="leftTip">
+                        <p>
+                            Для создания новой игры:
+                        </p>
+                            <ol>
+                                <li>
+                                    Придумайте свое "Имя пользователя", "ID сессии", "Пароль сессии". 
+                                </li>
+                                <li>
+                                    Передайте "Пароль сессии" и "ID сессии" остальным игрокам.
+                                </li>
+                                <li>
+                                    Нажмите кнопку "Добавить себя".
+                                </li>
+                            </ol>
+                        <p>
+                            Для присоединения к существующей игре:
+                        </p>
+                        <ol>
+                            <li>
+                                Придумайте свое "Имя пользователя".
+                            </li>
+                            <li>
+                                Заполните поля "Пароль сессии" и "ID сессии" значениями получеными от создателя игры.
+                            </li>   
+                            <li>
+                                Нажмите кнопку "Добавить себя".
+                            </li>   
+                        </ol>
+                    </span>
+
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#fullRulesModal">
+                    Читать полные правила
+                </button>
+
+                    <!-- Modal -->
+                    <div class="modal fade" id="fullRulesModal" tabindex="-1" role="dialog" aria-labelledby="fullRulesModalTitle" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="fullRulesModalTitle">
+                                        Полные правила игры
+                                    </h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                                </div>
+                                <div class="modal-body">
+                                    {{>web/html/pattern/cardsRules}}
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                </li>
-                <li class="nav-item ">
-                    <a class="nav-link disabled" id="navLinkSettings" href="/games_settings"> Настройка игр </a>
-                </li>
-            </ul>
-                <div class="btn-group align-right" role="group">
-                    <a 
-                        href="/login"  
-                        class="btn btn-secondary" 
-                        id="buttonLogin"  
-                        role="button"
-                        >
-                            LogIn
-                    </a>
-                    <a 
-                        href="#"  
-                        class="btn btn-secondary" 
-                        id="buttonReg"  
-                        role="button"
-                        onClick="window.open('/users/reg', '_blank', 'toolbar=no,menubar=no,location=no,scrollbars=yes');"
-                        hidden
-                        >
-                            New user
-                    </a>
-                    <a 
-                        href="/admin"  
-                        class="btn btn-outline-secondary" 
-                        id="buttonUser"   
-                        role="button"
-                        >
-                            User
-                    </a>
-                    <a 
-                        href="/logout" 
-                        class="btn btn-secondary"
-                        id="buttonLogout" 
-                        role="button"
-                        >
-                            LogOut
-                    </a>
                 </div>
-        </div>
-    </div>
-</nav>
-
-<!-- Основное "тело" сайта, его упаковываем в контейнер, чтобы применить адаптивность -->
-<main role="main" class="container pt-3">
-    <div class="row">
-
-
-        <!--Боковое меню - теперь тут будут жить подсказки-->
-        <div class="col-12 col-md-3 ">
-            <div id="menuCounting" class="leftMenu">
-                <p class="font-weight-bold">
-                    Подсказка: 
-                </p>
-                <p id="leftTip">
-                    постарайтесь получить удовольствие от игры
-                </p>
             </div>
-        </div>
 
-        <!-- Cards -->
-        <div id="cards" class="bodyDiv col-12 col-md-7" >
-            <h2>
-                Карточки
-            </h2>
+            <!-- Cards -->
+            <div id="user" class="col-12 col-md-8 bodyDiv">
+                <h2>
+                    Карточки
+                </h2>
 
-            <div id="user" class="cards">
-                <p>Игрок придумывает некий объект, передает его другому игроку, который не знает, что это за объект, но все остальные знают (вроде карточки с надписью на лбу). Задача игрока раньше других догадаться, что написано в его карточке.</p>
+                <div class="collapse show" id="shortRulesCollapse">
+                    <div class="card card-body">
+                        <p>Игрок придумывает некий объект, передает его другому игроку, который не знает, что это за объект, но все остальные знают (вроде карточки с надписью на лбу). Задача игрока раньше других догадаться, что написано в его карточке.
+                        </p>
+                    </div>
+                </div>
+
+                <p>
+                    <button class="btn btn-secondary btn-sm" type="button" data-toggle="collapse" data-target="#shortRulesCollapse" aria-expanded="false" aria-controls="shortRulesCollapse">
+                    Скрыть/показать краткие правила
+                </button>
+                </p>
                 <form>
                     <div class="form-group row">
                         <label for="userName" class="col-sm-4 col-form-label">Имя пользователя</label>
                         <div class="col-sm-6">
-                            <input type="text" id="userName" size="10" class="textboxWithLinck form-control"
-                                   onkeyup="this.value = this.value.replace(/[^A-Za-zА-Яа-яЁё0-9 ]/,'');"
-                                   required placeholder="Введите отображаемое имя"/>
+                            <input type="text" id="userName" size="10" class="textboxWithLinck form-control" onkeyup="this.value = this.value.replace(/[^A-Za-zА-Яа-яЁё0-9 ]/,'');" required placeholder="Введите отображаемое имя" />
                         </div>
                     </div>
                     <div class="form-group row">
@@ -137,35 +118,30 @@
                     <div class="form-group row">
                         <label for="userCard" class="col-sm-4 col-form-label">Карточка соседа</label>
                         <div class="col-sm-6">
-                            <input type="text" id="userCard" size="10" class="textboxWithLinck form-control"
-                                   onkeyup="this.value = this.value.replace(/[^A-Za-zА-Яа-яЁё0-9 ]/,'');"
-                                   required placeholder="Введите карточку"/>
+                            <input type="text" id="userCard" size="10" class="textboxWithLinck form-control" onkeyup="this.value = this.value.replace(/[^A-Za-zА-Яа-яЁё0-9 ]/,'');" required placeholder="Введите карточку" />
                         </div>
                     </div>
                     <button type="button" class="btn btn-primary" onclick="login()" name="addUser" id="addUser">
-                        Присоединиться
+                    Добавить себя
                     </button>
+
                 </form>
             </div>
 
-            <div id="beforGame" class="beforGame" hidden>
-
-                <label for="startGame">
-                    <h5>
-                        !!!Дождитесь пока зайдут все пользователи!!!
-                    </h5>
-                </label>
+            <div id="beforGame" class="col-12 col-md-8 bodyDiv" hidden>
+                <h5>
+                    !!!Дождитесь пока зайдут все пользователи!!!
+                </h5>
+                
                 <p>
-                    <button type="button" class="btn btn-primary" onclick="startGame()" id="startGame"
-                            name="startGame">
+                    <button type="button" class="btn btn-primary" onclick="startGame()" id="startGame" name="startGame">
                         Начать игру
                     </button>
-                    <!-- <input type="button" onclick="startGame()" id="startGame" name="startGame" value="Начать игру"> -->
                 </p>
                 <textarea id="users" rows="17"></textarea>
             </div>
 
-            <div id="game" class="game" hidden>
+            <div id="game" class="col-12 col-md-8 bodyDiv" hidden>
                 <div class="card-group">
                     <div class="card">
                         <div class="card-body">
@@ -177,8 +153,8 @@
                             </p>
                             <br><br>
                             <button type="button" class="btn btn-danger" onclick="stopGame()" name="stopGame">
-                                Закончить игру
-                            </button>
+                            Закончить игру
+                        </button>
                         </div>
                     </div>
 
@@ -186,31 +162,11 @@
                 </div>
             </div>
         </div>
-    </div>
-</main>
+    </main>
 
-<footer class="mt-5 bg-light">
-    <div class="container mx-auto">
-        <p class="text-secondary text-center mb-0 text-uppercase">
-            © Неведомая ёбаная херня Димы Романова, никакие права не
-            защищены, все спизжено.
-        </p>
-        <p class="text-black-50 text-center mt-0">Коля тут не при чем!</p>
-    </div>
-</footer>
+    {{>web/html/pattern/footer}} 
+    {{>web/html/pattern/footDepend}}
 
-<!-- Optional JavaScript for Bootstrap -->
-<!-- jQuery first, then Popper.js, then Bootstrap JS -->
-<!-- Placed at the end of the document so the pages load faster -->
-<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
-        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
-        crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"
-        integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut"
-        crossorigin="anonymous"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"
-        integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k"
-        crossorigin="anonymous"></script>
 </body>
 
 </html>

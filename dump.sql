@@ -16,23 +16,28 @@ SET xmloption = content;
 SET client_min_messages = warning;
 SET row_security = off;
 
+ALTER TABLE ONLY public.thirty_years_events DROP CONSTRAINT thirty_years_events_users_id_fkey;
 ALTER TABLE ONLY public.spy_locations DROP CONSTRAINT spy_locations_users_id_fkey;
 ALTER TABLE ONLY public.roles_to_users DROP CONSTRAINT roles_to_users_users_id_fkey;
 ALTER TABLE ONLY public.roles_to_users DROP CONSTRAINT roles_to_users_roles_id_fkey;
 ALTER TABLE ONLY public.messages_u_2_u DROP CONSTRAINT messages_u_2_u_users_id_to_fkey;
 ALTER TABLE ONLY public.messages_u_2_u DROP CONSTRAINT messages_u_2_u_users_id_from_fkey;
 ALTER TABLE ONLY public.users DROP CONSTRAINT users_pkey;
+ALTER TABLE ONLY public.thirty_years_events DROP CONSTRAINT thirty_years_events_pkey;
 ALTER TABLE ONLY public.spy_locations DROP CONSTRAINT spy_locations_pkey;
 ALTER TABLE ONLY public.roles_to_users DROP CONSTRAINT roles_to_users_pkey;
 ALTER TABLE ONLY public.roles DROP CONSTRAINT roles_pkey;
 ALTER TABLE ONLY public.messages_u_2_u DROP CONSTRAINT messages_u_2_u_pkey;
 ALTER TABLE public.users ALTER COLUMN id DROP DEFAULT;
+ALTER TABLE public.thirty_years_events ALTER COLUMN id DROP DEFAULT;
 ALTER TABLE public.spy_locations ALTER COLUMN id DROP DEFAULT;
 ALTER TABLE public.roles_to_users ALTER COLUMN id DROP DEFAULT;
 ALTER TABLE public.roles ALTER COLUMN id DROP DEFAULT;
 ALTER TABLE public.messages_u_2_u ALTER COLUMN id DROP DEFAULT;
 DROP SEQUENCE public.users_id_seq;
 DROP TABLE public.users;
+DROP SEQUENCE public.thirty_years_events_id_seq;
+DROP TABLE public.thirty_years_events;
 DROP SEQUENCE public.spy_locations_id_seq;
 DROP TABLE public.spy_locations;
 DROP SEQUENCE public.roles_to_users_id_seq;
@@ -44,11 +49,14 @@ DROP TABLE public.messages_u_2_u;
 DROP FUNCTION public.get_users_whith_roles();
 DROP FUNCTION public.get_users_whith_role(_role character varying);
 DROP FUNCTION public.get_user_and_role(_login character varying);
+DROP FUNCTION public.get_thirty_years_events_login(_event text);
+DROP FUNCTION public.get_thirty_years_event_and_login();
 DROP FUNCTION public.get_spy_locations_and_login();
 DROP FUNCTION public.get_spy_location_login(_location text);
 DROP FUNCTION public.delete_user(_login text);
 DROP FUNCTION public.delete_spy_location(_location text, login text);
 DROP FUNCTION public.add_user(_login text, _password text, _role text);
+DROP FUNCTION public.add_thirty_years_event(_event text, _login text);
 DROP FUNCTION public.add_spy_location(_location text, _login text);
 --
 -- Name: add_spy_location(text, text); Type: FUNCTION; Schema: public; Owner: developer
@@ -79,6 +87,36 @@ $$;
 
 
 ALTER FUNCTION public.add_spy_location(_location text, _login text) OWNER TO developer;
+
+--
+-- Name: add_thirty_years_event(text, text); Type: FUNCTION; Schema: public; Owner: developer
+--
+
+CREATE FUNCTION public.add_thirty_years_event(_event text, _login text) RETURNS text
+    LANGUAGE plpgsql
+    AS $$
+DECLARE
+    event INT;
+    userid INT;
+BEGIN
+    FOR event IN
+        SELECT id FROM thirty_years_events WHERE LOWER(thirty_years_events.event)= LOWER(_event)
+        LOOP
+            RETURN 'Event exists';
+        END LOOP;
+    FOR userid IN
+        SELECT id FROM users WHERE login = _login
+        LOOP
+            INSERT INTO thirty_years_events (event, users_id, available) VALUES (_event, userid, TRUE);
+            RETURN 'OK';
+        END LOOP;
+    RETURN 'User does not exists';
+
+END
+$$;
+
+
+ALTER FUNCTION public.add_thirty_years_event(_event text, _login text) OWNER TO developer;
 
 --
 -- Name: add_user(text, text, text); Type: FUNCTION; Schema: public; Owner: developer
@@ -204,6 +242,51 @@ $$;
 
 
 ALTER FUNCTION public.get_spy_locations_and_login() OWNER TO developer;
+
+--
+-- Name: get_thirty_years_event_and_login(); Type: FUNCTION; Schema: public; Owner: developer
+--
+
+CREATE FUNCTION public.get_thirty_years_event_and_login() RETURNS TABLE(event character varying, login character varying)
+    LANGUAGE plpgsql
+    AS $$
+DECLARE
+BEGIN
+    FOR event, login IN
+        SELECT thirty_years_events.event, users.login FROM thirty_years_events
+                                                            JOIN users ON users.id = thirty_years_events.users_id
+        LOOP
+            RETURN NEXT;
+        END LOOP;
+    RETURN;
+END
+$$;
+
+
+ALTER FUNCTION public.get_thirty_years_event_and_login() OWNER TO developer;
+
+--
+-- Name: get_thirty_years_events_login(text); Type: FUNCTION; Schema: public; Owner: developer
+--
+
+CREATE FUNCTION public.get_thirty_years_events_login(_event text) RETURNS TABLE(login character varying)
+    LANGUAGE plpgsql
+    AS $$
+DECLARE
+BEGIN
+    FOR login IN
+        SELECT users.login FROM users
+                                    JOIN thirty_years_events ON users.id = thirty_years_events.users_id
+        WHERE _event = thirty_years_events.event
+        LOOP
+            RETURN NEXT;
+        END LOOP;
+    RETURN;
+END
+$$;
+
+
+ALTER FUNCTION public.get_thirty_years_events_login(_event text) OWNER TO developer;
 
 --
 -- Name: get_user_and_role(character varying); Type: FUNCTION; Schema: public; Owner: developer
@@ -428,6 +511,42 @@ ALTER SEQUENCE public.spy_locations_id_seq OWNED BY public.spy_locations.id;
 
 
 --
+-- Name: thirty_years_events; Type: TABLE; Schema: public; Owner: developer
+--
+
+CREATE TABLE public.thirty_years_events (
+    id integer NOT NULL,
+    event text,
+    users_id integer,
+    available boolean
+);
+
+
+ALTER TABLE public.thirty_years_events OWNER TO developer;
+
+--
+-- Name: thirty_years_events_id_seq; Type: SEQUENCE; Schema: public; Owner: developer
+--
+
+CREATE SEQUENCE public.thirty_years_events_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.thirty_years_events_id_seq OWNER TO developer;
+
+--
+-- Name: thirty_years_events_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: developer
+--
+
+ALTER SEQUENCE public.thirty_years_events_id_seq OWNED BY public.thirty_years_events.id;
+
+
+--
 -- Name: users; Type: TABLE; Schema: public; Owner: developer
 --
 
@@ -492,6 +611,13 @@ ALTER TABLE ONLY public.spy_locations ALTER COLUMN id SET DEFAULT nextval('publi
 
 
 --
+-- Name: thirty_years_events id; Type: DEFAULT; Schema: public; Owner: developer
+--
+
+ALTER TABLE ONLY public.thirty_years_events ALTER COLUMN id SET DEFAULT nextval('public.thirty_years_events_id_seq'::regclass);
+
+
+--
 -- Name: users id; Type: DEFAULT; Schema: public; Owner: developer
 --
 
@@ -539,6 +665,20 @@ COPY public.spy_locations (id, location, users_id) FROM stdin;
 
 
 --
+-- Data for Name: thirty_years_events; Type: TABLE DATA; Schema: public; Owner: developer
+--
+
+COPY public.thirty_years_events (id, event, users_id, available) FROM stdin;
+1	Полет на параплане	2	t
+2	Поход в туалет	2	t
+3	Фоткать голых баб на забросе	3	t
+4	Поход в пещеры	2	t
+5	Частится в зуме	2	t
+6	Кальянная на яблочково	2	t
+\.
+
+
+--
 -- Data for Name: users; Type: TABLE DATA; Schema: public; Owner: developer
 --
 
@@ -574,6 +714,13 @@ SELECT pg_catalog.setval('public.roles_to_users_id_seq', 4, true);
 --
 
 SELECT pg_catalog.setval('public.spy_locations_id_seq', 4, true);
+
+
+--
+-- Name: thirty_years_events_id_seq; Type: SEQUENCE SET; Schema: public; Owner: developer
+--
+
+SELECT pg_catalog.setval('public.thirty_years_events_id_seq', 6, true);
 
 
 --
@@ -613,6 +760,14 @@ ALTER TABLE ONLY public.roles_to_users
 
 ALTER TABLE ONLY public.spy_locations
     ADD CONSTRAINT spy_locations_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: thirty_years_events thirty_years_events_pkey; Type: CONSTRAINT; Schema: public; Owner: developer
+--
+
+ALTER TABLE ONLY public.thirty_years_events
+    ADD CONSTRAINT thirty_years_events_pkey PRIMARY KEY (id);
 
 
 --
@@ -661,6 +816,14 @@ ALTER TABLE ONLY public.roles_to_users
 
 ALTER TABLE ONLY public.spy_locations
     ADD CONSTRAINT spy_locations_users_id_fkey FOREIGN KEY (users_id) REFERENCES public.users(id);
+
+
+--
+-- Name: thirty_years_events thirty_years_events_users_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: developer
+--
+
+ALTER TABLE ONLY public.thirty_years_events
+    ADD CONSTRAINT thirty_years_events_users_id_fkey FOREIGN KEY (users_id) REFERENCES public.users(id);
 
 
 --

@@ -2,10 +2,11 @@ package com.parcel.tools.web.rest.games
 
 import com.parcel.tools.constructor.Page
 import com.parcel.tools.constructor.bodies.games.CounterGames
-import com.parcel.tools.games.GameSessionException
+import com.parcel.tools.games.gamesession.GameSessionException
 import com.parcel.tools.games.GameSessionManagerException
-import com.parcel.tools.games.mafia.MafiaSessionException
-import com.parcel.tools.games.mafia.MafiaSessionManager
+import com.parcel.tools.games.games.mafia.MafiaSessionException
+import com.parcel.tools.games.games.mafia.MafiaSessionManager
+import com.parcel.tools.statistics.StatisticsForGames
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.RequestMapping
@@ -18,11 +19,13 @@ import javax.servlet.http.HttpSession
 class MafiaController {
 
     private val logger = org.apache.log4j.Logger.getLogger(MafiaController::class.java!!)
+    private val static = StatisticsForGames("Mafia")
 
 
     @RequestMapping("/games/mafia")
     @Throws(IOException::class)
     internal fun games(model: Model, session: HttpSession): String {
+        static.openGame()
         val counter = CounterGames()
         val page = Page(counter)
         model.addAttribute("page", page)
@@ -72,6 +75,7 @@ class MafiaController {
                            @RequestParam("sessionId") sessionId: String = "",
                            @RequestParam("sessionPas") sessionPas: String = ""): String {
         logger.info("startGame($userName, $sessionId, $sessionPas)")
+        static.startGame()
         MafiaSessionManager.startGame(sessionId.toLong(), sessionPas.toLong())
         val userInformation =
                 MafiaSessionManager.getSitizenVoteTable(sessionId.toLong(), sessionPas.toLong(),userName)

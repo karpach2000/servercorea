@@ -1,8 +1,8 @@
 package com.parcel.tools.constructor.bodies.gamesSettings;
 
 import com.parcel.tools.constructor.bodies.Counter;
-import com.parcel.tools.games.spy.SpySessionManager;
-import com.parcel.tools.games.spy.database.SpyLocation;
+import com.parcel.tools.games.games.spy.SpySessionManager;
+import com.parcel.tools.games.games.spy.database.SpyLocation;
 
 import java.util.ArrayList;
 import java.util.List;

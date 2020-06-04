@@ -2,17 +2,9 @@
 <html lang="ru">
 
 <head>
-    <!-- Required meta tags -->
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+        
+    {{>web/html/pattern/headDepend}}
     <title>Игры</title>
-
-
-    <!-- Управление видимостью объектов - общий файл для всех страниц -->
-    <script src="/web/javascript/styleToggler.js"></script>
-
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css"
-          integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous" />
 </head>
 
 <body class="mt-5"  onload="toggleMenu()">
@@ -89,16 +81,15 @@
     </div>
 </nav>
 
-
+    {{>web/html/pattern/navbar}}
 <!-- Основное "тело" сайта, его упаковываем в контейнер, чтобы применить адаптивность -->
 <main role="main" class="container pt-3">
     <div class="row">
         <!-- SPY -->
         <div class="col-12 col-md-4 my-4">
+            <a href="games/spy" title="Го играть, я создал" class="text-decoration-none text-reset">
             <div class="card border-secondary shadow">
-                <a href="games/spy"  title="Го играть, я создал">
-                    <img src="web/images/spy_header.jpg" class="card-img-top" alt="Бонд. Джеймс Бонд. Да, это я, просто упоролся">
-                </a>
+                <img src="web/images/spy_header.jpg" class="card-img-top" alt="Бонд. Джеймс Бонд. Да, это я, просто упоролся">
                 <div class="card-body">
                     <h5 class="card-title">Шпион</h5>
                     <p class="card-text">Знаете этот неловкий момент, когда все вокруг что-то знают,
@@ -113,13 +104,13 @@
                     </small>
                 </div>
             </div>
+            </a>
         </div>
         <!-- MAFIA -->
         <div class="col-12 col-md-4 my-4">
+            <a href="games/mafia"  title="Го играть, я создал" class="text-decoration-none text-reset">
             <div class="card border-secondary shadow">
-                <a href="games/mafia"  title="Го играть, я создал">
-                    <img src="web/images/mafia_header.jpg" class="card-img-top" alt="Ты играешь в мою игру, но делаешь это без уважения">
-                </a>
+                <img src="web/images/mafia_header.jpg" class="card-img-top" alt="Ты играешь в мою игру, но делаешь это без уважения">
                 <div class="card-body">
                     <h5 class="card-title">Мафия</h5>
                     <p class="card-text">Классическая мафия без доп ролей, только мафия и мирные жители под присмотром ведущего</p>
@@ -132,13 +123,13 @@
                     </small>
                 </div>
             </div>
+            </a>
         </div>
         <!-- Cards -->
         <div class="col-12 col-md-4 my-4">
+            <a href="games/cards"  title="Го играть, я создал" class="text-decoration-none text-reset">
             <div class="card border-secondary shadow">
-                <a href="games/cards"  title="Го играть, я создал">
-                    <img src="web/images/cards_header.jpg" class="card-img-top" alt="Кто это блин?">
-                </a>
+                <img src="web/images/cards_header.jpg" class="card-img-top" alt="Кто это блин?">
                 <div class="card-body">
                     <h5 class="card-title">Карточки</h5>
                     <p class="card-text">Попробуй отгадать, что твой сосед тебе на лбу написал: синхрофазатрон или лох?
@@ -152,13 +143,13 @@
                     </small>
                 </div>
             </div>
+            </a>
         </div>
         <!-- Pattern -->
         <div class="col-md-4 my-4 d-none d-md-block">
+            <a href="#"  title="Погоди, я еще не создал" class="text-decoration-none text-reset" disabled>
             <div class="card border-secondary shadow">
-                <a href="#"  title="Погоди, я еще не создал" disabled>
-                    <img src="web/images/chess_header.jpg" class="card-img-top" alt="Очень интенсивная интеллектуальная деятельность">
-                </a>
+                <img src="web/images/chess_header.jpg" class="card-img-top" alt="Очень интенсивная интеллектуальная деятельность">
                 <div class="card-body">
                     <h5 class="card-title">В разработке</h5>
                     <p class="card-text">Здесь скоро появятся новые игры, но это не точно</p>
@@ -171,32 +162,14 @@
                     </small>
                 </div>
             </div>
+            </a>
         </div>
     </div>
 </main>
 
-<footer class="mt-5 bg-light">
-    <div class="container mx-auto">
-        <p class="text-secondary text-center mb-0 text-uppercase">
-            © Неведомая ёбаная херня Димы Романова, никакие права не
-            защищены, все спизжено.
-        </p>
-        <p class="text-black-50 text-center mt-0">Коля тут не при чем!</p>
-    </div>
-</footer>
+{{>web/html/pattern/footer}}
+{{>web/html/pattern/footDepend}}
 
-<!-- Optional JavaScript for Bootstrap -->
-<!-- jQuery first, then Popper.js, then Bootstrap JS -->
-<!-- Placed at the end of the document so the pages load faster -->
-<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
-        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
-        crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"
-        integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut"
-        crossorigin="anonymous"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"
-        integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k"
-        crossorigin="anonymous"></script>
 </body>
 
 </html>

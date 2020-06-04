@@ -1,6 +1,8 @@
 package com.parcel.tools.games
 
-import com.parcel.tools.games.spy.*
+import com.parcel.tools.games.games.spy.*
+import com.parcel.tools.games.gamesession.GamesSession
+import com.parcel.tools.games.gamesuser.GameUser
 
 open class  GameSessionManagerException(message: String):Exception(message)
 
@@ -124,6 +126,11 @@ abstract class GamesSessionManager<U : GameUser, E:GameEvent, GS: GamesSession<U
         getSession(sessionId, sessionPas).subscribeGameEvents(event)
     }
 
+    fun getGameSessionEvents(sessionId: Long, sessionPas: Long, userName: String): E
+    {
+        return getSession(sessionId, sessionPas).getGameEvents(userName)
+    }
+
     fun deSubscribeGameSessionEvent(sessionId: Long, sessionPas: Long, event: E)
     {
         if(SpySessionManager.isSessionExists(sessionId))
@@ -131,10 +138,15 @@ abstract class GamesSessionManager<U : GameUser, E:GameEvent, GS: GamesSession<U
     }
 
 
+    /******СТАТИСТИКА************/
+    fun countSessions() = gameSessions.size
+
+
     /********СБОРЩИКИ МУСОРА*******/
 
     private fun destructorAction()
     {
+        logger.info("START DESTRUCTOR!")
         while (true)
         {
             removeOldGames()
@@ -146,10 +158,11 @@ abstract class GamesSessionManager<U : GameUser, E:GameEvent, GS: GamesSession<U
     {
         logger.debug("Removing old games.")
         val current = System.currentTimeMillis()
-        gameSessions.forEach {
-            if(current- it.startTime> this.gameLifeTime) {
-                logger.debug("Removing game: ${it.sessionId}")
-                gameSessions.remove(it)
+        for(gs in gameSessions)
+        {
+            if(current- gs.startTime> this.gameLifeTime) {
+                logger.info("Removing game: ${gs.sessionId}")
+                gameSessions.remove(gs)
             }
         }
     }
