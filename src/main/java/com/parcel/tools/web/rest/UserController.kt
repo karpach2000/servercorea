@@ -28,7 +28,7 @@ class UserController {
     }
 
     /**
-     * Залогинится
+     * Получение логина
      */
     @RequestMapping("/session/getCurrentLogin")
     @Throws(IOException::class)
@@ -137,5 +137,15 @@ class UserController {
         val page = Page(counter)
         model.addAttribute("page", page)
         return "web/html/account"
+    }
+
+    //Настройки по шпиону
+    @RequestMapping("/settings/settingsSpy")
+    @Throws(IOException::class)
+    internal fun settingsSpy(model: Model, request: HttpServletRequest):String {
+        val counter = CounterAdmin()
+        val page = Page(counter)
+        model.addAttribute("page", page)
+        return "web/html/settingsSpy"
     }
 }
