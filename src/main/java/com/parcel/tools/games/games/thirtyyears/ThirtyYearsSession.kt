@@ -4,6 +4,7 @@ import com.parcel.tools.Globals
 import com.parcel.tools.games.GlobalRandomiser
 import com.parcel.tools.games.games.thirtyyears.comunicateinformation.ThirtyYearsVoteInformation
 import com.parcel.tools.games.games.thirtyyears.comunicateinformation.ThirtyYearsVoteVariants
+import com.parcel.tools.games.games.thirtyyears.settings.ThirtyYearsSettings
 import com.parcel.tools.games.gamesession.GamesSession
 
 class ThirtyYearsSessionException(message: String):Exception(message)
@@ -58,6 +59,8 @@ class ThirtyYearsSession(sessionId: Long, sessionPas: Long) :
 
     init {
         updateEvents()
+        //после всех тестов  обновление перенесем в старт программы
+        ThirtyYearsSettings.update()
     }
 
     override fun addUser(name: String): Boolean {
@@ -171,9 +174,10 @@ class ThirtyYearsSession(sessionId: Long, sessionPas: Long) :
         else if(gameState == GameState.VOTE)
         {
             //Обновляет очки после голосования
-            updatePoints(users[indexThirtyYearsUserExcute].name)
+
             //если все проголосовали
             if(countThirtyYearsUserVote>=users.size-1) {
+                updatePoints(users[indexThirtyYearsUserExcute].name)
                 if (indexThirtyYearsUserExcute < users.size-1) {
                     goTo_SHOW_RESULTS_event()
                 } else
@@ -201,7 +205,7 @@ class ThirtyYearsSession(sessionId: Long, sessionPas: Long) :
             for (user in users) {
                 //если проголосавал за правдивый ответ от создателя
                 if (user.gameUserVote.voteName == trueTellerName) {
-                    user.points = user.points + user.gameUserVote.votedCount
+                    user.points = user.points + ThirtyYearsSettings.points.selectedTrueTeller
                 } //if
             }//for
         }//fun
@@ -216,13 +220,32 @@ class ThirtyYearsSession(sessionId: Long, sessionPas: Long) :
                 var points = 0
                 users.forEach {
                     if(it.gameUserVote.voteName==user.name)
-                        points++
+                        points = points + ThirtyYearsSettings.points.somewoneVotedYou
                 }
-                user.points = points
+                user.points = user.points + points
             }
         }
+
+        /**
+         * Сбросить очки голосования для всех пользователей
+         */
+        fun clearPoints()
+        {
+            users.forEach { it.points = 0 }
+        }
+
+        /**
+         * Обновить суммарное количество очков набраное пользователем.
+         */
+        fun updateTotalPoints()
+        {
+            users.forEach { it.totalPoints = it.totalPoints + it.points }
+        }
+
+        clearPoints()
         myVoteTrue()
         myVotesCount()
+        updateTotalPoints()
     }
 
 

@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+
+    {{>web/html/pattern/headDepend}}
+    <title>Шпион</title>
+    <script src="/web/javascript/games/spy.js"></script>
+</head>
+
+<body class="mt-5" onload="toggleMenu()">
+
+    {{>web/html/pattern/navbar}}
+    <!-- Основное "тело" сайта, его упаковываем в контейнер, чтобы применить адаптивность -->
+    <main role="main" class="container pt-3">
+        <div class="row">
+
+            <!--Боковое меню - теперь тут будут жить подсказки-->
+            <div class="col-12 col-md-4 leftMenu">
+                <p class="font-weight-bold">
+                    Подсказка:
+                </p>
+                <span id="leftTip">
+                <p>
+                    Для создания новой игры:
+                </p>
+                    <ol>
+                        <li>
+                            Придумайте свое "Имя пользователя", "ID сессии", "Пароль сессии". 
+                        </li>
+                        <li>
+                            Передайте "Пароль сессии" и "ID сессии" остальным игрокам.
+                        </li>
+                        <li>
+                            Нажмите кнопку "Добавить себя".
+                        </li>
+                    </ol>
+                <p>
+                    Для присоединения к существующей игре:
+                </p>
+                <ol>
+                    <li>
+                        Придумайте свое "Имя пользователя".
+                    </li>
+                    <li>
+                        Заполните поля "Пароль сессии" и "ID сессии" значениями получеными от создателя игры.
+                    </li>   
+                    <li>
+                        Нажмите кнопку "Добавить себя".
+                    </li>   
+                </ol>
+                </span>
+
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#fullRulesModal">
+                Читать полные правила
+                </button>
+
+                <!-- Modal -->
+                <div class="modal fade" id="fullRulesModal" tabindex="-1" role="dialog" aria-labelledby="fullRulesModalTitle" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="fullRulesModalTitle">
+                                    Полные правила игры
+                                </h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+
+                            <div class="modal-body">
+                                {{>web/html/pattern/spyRules}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!--SPY-->
+            <div id="user" class="col-12 col-md-8 bodyDiv">
+                <h2>
+                    Шпион
+                </h2>
+
+                <div class="collapse show" id="shortRulesCollapse">
+                    <div class="card card-body">
+                        <p>В каждом раунде игроки оказываются в какой-то локации, но один (или несколько) неизбежно оказывается шпионом, который не знает, где находится.
+                        </p>
+                        <p>
+                            Его задача — разговорить других игроков, определить локацию и не разоблачить себя. Остальные, в свою очередь, пытаются обтекаемо дать понять «своим», что знают, где находится, и сузить круг подозреваемых.
+                        </p>
+                    </div>
+                </div>
+
+                <p>
+                    <button class="btn btn-secondary btn-sm" type="button" data-toggle="collapse" data-target="#shortRulesCollapse" aria-expanded="false" aria-controls="shortRulesCollapse">
+                    Скрыть/показать краткие правила
+                </button>
+                </p>
+
+                <form>
+                    <div class="form-group row">
+                        <label for="userName" class="col-sm-4 col-form-label">Имя пользователя</label>
+                        <div class="col-sm-6">
+                            <input type="text" id="userName" size="10" class="textboxWithLinck form-control" onkeyup="this.value = this.value.replace(/[^A-Za-zА-Яа-яЁё0-9]/,'');" required placeholder="Введите отображаемое имя" />
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="sessionId" class="col-sm-4 col-form-label">ID сессии (до 6 цифр)</label>
+                        <div class="col-sm-6">
+                            <input type="number" id="sessionId" class="textboxWithLinck form-control" min="0" max="999999" required />
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="sessionPas" class="col-sm-4 col-form-label">Пароль сессии (до 6 цифр)</label>
+                        <div class="col-sm-6">
+                            <input type="number" id="sessionPas" class="textboxWithLinck form-control" min="0" max="999999" required />
+                        </div>
+                    </div>
+                    <button type="button" class="btn btn-primary" onclick="spy_login()" name="addUser" id="addUser">
+                    Добавить себя
+                </button>
+                </form>
+            </div>
+
+            <div id="beforGame" class="col-12 col-md-8 bodyDiv" hidden>
+                {{page.pageBody.counterGamesSpy.tooltipWhenAddingUsers}}
+
+                <h5>
+                    !!!Дождитесь пока зайдут все пользователи!!!
+                </h5>
+
+                <p>
+                    <button type="button" class="btn btn-primary" onclick="startGame()" id="startGame" name="startGame">
+                    Начать игру
+                    </button>
+                </p>
+                <textarea id="users" rows="17"></textarea>
+            </div>
+
+            <div id="game" class="col-12 col-md-4 bodyDiv" hidden>
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">InGame</h5>
+
+                        <p class="card-text">
+                            <textarea class="form-control" id="gamerInformation" rows="17"></textarea>
+                        </p>
+                        <button type="button" class="btn btn-primary" onclick="showSpy()" name="showSpy" hidden>
+                        Показать шпиона
+                    </button>
+                        <br><br>
+                        <button type="button" class="btn btn-danger" onclick="stopGame()" name="stopGame">
+                        Закончить игру
+                    </button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="gameInfo" class="col-12 col-md-4 bodyDiv" hidden>
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Локации в игре</h5>
+                        <table class="table table-bordered table-hover">
+                            <thead class="thead-light">
+                                <tr>
+                                    <th>Локация</th>
+                                    <th>Создатель</th>
+                                </tr>
+                            </thead>
+                            <tbody class="table table-striped">
+                                {{#page.pageBody.counterGamesSpy.locations}}
+                                <tr class="table-data">
+                                    <td>{{locationName}}</td>
+                                    <td>{{authorLogin}}</td>
+                                </tr>
+                                {{/page.pageBody.counterGamesSpy.locations}}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    {{>web/html/pattern/footer}} {{>web/html/pattern/footDepend}}
+
+</body>
+
+</html>

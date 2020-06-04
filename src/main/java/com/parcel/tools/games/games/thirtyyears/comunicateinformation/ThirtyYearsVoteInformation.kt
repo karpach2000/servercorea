@@ -127,8 +127,8 @@ class ThirtyYearsVoteInformation() {
             }
             tr.selectedAuthor=it.gameUserVote.voteName
             //голоса
-            tr.pointsCount = it.gameUserVote.votedCount
-            tr.totalPointsCount = it.points
+            tr.pointsCount = it.points
+            tr.totalPointsCount = it.totalPoints
             table.rows.add(tr)
         }
     }
