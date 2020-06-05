@@ -51,6 +51,8 @@ DROP FUNCTION public.get_users_whith_role(_role character varying);
 DROP FUNCTION public.get_user_and_role(_login character varying);
 DROP FUNCTION public.get_thirty_years_events_login(_event text);
 DROP FUNCTION public.get_thirty_years_event_and_login();
+DROP FUNCTION public.get_spy_locations_by_login(_login character varying);
+DROP FUNCTION public.get_spy_locations_and_login_by_role(_role character varying);
 DROP FUNCTION public.get_spy_locations_and_login();
 DROP FUNCTION public.get_spy_location_login(_location text);
 DROP FUNCTION public.delete_user(_login text);
@@ -242,6 +244,56 @@ $$;
 
 
 ALTER FUNCTION public.get_spy_locations_and_login() OWNER TO developer;
+
+--
+-- Name: get_spy_locations_and_login_by_role(character varying); Type: FUNCTION; Schema: public; Owner: developer
+--
+
+CREATE FUNCTION public.get_spy_locations_and_login_by_role(_role character varying) RETURNS SETOF text
+    LANGUAGE plpgsql
+    AS $$
+DECLARE
+    r varchar(50);
+BEGIN
+    FOR r IN
+        SELECT spy_locations.location, users.login FROM roles_to_users
+               JOIN users ON users.id = roles_to_users.users_id
+               JOIN roles ON roles.id = roles_to_users.roles_id
+               JOIN spy_locations ON roles_to_users.users_id = spy_locations.users_id
+        WHERE roles.user_role = _role
+        LOOP
+            RETURN NEXT r;
+        END LOOP;
+    RETURN;
+END
+$$;
+
+
+ALTER FUNCTION public.get_spy_locations_and_login_by_role(_role character varying) OWNER TO developer;
+
+--
+-- Name: get_spy_locations_by_login(character varying); Type: FUNCTION; Schema: public; Owner: developer
+--
+
+CREATE FUNCTION public.get_spy_locations_by_login(_login character varying) RETURNS SETOF text
+    LANGUAGE plpgsql
+    AS $$
+DECLARE
+    r varchar(50);
+BEGIN
+    FOR r IN
+        SELECT spy_locations.location FROM spy_locations
+               JOIN users ON users.id = spy_locations.users_id
+        WHERE _login = users.login
+        LOOP
+            RETURN NEXT r;
+        END LOOP;
+    RETURN;
+END
+$$;
+
+
+ALTER FUNCTION public.get_spy_locations_by_login(_login character varying) OWNER TO developer;
 
 --
 -- Name: get_thirty_years_event_and_login(); Type: FUNCTION; Schema: public; Owner: developer
@@ -661,6 +713,9 @@ COPY public.spy_locations (id, location, users_id) FROM stdin;
 2	баня	3
 3	пионерский лагерь	3
 4	МГУ им. Ломоносова	3
+5	жопище	2
+6	банище	2
+7	МГТУ им. Баумана	2
 \.
 
 
@@ -713,7 +768,7 @@ SELECT pg_catalog.setval('public.roles_to_users_id_seq', 4, true);
 -- Name: spy_locations_id_seq; Type: SEQUENCE SET; Schema: public; Owner: developer
 --
 
-SELECT pg_catalog.setval('public.spy_locations_id_seq', 4, true);
+SELECT pg_catalog.setval('public.spy_locations_id_seq', 7, true);
 
 
 --
