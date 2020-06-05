@@ -25,7 +25,7 @@ public class CounterGamesSpy {
     public CounterGamesSpy()
     {
         try {
-            locations = SpySessionManager.INSTANCE.getLocationList();
+            locations = SpySessionManager.INSTANCE.getMainLocationList();
         }
         catch(Exception e)
         {

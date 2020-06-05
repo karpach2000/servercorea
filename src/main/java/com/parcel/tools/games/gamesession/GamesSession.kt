@@ -10,9 +10,18 @@ abstract class  GamesSession<U : GameUser, E: GameEvent>(val sessionId: Long, va
 
     private val logger = org.apache.log4j.Logger.getLogger(GamesSession::class.java!!)
 
+    /**
+     * Имя пользователя (зарегестрированного) создавшего игру.
+     */
+    var registeredGameCreator = "anonymousUser"
+    /**
+     *
+     */
     protected val gameEvent = ArrayList<E>()
 
-
+    /**
+     * Список игроков играющих в игру.
+     */
     protected var users = ArrayList<U>()
 
     /**

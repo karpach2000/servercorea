@@ -45,12 +45,43 @@ object SpySessionManager :
             throw SpySessionException("Session $sessionId does not exist. Maybe someone finished the game.")
     }
 
+    /*******ЛОКАЦИИ******/
+    /**
+     * Возвращает список основных локаций.
+     */
+
+    fun getMainLocationList() :List<SpyLocation> {
+        return Globals.spyLocationManager.getAllLocations()
+    }
+
 
     /**
-     * Возвращает списо к локаций.
+     * Обновить список локаций в игре
      */
-    fun getLocationList() :List<SpyLocation> {
-        return Globals.spyLocationManager.getAllLocations()
+    fun updateLocations(sessionId: Long, sessionPas: Long, userName: String,
+                        useUserLocations: Boolean = false) : Boolean
+    {
+        logger.info("updateLocations($sessionId, $sessionPas, $userName)")
+        return getSession(sessionId, sessionPas).updateLocations(useUserLocations)
+    }
+
+
+    /**
+     * Получить список основных локаций (те что в оригинале)
+     */
+    fun  getMainLocations(sessionId: Long, sessionPas: Long, userName: String) : List<String>
+    {
+        logger.info("getMainLocations($sessionId, $sessionPas, $userName)")
+        return getSession(sessionId, sessionPas).getMainLocations()
+    }
+
+    /**
+     * Получить список локаций пользователя администратора игры.
+     */
+    fun getUserLocations(sessionId: Long, sessionPas: Long, userName: String) : List<String>
+    {
+        logger.info("getUserLocations($sessionId, $sessionPas, $userName)")
+        return getSession(sessionId, sessionPas).getUserLocations()
     }
 
     /**

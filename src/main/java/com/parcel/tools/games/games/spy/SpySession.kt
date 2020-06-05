@@ -93,14 +93,43 @@ class SpySession(sessionId: Long, sessionPas: Long) : GamesSession<SpyUser, SpyE
     /*******SETTINGS*********/
 
 
+    /**
+     * Обновить список локаций.
+     * @param useUserLocations использовать пользовательские локации.
+     */
     @Synchronized
-    private fun updateLocations() : Boolean
+    fun updateLocations(useUserLocations: Boolean = false) : Boolean
     {
         logger.debug("updateLocations()")
         locations.clear()
-        Globals.spyLocationManager.getAllLocationsAsString().forEach { locations.add(it) }
+        Globals.spyLocationManager.getLocatioinsByRole("ADMIN") .forEach { locations.add(it) }
+        if(useUserLocations && this.registeredGameCreator!="anonymousUser")
+            Globals.spyLocationManager.getLocatioinsByLogin(registeredGameCreator)
+                    .forEach { locations.add(it) }
         return true
     }
+
+
+    /**
+     * Получить список основных локаций (те что в оригинале)
+     */
+    fun getMainLocations() : List<String>
+    {
+        logger.debug("getMainLocations()")
+        return Globals.spyLocationManager.getLocatioinsByRole("ADMIN")
+    }
+
+    /**
+     * Получить список локаций пользователя администратора игры.
+     */
+    fun getUserLocations() : List<String>
+    {
+        logger.debug("getMainLocations()")
+        if(this.registeredGameCreator!="anonymousUser")
+            return Globals.spyLocationManager.getLocatioinsByLogin(registeredGameCreator)
+        else return ArrayList<String>()
+    }
+
 
 
 }

@@ -75,6 +75,7 @@ abstract class GamesSessionManager<U : GameUser, E:GameEvent, GS: GamesSession<U
 
 
 
+
     /*********УПРАВЛЕНИЕ СЕССИЯМИ**********/
 
     abstract fun addSession(sessionId: Long, sessionPas: Long): Boolean

@@ -10,4 +10,5 @@ abstract class GameUser (val name:String) {
      */
     val gameUserVote = GameUserVote()
 
+
 }
