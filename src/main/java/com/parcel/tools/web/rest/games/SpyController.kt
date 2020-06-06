@@ -8,6 +8,7 @@ import com.parcel.tools.games.GameSessionManagerException
 import com.parcel.tools.games.games.spy.SpySessionException
 import com.parcel.tools.games.games.spy.SpySessionManager
 import com.parcel.tools.statistics.StatisticsForGames
+import org.springframework.security.core.Authentication
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.core.userdetails.User
 import org.springframework.stereotype.Controller
@@ -36,33 +37,7 @@ class SpyController {
     }
 
 
-    @RequestMapping("/games_settings_spy_addLocation")
-    @Throws(IOException::class)
-    internal fun addLocation(model: Model, session: HttpSession,
-                               @RequestParam("locationName") locationName: String = "",
-                               @RequestParam("button") button: String = ""): String {
-        val user: User = SecurityContextHolder
-                .getContext()
-                .authentication
-                .principal as User
-        val name: String = user.getUsername()
-        var result = false
-        if(button =="Add") {
 
-            result = SpySessionManager.addLocation(locationName, name)
-        }
-        else if(button == "Delete")
-        {
-            result = SpySessionManager.deleteLocation(locationName, name)
-        }
-        val counter = CounterGamesSettings()
-        if(!result) {
-            counter.errorMessage = "Ошибка добавления/удаления локации";
-        }
-        val page = Page(counter)
-        model.addAttribute("page", page)
-        return "web/html/gamesSettings"
-    }
 
     @RequestMapping("/games/spy_add_session")
     @ResponseBody
@@ -164,6 +139,110 @@ class SpyController {
         logger.info("countUsers($userName, $sessionId, $sessionPas)")
         return SpySessionManager.countUsersInGame(sessionId.toLong(), sessionPas.toLong()).toString()
     }
+
+
+    /**
+     * Выставить имя пользователя (зарегестрированного) создавшего игру.
+     */
+    @RequestMapping("/games/becomeRegisteredGameCreator")///games/spy_get_users
+    @ResponseBody
+    @Throws(IOException::class)
+    internal fun becomeRegisteredGameCreator(model: Model,
+                                 @RequestParam("userName") userName: String = "",
+                                 @RequestParam("sessionId") sessionId: String = "",
+                                 @RequestParam("sessionPas") sessionPas: String = ""
+    ): String {
+        logger.info("becomeRegisteredGameCreator($userName, $sessionId, $sessionPas)")
+        val auth: Authentication = SecurityContextHolder.getContext().authentication
+        val name: String = auth.getName() //get logged in username
+
+        return SpySessionManager.setRegisteredGameCreator(
+                sessionId.toLong(), sessionPas.toLong(), userName, name).toString()
+    }
+
+
+
+   /****LOCATIONS******/
+
+    @RequestMapping("/games_settings_spy_addLocation")
+    @Throws(IOException::class)
+    internal fun addLocation(model: Model, session: HttpSession,
+                             @RequestParam("locationName") locationName: String = "",
+                             @RequestParam("button") button: String = ""): String {
+        val user: User = SecurityContextHolder
+                .getContext()
+                .authentication
+                .principal as User
+        val name: String = user.getUsername()
+        var result = false
+        if(button =="Add") {
+
+            result = SpySessionManager.addLocation(locationName, name)
+        }
+        else if(button == "Delete")
+        {
+            result = SpySessionManager.deleteLocation(locationName, name)
+        }
+        val counter = CounterGamesSettings()
+        if(!result) {
+            counter.errorMessage = "Ошибка добавления/удаления локации";
+        }
+        val page = Page(counter)
+        model.addAttribute("page", page)
+        return "web/html/gamesSettings"
+    }
+
+
+    /**
+     * Обновить список локаций в игре
+     * @param useUserLocations нужно ли использовать локации пользователя.
+     */
+    @RequestMapping("/games/updateLocations")///games/spy_get_users
+    @ResponseBody
+    @Throws(IOException::class)
+    internal fun updateLocations(model: Model,
+                            @RequestParam("userName") userName: String = "",
+                            @RequestParam("sessionId") sessionId: String = "",
+                            @RequestParam("sessionPas") sessionPas: String = "",
+                            @RequestParam("useUserLocations") useUserLocations: String = ""
+                                 ): String {
+        logger.info("countUsers($userName, $sessionId, $sessionPas, $useUserLocations)")
+        return SpySessionManager.updateLocations(
+                sessionId.toLong(), sessionPas.toLong(), userName, useUserLocations.toBoolean()).toString()
+    }
+    /**
+     * Получить список локаций пользователя администратора игры.
+     */
+    @RequestMapping("/games/getUserLocations")
+    @ResponseBody
+    @Throws(IOException::class)
+    internal fun getUserLocations(model: Model,
+                                 @RequestParam("userName") userName: String = "",
+                                 @RequestParam("sessionId") sessionId: String = "",
+                                 @RequestParam("sessionPas") sessionPas: String = ""
+    ): String {
+        logger.info("countUsers($userName, $sessionId, $sessionPas)")
+        return SpySessionManager.getUserLocations(
+                sessionId.toLong(), sessionPas.toLong(), userName).toString()
+    }
+
+
+    /**
+     * Получить список основных локаций (те что в оригинале)
+     */
+    @RequestMapping("/games/getMainLocations")
+    @ResponseBody
+    @Throws(IOException::class)
+    internal fun getMainLocations(model: Model,
+                                  @RequestParam("userName") userName: String = "",
+                                  @RequestParam("sessionId") sessionId: String = "",
+                                  @RequestParam("sessionPas") sessionPas: String = ""
+    ): String {
+        logger.info("countUsers($userName, $sessionId, $sessionPas)")
+        return SpySessionManager.getMainLocations(
+                sessionId.toLong(), sessionPas.toLong(), userName).toString()
+    }
+
 
 
 }

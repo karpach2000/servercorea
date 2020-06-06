@@ -51,7 +51,7 @@ open class SpyLocationManager {
     fun getLocatioinsByLogin(login: String): List<String>
     {
         logger.info("getLocatioinsByRole($login)")
-        return jdbcTemplate!!.query("SELECT location FROM get_spy_locations_by_login($login)",
+        return jdbcTemplate!!.query("SELECT location FROM get_spy_locations_by_login('$login')",
                 StringRowMapper())
     }
     /**
@@ -60,7 +60,7 @@ open class SpyLocationManager {
     fun getLocatioinsByRole(role: String): List<String>
     {
         logger.info("getLocatioinsByRole($role)")
-        return jdbcTemplate!!.query("SELECT location FROM get_spy_locations_and_login_by_role($role)",
+        return jdbcTemplate!!.query("SELECT * FROM get_spy_locations_and_login_by_role('$role')",
                 StringRowMapper())
     }
 

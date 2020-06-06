@@ -57,6 +57,7 @@ object SpySessionManager :
 
     /**
      * Обновить список локаций в игре
+     * @param useUserLocations нужно ли использовать локации пользователя.
      */
     fun updateLocations(sessionId: Long, sessionPas: Long, userName: String,
                         useUserLocations: Boolean = false) : Boolean

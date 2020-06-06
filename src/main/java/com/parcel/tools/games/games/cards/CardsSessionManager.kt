@@ -23,11 +23,7 @@ object CardsSessionManager :
         return getSession(sessionId, sessionPas).getUserInformation(userName)
     }
 
-    fun setGameCreator(sessionId: Long, sessionPas: Long, userName: String, gameCreator: String)
-    {
-        logger.info("setGameCreator($sessionId, $sessionPas $userName,$gameCreator)")
-        getSession(sessionId, sessionPas).registeredGameCreator=gameCreator
-    }
+
 
 
     /*******ИГРОВОЙ ПРОЦЕСС******/

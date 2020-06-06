@@ -1,5 +1,6 @@
 package com.parcel.tools.games
 
+import com.parcel.tools.games.games.cards.CardsSessionManager
 import com.parcel.tools.games.games.spy.*
 import com.parcel.tools.games.gamesession.GamesSession
 import com.parcel.tools.games.gamesuser.GameUser
@@ -49,6 +50,15 @@ abstract class GamesSessionManager<U : GameUser, E:GameEvent, GS: GamesSession<U
         }
         logger.warn("Can`t finde game($sessionId, $sessionPas)")
         return false
+    }
+
+    /**
+     * Выставить имя пользователя (зарегестрированного) создавшего игру.
+     */
+    fun setRegisteredGameCreator(sessionId: Long, sessionPas: Long, userName: String, gameCreator: String)
+    {
+        logger.info("setGameCreator($sessionId, $sessionPas $userName,$gameCreator)")
+        getSession(sessionId, sessionPas).registeredGameCreator=gameCreator
     }
 
 
