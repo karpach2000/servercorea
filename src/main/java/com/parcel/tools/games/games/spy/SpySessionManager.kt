@@ -6,7 +6,7 @@ import com.parcel.tools.games.GamesSessionManager
 import com.parcel.tools.games.games.spy.database.SpyLocation
 import com.parcel.tools.games.games.spy.database.SpyLocationManagerException
 
-class SpySessionManagerException(message: String): GameSessionManagerException(message)
+
 
 /**
  * Управляет сессиями инры в шпиона
@@ -50,7 +50,7 @@ object SpySessionManager :
      * Возвращает список основных локаций.
      */
 
-    fun getMainLocationList() :List<SpyLocation> {
+    fun getAllLocationList() :List<SpyLocation> {
         return Globals.spyLocationManager.getAllLocations()
     }
 
@@ -74,6 +74,15 @@ object SpySessionManager :
     {
         logger.info("getMainLocations($sessionId, $sessionPas, $userName)")
         return getSession(sessionId, sessionPas).getMainLocations()
+    }
+
+    /**
+     * Получить список основных локаций (те что в оригинале)
+     */
+    fun  getMainLocations() : List<String>
+    {
+        logger.info("getMainLocations()")
+        return Globals.spyLocationManager.getLocatioinsByRole("ADMIN")
     }
 
     /**
