@@ -6,5 +6,8 @@ interface SpyEvent : GameEvent{
 
     fun spyIsNotSecretEvent(spyName: String)
 
+    fun updateLocationList(locations: String)
+
+
 
 }

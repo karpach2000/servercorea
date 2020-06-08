@@ -50,6 +50,14 @@ function onConnectionMessage(evt) {
             "!!!Шпион: "+data + "!!!\n" + document.getElementById("gamerInformation").textContent
         alert("Шпион " + data)
     }
+    else if(command=="updateLocationList")
+    {
+        spyWebsocketConnection.send("ok")
+        LocationsTable.generateTables(data)
+        LocationsTable.show()
+        alert(data)
+
+    }
 }
 
 /**********POSITIONS****************/

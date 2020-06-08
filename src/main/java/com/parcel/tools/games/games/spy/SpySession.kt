@@ -3,6 +3,7 @@ package com.parcel.tools.games.games.spy
 import com.parcel.tools.Globals
 import com.parcel.tools.games.gamesession.GamesSession
 import com.parcel.tools.games.GlobalRandomiser
+import com.parcel.tools.games.games.spy.comunicateinformation.SpyLocations
 import java.lang.Exception
 
 
@@ -15,6 +16,11 @@ class SpySession(sessionId: Long, sessionPas: Long) : GamesSession<SpyUser, SpyE
     private val locations = ArrayList<String>()
 
     private var currentLocation = ""
+
+    /**
+     * Информация о том нужно ли использовать локации пользователя.
+     */
+    var useUserLocations = false
 
 
 
@@ -106,6 +112,7 @@ class SpySession(sessionId: Long, sessionPas: Long) : GamesSession<SpyUser, SpyE
         if(useUserLocations && this.registeredGameCreator!="anonymousUser")
             Globals.spyLocationManager.getLocatioinsByLogin(registeredGameCreator)
                     .forEach { locations.add(it) }
+        newLocationsEvent()
         return true
     }
 
@@ -129,6 +136,22 @@ class SpySession(sessionId: Long, sessionPas: Long) : GamesSession<SpyUser, SpyE
             return Globals.spyLocationManager.getLocatioinsByLogin(registeredGameCreator)
         else return ArrayList<String>()
     }
+
+
+    /******EVENTS********/
+
+    /**
+     * Событие что кто то обновил список локаций.
+     */
+    fun newLocationsEvent()
+    {
+        val spyLocations = SpyLocations()
+        spyLocations.publicLocations = getMainLocations() as ArrayList<String>
+        spyLocations.userLocations = getUserLocations() as ArrayList<String>
+        spyLocations.useUserLocations = this.useUserLocations
+        gameEvent.forEach { it.updateLocationList(spyLocations.toJson()) }
+    }
+
 
 
 

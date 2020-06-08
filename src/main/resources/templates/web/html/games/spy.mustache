@@ -5,7 +5,10 @@
 
     {{>web/html/pattern/headDepend}}
     <title>Шпион</title>
-    <script src="/web/javascript/games/spy.js"></script>
+    <script src="/web/javascript/games/spy/spy.js"></script>
+    <script src="/web/javascript/games/spy/Locations.js"></script>
+    <script src="/web/javascript/games/spy/LocationsTable.js"></script>
+
 </head>
 
 <body class="mt-5" onload="toggleMenu()">
@@ -156,7 +159,8 @@
                     </div>
                 </div>
             </div>
-
+            <div id="spy_mainLocations" class="col-12 col-md-4 bodyDiv"></div>
+            <div id="spy_userLocations" class="col-12 col-md-4 bodyDiv"></div>
             <div id="gameInfo" class="col-12 col-md-4 bodyDiv" hidden>
                 <div class="card">
                     <div class="card-body">
