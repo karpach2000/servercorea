@@ -8,6 +8,10 @@ let LocationsTable = {
      * Список пользовательских локаций
      */
     tableUser: "<table>",
+    /**
+     * Использовать также мои (пользовательские ) локации.
+     */
+    useMyLocations: false,
     parsedJSON: {},
 
 
@@ -18,8 +22,17 @@ let LocationsTable = {
     generateTables(data) {
         this.generatePublicTable(data);
         this.generateUserTable(data);
+        this.putCheckbox(data);
     },
 
+
+    putCheckbox(data)
+    {
+        this.parseTable(data);
+
+        this.useMyLocations = Locations.useUserLocations
+
+    },
 
     generatePublicTable(data)
     {
@@ -86,6 +99,7 @@ let LocationsTable = {
     show() {
         document.getElementById("spy_mainLocations").innerHTML = this.tableMain;
         document.getElementById("spy_userLocations").innerHTML = this.tableUser;
+        document.getElementById("spy_useMyLocations").checked = this.useMyLocations
     }
 
 

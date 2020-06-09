@@ -55,8 +55,6 @@ function onConnectionMessage(evt) {
         spyWebsocketConnection.send("ok")
         LocationsTable.generateTables(data)
         LocationsTable.show()
-        alert(data)
-
     }
 }
 
@@ -115,7 +113,51 @@ function gamePosition(location,isSpy) {
 }
 
 /***********************************/
+
+/**
+ * Хочу быть ведущим.
+ * (пользователь получает возможность добавить свои локации)
+ */
+function spy_wanToBeaLeader()
+{
+    becomeRegisteredGameCreator()
+    var useMyLocations = document.getElementById("spy_useMyLocations").checked
+    updateLocations(useMyLocations )
+}
+
+function becomeRegisteredGameCreator()
+{
+    var xmlHttp = new XMLHttpRequest();
+    var userName = document.getElementById("userName").value
+    var sessionId = document.getElementById("sessionId").value
+    var sessionPas = document.getElementById("sessionPas").value
+    xmlHttp.open("GET", "/games/becomeRegisteredGameCreator?userName="+userName+"&sessionId="+sessionId+
+        "&sessionPas="+sessionPas, false); // false for synchronous request
+    xmlHttp.send(null);
+}
+function updateLocations(useUserLocations)
+{
+    var xmlHttp = new XMLHttpRequest();
+    var userName = document.getElementById("userName").value
+    var sessionId = document.getElementById("sessionId").value
+    var sessionPas = document.getElementById("sessionPas").value
+    xmlHttp.open("GET", "/games/updateLocations?userName="+userName+"&sessionId="+sessionId+
+        "&sessionPas="+sessionPas+"&useUserLocations="+useUserLocations, false); // false for synchronous request
+    xmlHttp.send(null);
+}
+
+
+
+
+
+
+
 var getUserAction = false
+
+
+
+
+
 
 function spy_login() {
     var xmlHttp = new XMLHttpRequest();

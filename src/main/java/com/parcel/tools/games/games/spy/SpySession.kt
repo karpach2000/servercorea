@@ -39,7 +39,7 @@ class SpySession(sessionId: Long, sessionPas: Long) : GamesSession<SpyUser, SpyE
         if (!started) {
             started = true
             logger.debug("startGame()...")
-            updateLocations()
+            updateLocations(useUserLocations)
 
             //делаем локацию
             val locationIndex: Int = GlobalRandomiser.getRundom(locations.size)
@@ -109,6 +109,7 @@ class SpySession(sessionId: Long, sessionPas: Long) : GamesSession<SpyUser, SpyE
         logger.debug("updateLocations()")
         locations.clear()
         Globals.spyLocationManager.getLocatioinsByRole("ADMIN") .forEach { locations.add(it) }
+        this.useUserLocations = useUserLocations
         if(useUserLocations && this.registeredGameCreator!="anonymousUser")
             Globals.spyLocationManager.getLocatioinsByLogin(registeredGameCreator)
                     .forEach { locations.add(it) }
