@@ -140,10 +140,10 @@
                 </p>
 
 
-                <button type="button" class="btn btn-warning" onclick="spy_wanToBeaLeader()" id="mafia_wanToBeaLeader" name="mafia_wanToBeaLeader">
+                <button type="button" class="btn btn-warning" onclick="spy_wanToBeaLeader()" id="mafia_wanToBeaLeader" name="mafia_wanToBeaLeader" hidden>
                     Хочу быть ведущим
                 </button>
-                <p><input type="checkbox" id="spy_useMyLocations" onchange="spy_wanToBeaLeader()" value="Использовать также мои локации">Использовать также мои локации<p>
+                <p hidden><input type="checkbox" id="spy_useMyLocations" onchange="spy_wanToBeaLeader()" value="Использовать также мои локации">Использовать также мои локации<p>
 
                 <textarea id="users" rows="17"></textarea>
             </div>
@@ -166,8 +166,8 @@
                     </div>
                 </div>
             </div>
-            <div id="spy_mainLocations" class="col-12 col-md-4 bodyDiv"></div>
-            <div id="spy_userLocations" class="col-12 col-md-4 bodyDiv"></div>
+            <div id="spy_mainLocations" class="col-12 col-md-2 bodyDiv"></div>
+            <div id="spy_userLocations" class="col-12 col-md-2 bodyDiv" hidden></div>
         </div>
     </main>
 
