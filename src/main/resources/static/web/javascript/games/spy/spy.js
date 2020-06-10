@@ -62,7 +62,7 @@ function onConnectionMessage(evt) {
 function beforGamePosition() {
     document.getElementById("user").hidden      = true;
     document.getElementById("game").hidden      = true;
-    document.getElementById("spy_mainLocations").hidden  = false;
+    document.getElementById("spy_mainLocations").hidden  = true;
     //document.getElementById("spy_userLocations").hidden  = false;
     document.getElementById("beforGame").hidden = false;
 

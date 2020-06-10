@@ -9,7 +9,7 @@ plugins {
 
 group = 'ru.parcel'
 
-version = '0.0.31-KD'
+version = '0.0.33-GK'
 sourceCompatibility = 1.8
 
 repositories {
