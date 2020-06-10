@@ -62,7 +62,8 @@ function onConnectionMessage(evt) {
 function beforGamePosition() {
     document.getElementById("user").hidden      = true;
     document.getElementById("game").hidden      = true;
-    document.getElementById("gameInfo").hidden  = true;
+    document.getElementById("spy_mainLocations").hidden  = false;
+    document.getElementById("spy_userLocations").hidden  = false;
     document.getElementById("beforGame").hidden = false;
 
     document.getElementById("leftTip").innerHTML =  '<p>Убедитесь, что все желающие знают ID и пароль сессии! '+
@@ -73,7 +74,8 @@ function beforGamePosition() {
 function stopGamePosition() {
     document.getElementById("user").hidden      = false;
     document.getElementById("game").hidden      = true;
-    document.getElementById("gameInfo").hidden  = true;
+    document.getElementById("spy_mainLocations").hidden  = true;
+    document.getElementById("spy_userLocations").hidden  = true;
     document.getElementById("beforGame").hidden = true;
 
     document.getElementById("leftTip").innerHTML =  '<p>Для создания новой игры:</p>'+
@@ -93,7 +95,8 @@ function stopGamePosition() {
 function gamePosition(location,isSpy) {
     document.getElementById("user").hidden      = true;
     document.getElementById("game").hidden      = false;
-    document.getElementById("gameInfo").hidden  = false;
+    document.getElementById("spy_mainLocations").hidden  = false;
+    document.getElementById("spy_userLocations").hidden  = false;
     document.getElementById("beforGame").hidden = true;
 
     //role
