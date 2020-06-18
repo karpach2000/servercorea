@@ -152,6 +152,19 @@ abstract class GamesSessionManager<U : GameUser, E:GameEvent, GS: GamesSession<U
     /******СТАТИСТИКА************/
     fun countSessions() = gameSessions.size
 
+    /**
+     * Получает Id всех текущих игр.
+     */
+    fun getGameIdList(): ArrayList<Long>
+    {
+        val ids = ArrayList<Long>()
+        for(gs in gameSessions)
+        {
+            ids.add(gs.sessionId)
+        }
+        return ids
+    }
+
 
     /********СБОРЩИКИ МУСОРА*******/
 
