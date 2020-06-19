@@ -9,12 +9,17 @@ webSocket.onerror = function(event) {
 
 webSocket.onopen = function(event) {
     console.log(`[open] Соединение установлено, сообщение ${event.data}`)
-    this.send('{"userName":"","sessionId":-1,"sessionPas":-1,"command":"PING","data":"","isAnserOnRequest":false}')
+    this.makeRequest('PING')
 };
 
 webSocket.onmessage = function(event) {
-    console.log(`[message] Данные получены с сервера:\n ${event.data}`);
-    // GameState.eventListener(command, data)
+    console.log(`[incoming] Данные получены с сервера:\n ${event.data}`);
+    // console.log('--- try to parse data');
+    let incoming = JSON.parse(event.data)
+        // console.log(incoming);
+
+
+    // GameState.eventListener(incoming)
 };
 
 webSocket.onclose = function(event) {
@@ -26,6 +31,13 @@ webSocket.onclose = function(event) {
         console.log('[close] Соединение прервано');
     }
 };
+
+webSocket.makeRequest = function(command, data = '', isAnswer = 'false') {
+    let message = `{'userName':'${field_userName.value}','sessionId':'${field_sessionId.value==""?-1:field_sessionId.value}','sessionPas':'${field_sessionPas.value==""?-1:field_sessionPas.value}','command':'${command}','data':'${data}','isAnserOnRequest':'${isAnswer}'}`
+    console.log(`[outcoming] Данные отправлены на сервер:\n ${message}`);
+    this.send(message)
+}
+
 
 // /** 
 //  * Обертка для GET-запросов.

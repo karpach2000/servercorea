@@ -1,72 +1,56 @@
 <!-- новая панель навигации. Прикреплена к верху, сворачивается в кнопку на мелких (медиум) экранах-->
-<nav class="navbar navbar-expand-md fixed-top navbar-dark bg-dark">
-    <div class="container">
-        <!-- логотип-эмблема -->
-        <a class="navbar-brand" href="#">НЁХ</a>
-        <!-- Кнопка, в которую сворачивается меню на мелких экранах -->
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
-                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+<div class="fixed-top">
+    <nav class="navbar navbar-expand-md navbar-dark bg-dark">
+
+        <div class="container">
+            <!-- логотип-эмблема -->
+            <a class="navbar-brand" href="#">
+                <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="30" height="30" viewBox="0 0 172 172" style=" fill:#000000;"><g fill="none" fill-rule="nonzero" stroke="none" stroke-width="1" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="10" stroke-dasharray="" stroke-dashoffset="0" font-family="none" font-weight="none" font-size="none" text-anchor="none" style="mix-blend-mode: normal"><path d="M0,172v-172h172v172z" fill="none"></path><path d="M86,172c-47.49649,0 -86,-38.50351 -86,-86v0c0,-47.49649 38.50351,-86 86,-86v0c47.49649,0 86,38.50351 86,86v0c0,47.49649 -38.50351,86 -86,86z" fill="#fff8f8"></path><path d="" fill="none"></path><path d="" fill="none"></path><g fill="#666666"><path d="M114.57454,25.18435c-1.19161,0.03551 -2.32259,0.53352 -3.15333,1.38854l-18.34667,18.34667c-0.86017,0.86005 -1.34352,2.02654 -1.34375,3.24292v10.78583c-6.46238,1.37385 -14.46684,3.68101 -18.34667,7.56083l-27.52,27.52c-0.4128,0.4128 -0.82366,0.94191 -1.22729,1.46021l31.87375,31.87375c0.51829,-0.40363 1.04741,-0.81449 1.46021,-1.22729l27.52,-27.52c4.91281,-4.91281 7.15504,-12.39895 8.21479,-18.34667h10.13187c1.21638,-0.00023 2.38286,-0.48358 3.24292,-1.34375l18.34667,-18.34667c1.35655,-1.31863 1.76444,-3.33481 1.02711,-5.07704c-0.73733,-1.74223 -2.4686,-2.8531 -4.35961,-2.79734c-1.19161,0.03551 -2.32259,0.53352 -3.15333,1.38854l-21.03417,-21.03417c1.35655,-1.31863 1.76444,-3.33481 1.02711,-5.07704c-0.73733,-1.74223 -2.4686,-2.8531 -4.35961,-2.79734zM102.80329,48.16247h11.86084c5.06827,0 9.17333,4.10507 9.17333,9.17333v11.86084l-1.89916,1.89916h-7.27417l-3.63708,-3.63708l2.29333,-2.29333c1.79339,-1.7888 1.79339,-4.69703 0,-6.48583c-1.79339,-1.79339 -4.69703,-1.79339 -6.48583,0l-2.29333,2.29333l-3.63708,-3.63708v-7.27417zM40.04121,103.86539c-1.97685,4.91691 -3.35042,10.56983 -3.35042,15.39042c0,2.75708 0.76434,5.312 1.98875,7.57875l-0.645,0.645c-1.19821,1.15042 -1.68088,2.85871 -1.26185,4.46607c0.41903,1.60735 1.67427,2.86259 3.28162,3.28162c1.60735,0.41902 3.31565,-0.06364 4.46607,-1.26185l0.645,-0.645c2.26675,1.22442 4.82167,1.98875 7.57875,1.98875c4.82059,0 10.47351,-1.37356 15.39042,-3.35042z"></path></g><path d="" fill="none"></path></g></svg>
+                <div class="d-none d-md-inline-block">ServerKorea</div>
+            </a>
+            <!-- Кнопка, в которую сворачивается меню на мелких экранах -->
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
-        <!-- контейнер, содержимое которого сворачивается в кнопку на мелких экранах -->
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul id="mainMenuItems" class="navbar-nav mr-auto topMenuUl">
-                <li class="nav-item">
-                    <a class="nav-link disabled" href="/index"> Главная </a>
-                </li>
-                <li class="nav-item dropdown active">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <!-- контейнер, содержимое которого сворачивается в кнопку на мелких экранах -->
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul id="mainMenuItems" class="navbar-nav mr-auto topMenuUl">
+                    <li class="nav-item">
+                        <a class="nav-link disabled" href="/index"> Главная </a>
+                    </li>
+                    <li class="nav-item dropdown active">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         Игры
                     </a>
-                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        {{# page.pageBody.counterMenu.items}}
-                        <a class="dropdown-item" href="{{link}}">{{name}}</a>
-                        {{/ page.pageBody.counterMenu.items}}
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            {{# page.pageBody.counterMenu.items}}
+                            <a class="dropdown-item" href="{{link}}">{{name}}</a> {{/ page.pageBody.counterMenu.items}}
 
-                        <div class="dropdown-divider"></div>
-                        <a class="dropdown-item active" href="/games"> Все игры</a>
-                    </div>
-                </li>
-                <li class="nav-item ">
-                    <a class="nav-link disabled" id="navLinkSettings" href="/games_settings"> Настройка игр </a>
-                </li>
-            </ul>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item active" href="/games"> Все игры</a>
+                        </div>
+                    </li>
+                    <li class="nav-item ">
+                        <a class="nav-link disabled" id="navLinkSettings" href="/games_settings"> Настройка игр </a>
+                    </li>
+                </ul>
                 <div class="btn-group align-right" role="group">
-                    <a 
-                        href="/login"  
-                        class="btn btn-secondary" 
-                        id="buttonLogin"  
-                        role="button"
-                        >
+                    <a href="/login" class="btn btn-secondary" id="buttonLogin" role="button">
                             LogIn
                     </a>
-                    <a 
-                        href="#"  
-                        class="btn btn-secondary" 
-                        id="buttonReg"  
-                        role="button"
-                        onClick="window.open('/users/reg', '_blank', 'toolbar=no,menubar=no,location=no,scrollbars=yes');"
-                        hidden
-                        >
+                    <a href="#" class="btn btn-secondary" id="buttonReg" role="button" onClick="window.open('/users/reg', '_blank', 'toolbar=no,menubar=no,location=no,scrollbars=yes');" hidden>
                             New user
                     </a>
-                    <a 
-                        href="/admin"  
-                        class="btn btn-outline-secondary" 
-                        id="buttonUser"   
-                        role="button"
-                        >
+                    <a href="/admin" class="btn btn-outline-secondary" id="buttonUser" role="button">
                             User
                     </a>
-                    <a 
-                        href="/logout" 
-                        class="btn btn-secondary"
-                        id="buttonLogout" 
-                        role="button"
-                        >
+                    <a href="/logout" class="btn btn-secondary" id="buttonLogout" role="button">
                             LogOut
                     </a>
                 </div>
+            </div>
+
         </div>
-    </div>
-</nav>
+    </nav>
+    <div id="alertContainer" class="container"></div>
+</div>
