@@ -14,12 +14,9 @@ webSocket.onopen = function(event) {
 
 webSocket.onmessage = function(event) {
     console.log(`[incoming] Данные получены с сервера:\n ${event.data}`);
-    // console.log('--- try to parse data');
     let incoming = JSON.parse(event.data)
         // console.log(incoming);
-
-
-    // GameState.eventListener(incoming)
+    GameState.eventListener(incoming)
 };
 
 webSocket.onclose = function(event) {

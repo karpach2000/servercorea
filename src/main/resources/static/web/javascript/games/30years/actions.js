@@ -2,14 +2,30 @@ $(function() {
     $('[data-toggle="tooltip"]').tooltip()
 })
 
-
-//     <div class="alert alert-warning alert-dismissible fade show" role="alert" style="display:none>
-//   <strong>Holy guacamole!</strong> You should check in on some of those fields below.
-//   <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-//     <span aria-hidden="true">&times;</span>
-//   </button>
-// </div>
-
+function updateUserList(array) {
+    document.getElementById("userTable").innerHTML = ''
+    for (let i = 0; i < array.length - 1; i++) {
+        let row = document.createElement('tr');
+        row.innerHTML =
+            '<td class="av p-0">' +
+            '   <img' +
+            '       class="img-fluid rounded m-0"' +
+            '       width="50px"' +
+            '       src="/web/images/avatar/Roundicons-0' + (i + 1) + '.png" ' +
+            '       alt="">' +
+            '</td>' +
+            '<td ' +
+            '   data-toggle="tooltip"' +
+            '   data-placement="left" ' +
+            '   title=' +
+            (array[i] == field_userName.value ? '"Это типа ты"' : '"Это еще какой-то хер"') +
+            '>' +
+            array[i] +
+            '</td>' +
+            '<td>?</td>'
+        document.getElementById("userTable").append(row)
+    }
+}
 
 function showAlert(message, color = 'orange') {
     let div = document.createElement('div');
@@ -50,4 +66,7 @@ $("#addUser").click(function() {
     document.getElementById('userList').hidden = false;
     document.getElementById('beforeGame').hidden = true;
     document.getElementById('inGame').hidden = false;
+
+    //request to server
+    webSocket.makeRequest('CONNECT')
 });
