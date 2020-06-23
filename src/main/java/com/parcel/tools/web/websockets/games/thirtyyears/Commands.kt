@@ -2,6 +2,10 @@ package com.parcel.tools.web.websockets.games.thirtyyears
 
 enum class Commands {
 
+    /**
+     * Сообщение об ошибке
+     */
+    ERROR,
     /******GAME STATE******/
 
     /**
