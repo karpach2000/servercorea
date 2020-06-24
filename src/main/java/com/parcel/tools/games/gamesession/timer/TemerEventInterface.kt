@@ -8,4 +8,6 @@ interface TimerEventInterface {
 
     fun timerPaused()
 
+    fun timeIsOver()
+
 }

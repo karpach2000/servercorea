@@ -157,16 +157,18 @@ class ThirtyYearsSession(sessionId: Long, sessionPas: Long) :
     {
         if(gameState == GameState.ENTER_REAL_EXCUTE)
         {
-            if(countThirtyYearsUserExcute >= users.size)
+            if(countThirtyYearsUserExcute >= users.size || gameSessionTimer.checkTimer())
             {
+                gameSessionTimer.stopTimer()
                 countThirtyYearsUserExcute = 0
                 goTo_ENTER_FALSH_EXCUTE_event()
             }
         }
         else if(gameState == GameState.ENTER_FALSH_EXCUTE)
         {
-            if(countThirtyYearsUserExcute >= users.size)
+            if(countThirtyYearsUserExcute >= users.size || gameSessionTimer.checkTimer())
             {
+                gameSessionTimer.stopTimer()
                 countThirtyYearsUserExcute = 0
                 goTo_VOTE_event()
             }
@@ -176,8 +178,9 @@ class ThirtyYearsSession(sessionId: Long, sessionPas: Long) :
             //Обновляет очки после голосования
 
             //если все проголосовали
-            if(countThirtyYearsUserVote>=users.size-1) {
+            if(countThirtyYearsUserVote>=users.size-1 || gameSessionTimer.checkTimer()) {
                 updatePoints(users[indexThirtyYearsUserExcute].name)
+                gameSessionTimer.stopTimer()
                 if (indexThirtyYearsUserExcute < users.size-1) {
                     goTo_SHOW_RESULTS_event()
                 } else
@@ -205,7 +208,7 @@ class ThirtyYearsSession(sessionId: Long, sessionPas: Long) :
             for (user in users) {
                 //если проголосавал за правдивый ответ от создателя
                 if (user.gameUserVote.voteName == trueTellerName) {
-                    user.points = user.points + ThirtyYearsSettings.points.selectedTrueTeller
+                    user.points = user.points + ThirtyYearsSettings.points.selectedTrueTellerPoints
                 } //if
             }//for
         }//fun
@@ -220,7 +223,7 @@ class ThirtyYearsSession(sessionId: Long, sessionPas: Long) :
                 var points = 0
                 users.forEach {
                     if(it.gameUserVote.voteName==user.name)
-                        points = points + ThirtyYearsSettings.points.somewoneVotedYou
+                        points = points + ThirtyYearsSettings.points.somewoneVotedYouPoints
                 }
                 user.points = user.points + points
             }
@@ -293,7 +296,8 @@ class ThirtyYearsSession(sessionId: Long, sessionPas: Long) :
         gameEvent.forEach {
             it.ENTER_REAL_EXCUTE_event(getUser(it.userName).event)
         }
-
+        gameSessionTimer.stopTimer()
+        gameSessionTimer.startTimer(ThirtyYearsSettings.points.ENTER_REAL_EXCUTE_time)
     }
     /**
      * Событие перевода в статус введение фальшивой отмазки.
@@ -304,6 +308,8 @@ class ThirtyYearsSession(sessionId: Long, sessionPas: Long) :
         gameEvent.forEach {
             it.ENTER_FALSH_EXCUTE_event(users[indexThirtyYearsUserExcute].event)
         }
+        gameSessionTimer.stopTimer()
+        gameSessionTimer.startTimer(ThirtyYearsSettings.points.ENTER_FALSH_EXCUTE_time)
     }
     /**
      * Событие перевода в статус голосования.
@@ -316,6 +322,8 @@ class ThirtyYearsSession(sessionId: Long, sessionPas: Long) :
                     users[indexThirtyYearsUserExcute],users).toJson()
             it.VOTE_event(table)
         }
+        gameSessionTimer.stopTimer()
+        gameSessionTimer.startTimer(ThirtyYearsSettings.points.VOTE_time)
     }
     /**
      * Событие перевода в статус Показываения пользователю результаты всей игры.

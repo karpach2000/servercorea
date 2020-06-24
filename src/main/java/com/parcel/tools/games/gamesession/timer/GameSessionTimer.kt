@@ -18,6 +18,11 @@ class GameSessionTimer {
 
     private var startMiles =0L
 
+    /**
+     * Пенриод на который завели таймер
+     */
+    private var period =0L
+
     var isStarted = false
     private set
 
@@ -32,9 +37,10 @@ class GameSessionTimer {
     {
         isStarted = true
         if(!isStarted) {
+            period = time
             startMiles = System.currentTimeMillis()
             timerEventsHandlers.forEach { it.timerStarted(time) }
-            thread = Thread(Runnable { timerAction(time) })
+            thread = Thread(Runnable { timerAction() })
             thread.start()
             return true
         }
@@ -43,6 +49,8 @@ class GameSessionTimer {
             return false
         }
     }
+
+
 
     fun stopTimer()
     {
@@ -57,23 +65,25 @@ class GameSessionTimer {
     /**
      * Фигня которая считает милисекунды.
      */
-    private fun timerAction(time: Long)
+    private fun timerAction()
     {
-        while (!checkTimer(time))
+        while (!checkTimer())
         {
             Thread.sleep(CHECK_PERIOD)
         }
-        timerEventsHandlers.forEach { it.timerStoped(time) }
+        timerEventsHandlers.forEach { it.timeIsOver() }
+        timerEventsHandlers.forEach { it.timerStoped(period) }
     }
 
     /**
      * Проверить таймер.
+     * @return true - время прошло
      */
-    private fun checkTimer(time: Long): Boolean
+    fun checkTimer(): Boolean
     {
         val current = System.currentTimeMillis()
         val deltaTime = current  - startMiles
-        return deltaTime > time
+        return deltaTime > period
     }
 
 
@@ -83,6 +93,11 @@ class GameSessionTimer {
     fun subscribeTimerEvents(timerEventInterface: TimerEventInterface)
     {
         timerEventsHandlers.add(timerEventInterface)
+    }
+
+    fun clearTimerEvents()
+    {
+        timerEventsHandlers.clear()
     }
 
 }

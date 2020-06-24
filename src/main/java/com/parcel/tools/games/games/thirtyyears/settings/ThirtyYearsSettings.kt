@@ -10,15 +10,17 @@ import java.nio.file.Paths
  */
 object ThirtyYearsSettings {
 
-    private val folder = "Settings/"
-    private val fileName = "ThirtyYearsSettings.json"
+    private val folder = "Settings/ThirtyYearsSettings/"
+    private val pointsFileName = "ThirtyYearsSettings.json"
+
 
     private val logger = org.apache.log4j.Logger.getLogger(ThirtyYearsSettings::class.java!!)
 
     /**
      * Объект содержит количество очков начисляемое пользователю за то или иное действие.
      */
-    var points = Points()
+    var points = SettingsData()
+
 
     /**
      * Обновить настройки из файла.
@@ -27,7 +29,7 @@ object ThirtyYearsSettings {
     {
 
         try {
-            val file = File(folder + fileName)
+            val file = File(folder + pointsFileName)
             //проверяем, что если файл не существует то создаем его
             return if (file.exists()) {
                 fromJson(file.readText())
@@ -59,7 +61,7 @@ object ThirtyYearsSettings {
     private fun fromJson(json : String) :Boolean
     {
         val builder = GsonBuilder()
-        points = builder.create().fromJson(json, Points::class.java)
+        points = builder.create().fromJson(json, SettingsData::class.java)
         return true
     }
 
@@ -70,7 +72,7 @@ object ThirtyYearsSettings {
     private fun save(): Boolean
     {
         try {
-            val file = File(folder + fileName)
+            val file = File(folder + pointsFileName)
             val path = Paths.get(folder)
             //проверяем наличие каталога, если катлона нет, создаем его
             if (!Files.exists(path)) {

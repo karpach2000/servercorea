@@ -2,6 +2,7 @@ package com.parcel.tools.games.gamesession
 
 import com.parcel.tools.games.GameEvent
 import com.parcel.tools.games.GameSessionManagerException
+import com.parcel.tools.games.gamesession.timer.GameSessionTimer
 import com.parcel.tools.games.gamesuser.GameUser
 
 class GameSessionException(message: String): Exception(message )
@@ -27,7 +28,11 @@ abstract class  GamesSession<U : GameUser, E: GameEvent>(val sessionId: Long, va
     /**
      * Используется как свойство в классе GameSession при голосовани.
      */
-    val gameSessionVote = GameSessionVote(users)
+    protected val gameSessionVote = GameSessionVote(users)
+    /**
+     * Используется в качестве таймера для игр.
+     */
+    protected  val gameSessionTimer = GameSessionTimer()
 
     var startTime = 0L
         private set
