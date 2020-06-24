@@ -57,10 +57,17 @@ class ThirtyYearsSession(sessionId: Long, sessionPas: Long) :
      */
     private var countThirtyYearsUserExcute = 0
 
+    /**
+     * Обработчик событий таймера.
+     */
+    private val thirtyYearsTimerEvent = ThirtyYearsTimerEvent(this)
+
     init {
         updateEvents()
         //после всех тестов  обновление перенесем в старт программы
         ThirtyYearsSettings.update()
+        //подписываемся
+        gameSessionTimer.subscribeTimerEvents(thirtyYearsTimerEvent)
     }
 
     override fun addUser(name: String): Boolean {
@@ -153,7 +160,7 @@ class ThirtyYearsSession(sessionId: Long, sessionPas: Long) :
      * Произоводит обновление в соответсвии с машиной состояния.
      * (ну и рассылка евентов соответсвенно)
      */
-    private fun updateByStateMashine()
+    fun updateByStateMashine()
     {
         if(gameState == GameState.ENTER_REAL_EXCUTE)
         {

@@ -2,20 +2,23 @@ package com.parcel.tools.games.games.thirtyyears
 
 import com.parcel.tools.games.gamesession.timer.TimerEventInterface
 
-class ThirtyYearsTimerEvent() : TimerEventInterface {
+class ThirtyYearsTimerEvent(private val thirtyYearsSession:ThirtyYearsSession) : TimerEventInterface {
+    private val logger = org.apache.log4j.Logger.getLogger(ThirtyYearsTimerEvent::class.java!!)
+
     override fun timerStarted(value: Long) {
-        TODO("Not yet implemented")
+        logger.debug("timerStarted($value: Long)")
     }
 
     override fun timerStoped(value: Long) {
-        TODO("Not yet implemented")
+        logger.debug("timerStoped($value: Long)")
     }
 
     override fun timerPaused() {
-        TODO("Not yet implemented")
+        logger.debug("timerStoped()")
     }
 
     override fun timeIsOver() {
-        TODO("Not yet implemented")
+        logger.debug("timeIsOver()")
+        thirtyYearsSession.updateByStateMashine()
     }
 }
