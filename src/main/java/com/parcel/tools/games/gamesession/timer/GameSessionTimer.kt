@@ -35,8 +35,9 @@ class GameSessionTimer {
      */
     fun startTimer(time: Long): Boolean
     {
-        isStarted = true
+
         if(!isStarted) {
+            isStarted = true
             period = time
             startMiles = System.currentTimeMillis()
             timerEventsHandlers.forEach { it.timerStarted(time) }

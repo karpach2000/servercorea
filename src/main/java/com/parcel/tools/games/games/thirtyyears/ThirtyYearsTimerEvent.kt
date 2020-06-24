@@ -7,6 +7,11 @@ class ThirtyYearsTimerEvent(private val thirtyYearsSession:ThirtyYearsSession) :
 
     override fun timerStarted(value: Long) {
         logger.debug("timerStarted($value: Long)")
+        val startTime = System.currentTimeMillis()
+        thirtyYearsSession.gameEvent.forEach {
+            val delta = System.currentTimeMillis() - startTime
+            it.START_TIMER_event(value - delta)
+        }
     }
 
     override fun timerStoped(value: Long) {

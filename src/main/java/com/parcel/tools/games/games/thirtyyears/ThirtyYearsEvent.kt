@@ -26,6 +26,11 @@ interface ThirtyYearsEvent : GameEvent {
      */
     fun SHOW_RESULTS_event(table: String)
 
+    /**
+     * События демонстрации результатов голосования пользователям.
+     */
+    fun START_TIMER_event(miles: Long)
+
 
     /***КОММУНИКАЦИЯ****/
     fun setInMessage(message: String)

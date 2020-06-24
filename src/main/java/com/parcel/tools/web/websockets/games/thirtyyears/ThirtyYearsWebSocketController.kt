@@ -74,6 +74,12 @@ class ThirtyYearsWebSocketController : TextWebSocketHandler() {
         override fun SHOW_RESULTS_event(table: String) {
             request(Commands.SHOW_RESULTS_EVENT, table)
         }
+        /**
+         * Запустить таймер.
+         */
+        override fun START_TIMER_event(miles: Long) {
+            request(Commands.START_TIMER, miles.toString())
+        }
 
         override fun addUserEvent(userList: String) {
             request(Commands.ADD_USER, userList)

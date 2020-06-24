@@ -18,7 +18,7 @@ abstract class  GamesSession<U : GameUser, E: GameEvent>(val sessionId: Long, va
     /**
      *
      */
-    protected val gameEvent = ArrayList<E>()
+    val gameEvent = ArrayList<E>()
 
     /**
      * Список игроков играющих в игру.

@@ -65,6 +65,11 @@ enum class Commands {
      */
     STOP_GAME,
 
+    /**
+     * Запуск таймера.
+     */
+    START_TIMER,
+
 
     //GAME
 
