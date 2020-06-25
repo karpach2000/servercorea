@@ -25,7 +25,7 @@ class WebPage(val sessionId: Long,val sessionPass: Long,val name: String)
 
         private fun parseInMessage(message: ThirtyYearsMessage)
         {
-            if(message.command==Commands.START_GAME)
+            if(message.command==Commands.START_GAME_EVENT)
             {
                 //webPage.webPageState=WebPageStates.START_GAME
 
@@ -58,7 +58,7 @@ class WebPage(val sessionId: Long,val sessionPass: Long,val name: String)
                 webPage.voteInformation.fromJson(message.data)
             }
 
-            else if(message.command==Commands.ADD_USER)
+            else if(message.command==Commands.ADD_USER_EVENT)
             {
                 webPage.users = message.data
             }

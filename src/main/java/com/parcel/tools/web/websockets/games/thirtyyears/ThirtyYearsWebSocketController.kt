@@ -78,19 +78,19 @@ class ThirtyYearsWebSocketController : TextWebSocketHandler() {
          * Запустить таймер.
          */
         override fun START_TIMER_event(miles: Long) {
-            request(Commands.START_TIMER, miles.toString())
+            request(Commands.START_TIMER_EVENT, miles.toString())
         }
 
         override fun addUserEvent(userList: String) {
-            request(Commands.ADD_USER, userList)
+            request(Commands.ADD_USER_EVENT, userList)
         }
 
         override fun startGameEvent() {
-            request(Commands.START_GAME)
+            request(Commands.START_GAME_EVENT)
         }
 
         override fun stopGameEvent(spyName: String) {
-            request(Commands.STOP_GAME)
+            request(Commands.STOP_GAME_EVENT)
         }
 
         /**
