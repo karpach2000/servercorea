@@ -38,7 +38,7 @@ function showAlert(message, color = 'orange') {
 
     div.className = "alert alert-dismissible fade show alert-" + alertStyle;
     div.setAttribute('role', "alert")
-    div.innerHTML = '<strong>' + 'Пресвятые боеголовки! ' + message + '</strong>' +
+    div.innerHTML = '<strong>' + prefix + message + '</strong>' +
         '<button type="button" class="close" data-dismiss="alert" aria-label="Close">' +
         '<span aria-hidden="true">&times;</span></button>';
     document.getElementById("alertContainer").append(div)
@@ -70,3 +70,33 @@ $("#addUser").click(function() {
     //request to server
     webSocket.makeRequest('CONNECT')
 });
+
+function countDownProgressBar(ms = 30000) {
+    let msPerPersent = ms / 100;
+
+}
+
+
+/**
+ * Управляем атрибутами прогрессбара
+ * @param {*} persent - проценты от общего времени
+ * @param {*} ms - отображаемое время
+ */
+function setProgressBarAttr(persent, ms) { //#fixme: if ms not defined, ms = 0. WTF?!
+
+    if (persent > 30) {
+        progressBar_left.innerHTML = ~~(ms / 1000)
+        progressBar_done.innerHTML = ''
+    } else if (persent < 0) {
+        progressBar_left.innerHTML = ''
+        progressBar_done.innerHTML = 'Время вышло!'
+    } else {
+        progressBar_left.innerHTML = ''
+        progressBar_done.innerHTML = ~~(ms / 1000)
+    }
+
+    progressBar_left.setAttribute('aria-valuenow', persent)
+    progressBar_left.setAttribute('style', 'width: ' + persent + '%')
+    progressBar_done.setAttribute('aria-valuenow', (100 - persent))
+    progressBar_done.setAttribute('style', 'width: ' + (100 - persent) + '%')
+}
