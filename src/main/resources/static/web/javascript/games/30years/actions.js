@@ -26,7 +26,11 @@ function updateUserList(array) {
         document.getElementById("userTable").append(row)
     }
 }
-
+/**
+ * Функция выводит алерт в виде модуля на странице, без блокирующего алерта
+ * @param {string} message - выводимое сообщение, к которому добавится префикс
+ * @param {string} color - orange, green,red, blue - возможные цвета алерта
+ */
 function showAlert(message, color = 'orange') {
     let div = document.createElement('div');
     let alertStyle;
@@ -45,18 +49,18 @@ function showAlert(message, color = 'orange') {
 }
 
 $("#addUser").click(function() {
-    console.log("[action] нажата кнопка 'Добавить себя'");
+    logger("[action] нажата кнопка 'Добавить себя'");
 
     if (field_userName.value == "") {
-        console.log('[warning] Пустое поле "Имя пользователя"');
+        logger('[warning] Пустое поле "Имя пользователя"');
         showAlert('Заполните поле "Имя пользователя"')
         return
     } else if (field_sessionId.value == "") {
-        console.log('[warning] Пустое поле "ID сессии"');
+        logger('[warning] Пустое поле "ID сессии"');
         showAlert('Заполните поле "ID сессии"')
         return
     } else if (field_sessionPas.value == "") {
-        console.log('[warning] Пустое поле "Пароль сессии"');
+        logger('[warning] Пустое поле "Пароль сессии"');
         showAlert('Заполните поле "Пароль сессии"')
         return
     }
@@ -71,28 +75,51 @@ $("#addUser").click(function() {
     webSocket.makeRequest('CONNECT')
 });
 
-function countDownProgressBar(ms = 30000) {
-    let msPerPersent = ms / 100;
+function initProgressBar(ms = 30000) {
+    setProgressBarAttr(100, ms)
+    progressBar.hidden = false //потом уйдет в стейты
+    countDownProgressBar(100, ms, ~~(ms / 200))
 
+}
+
+function resetProgressBar() {
+    progressBar.hidden = true
+}
+
+/**
+ * рекурсивный таймер обратного отсчета для прогресс бара
+ * @param {number} persent - оставшийся процент времени
+ * @param {number} ms - отображаемое значение, оставшееся время
+ * @param {number} step - шаг изменения в полпроцента
+ */
+function countDownProgressBar(persent, ms, step) {
+    setProgressBarAttr(persent, ms)
+    if (persent < 0) {
+        setProgressBarAttr(-1, ms)
+        return logger('[info] Время вышло!')
+    } else {
+        logger('[info] Осталось миллисекунд:' + ms)
+        setTimeout(countDownProgressBar, step, persent - 0.5, ms - step, step);
+    }
 }
 
 
 /**
  * Управляем атрибутами прогрессбара
- * @param {*} persent - проценты от общего времени
- * @param {*} ms - отображаемое время
+ * @param {number} persent - проценты от общего
+ * @param {number} ms - отображаемое время
  */
 function setProgressBarAttr(persent, ms) { //#fixme: if ms not defined, ms = 0. WTF?!
 
     if (persent > 30) {
-        progressBar_left.innerHTML = ~~(ms / 1000)
-        progressBar_done.innerHTML = ''
+        progressBar_left.childNodes[1].innerText = ~~(ms / 1000)
+        progressBar_done.childNodes[1].innerText = ''
     } else if (persent < 0) {
-        progressBar_left.innerHTML = ''
-        progressBar_done.innerHTML = 'Время вышло!'
+        progressBar_left.childNodes[1].innerText = ''
+        progressBar_done.childNodes[1].innerText = 'Время вышло!'
     } else {
-        progressBar_left.innerHTML = ''
-        progressBar_done.innerHTML = ~~(ms / 1000)
+        progressBar_left.childNodes[1].innerText = ''
+        progressBar_done.childNodes[1].innerText = ~~(ms / 1000)
     }
 
     progressBar_left.setAttribute('aria-valuenow', persent)

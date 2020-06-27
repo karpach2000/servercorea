@@ -4,16 +4,16 @@ let mafiaWsConnectionUrl = "ws://" + document.location.host + "/games/thirtyyear
 let webSocket = new WebSocket(mafiaWsConnectionUrl);
 
 webSocket.onerror = function(event) {
-    console.log(`[error] ${event.message}`)
+    logger(`[error] ${event.message}`, true)
 };
 
 webSocket.onopen = function(event) {
-    console.log(`[open] Соединение установлено, сообщение ${event.data}`)
+    logger(`[open] Соединение установлено, сообщение ${event.data}`)
     this.makeRequest('PING')
 };
 
 webSocket.onmessage = function(event) {
-    console.log(`[incoming] Данные получены с сервера:\n ${event.data}`);
+    logger(`[incoming] Данные получены с сервера:\n ${event.data}`);
     let incoming = JSON.parse(event.data)
         // console.log(incoming);
     GameState.eventListener(incoming)
@@ -21,17 +21,17 @@ webSocket.onmessage = function(event) {
 
 webSocket.onclose = function(event) {
     if (event.wasClean) {
-        console.log(`[close] Соединение закрыто чисто, код=${event.code} причина=${event.reason}`);
+        logger(`[close] Соединение закрыто чисто, код=${event.code} причина=${event.reason}`);
     } else {
         // например, сервер убил процесс или сеть недоступна
         // обычно в этом случае event.code 1006
-        console.log('[close] Соединение прервано');
+        logger('[close] Соединение прервано', true);
     }
 };
 
 webSocket.makeRequest = function(command, data = '', isAnswer = 'false') {
     let message = `{'userName':'${field_userName.value}','sessionId':'${field_sessionId.value==""?-1:field_sessionId.value}','sessionPas':'${field_sessionPas.value==""?-1:field_sessionPas.value}','command':'${command}','data':'${data}','isAnserOnRequest':'${isAnswer}'}`
-    console.log(`[outcoming] Данные отправлены на сервер:\n ${message}`);
+    logger(`[outcoming] Данные отправлены на сервер:\n ${message}`);
     this.send(message)
 }
 
