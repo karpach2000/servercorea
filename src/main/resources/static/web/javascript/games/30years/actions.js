@@ -65,11 +65,6 @@ $("#addUser").click(function() {
         return
     }
     showAlert('Вроде все правильно', 'green')
-        //это должно будет уехать в стейты
-    document.getElementById('userlogin').hidden = true;
-    document.getElementById('userList').hidden = false;
-    document.getElementById('beforeGame').hidden = true;
-    document.getElementById('inGame').hidden = false;
 
     //request to server
     webSocket.makeRequest('CONNECT')
