@@ -3,6 +3,7 @@ package com.parcel.tools.games.games.spy
 import com.parcel.tools.Globals
 import com.parcel.tools.games.gamesession.GamesSession
 import com.parcel.tools.games.GlobalRandomiser
+import com.parcel.tools.games.games.spy.comunicateinformation.SpyLocations
 import java.lang.Exception
 
 
@@ -15,6 +16,11 @@ class SpySession(sessionId: Long, sessionPas: Long) : GamesSession<SpyUser, SpyE
     private val locations = ArrayList<String>()
 
     private var currentLocation = ""
+
+    /**
+     * Информация о том нужно ли использовать локации пользователя.
+     */
+    var useUserLocations = false
 
 
 
@@ -33,7 +39,7 @@ class SpySession(sessionId: Long, sessionPas: Long) : GamesSession<SpyUser, SpyE
         if (!started) {
             started = true
             logger.debug("startGame()...")
-            updateLocations()
+            updateLocations(useUserLocations)
 
             //делаем локацию
             val locationIndex: Int = GlobalRandomiser.getRundom(locations.size)
@@ -93,14 +99,61 @@ class SpySession(sessionId: Long, sessionPas: Long) : GamesSession<SpyUser, SpyE
     /*******SETTINGS*********/
 
 
+    /**
+     * Обновить список локаций.
+     * @param useUserLocations использовать пользовательские локации.
+     */
     @Synchronized
-    private fun updateLocations() : Boolean
+    fun updateLocations(useUserLocations: Boolean = false) : Boolean
     {
         logger.debug("updateLocations()")
         locations.clear()
-        Globals.spyLocationManager.getAllLocationsAsString().forEach { locations.add(it) }
+        Globals.spyLocationManager.getLocatioinsByRole("ADMIN") .forEach { locations.add(it) }
+        this.useUserLocations = useUserLocations
+        if(useUserLocations && this.registeredGameCreator!="anonymousUser")
+            Globals.spyLocationManager.getLocatioinsByLogin(registeredGameCreator)
+                    .forEach { locations.add(it) }
+        newLocationsEvent()
         return true
     }
+
+
+    /**
+     * Получить список основных локаций (те что в оригинале)
+     */
+    fun getMainLocations() : List<String>
+    {
+        logger.debug("getMainLocations()")
+        return Globals.spyLocationManager.getLocatioinsByRole("ADMIN")
+    }
+
+    /**
+     * Получить список локаций пользователя администратора игры.
+     */
+    fun getUserLocations() : List<String>
+    {
+        logger.debug("getMainLocations()")
+        if(this.registeredGameCreator!="anonymousUser")
+            return Globals.spyLocationManager.getLocatioinsByLogin(registeredGameCreator)
+        else return ArrayList<String>()
+    }
+
+
+    /******EVENTS********/
+
+    /**
+     * Событие что кто то обновил список локаций.
+     */
+    fun newLocationsEvent()
+    {
+        val spyLocations = SpyLocations()
+        spyLocations.publicLocations = getMainLocations() as ArrayList<String>
+        spyLocations.userLocations = getUserLocations() as ArrayList<String>
+        spyLocations.useUserLocations = this.useUserLocations
+        gameEvent.forEach { it.updateLocationList(spyLocations.toJson()) }
+    }
+
+
 
 
 }

@@ -2,6 +2,7 @@ package com.parcel.tools.games.gamesession
 
 import com.parcel.tools.games.GameEvent
 import com.parcel.tools.games.GameSessionManagerException
+import com.parcel.tools.games.gamesession.timer.GameSessionTimer
 import com.parcel.tools.games.gamesuser.GameUser
 
 class GameSessionException(message: String): Exception(message )
@@ -10,15 +11,28 @@ abstract class  GamesSession<U : GameUser, E: GameEvent>(val sessionId: Long, va
 
     private val logger = org.apache.log4j.Logger.getLogger(GamesSession::class.java!!)
 
-    protected val gameEvent = ArrayList<E>()
+    /**
+     * Имя пользователя (зарегестрированного) создавшего игру.
+     */
+    var registeredGameCreator = "anonymousUser"
+    /**
+     *
+     */
+    val gameEvent = ArrayList<E>()
 
-
+    /**
+     * Список игроков играющих в игру.
+     */
     protected var users = ArrayList<U>()
 
     /**
      * Используется как свойство в классе GameSession при голосовани.
      */
-    val gameSessionVote = GameSessionVote(users)
+    protected val gameSessionVote = GameSessionVote(users)
+    /**
+     * Используется в качестве таймера для игр.
+     */
+    protected  val gameSessionTimer = GameSessionTimer()
 
     var startTime = 0L
         private set

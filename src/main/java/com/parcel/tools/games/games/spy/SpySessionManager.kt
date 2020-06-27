@@ -6,7 +6,7 @@ import com.parcel.tools.games.GamesSessionManager
 import com.parcel.tools.games.games.spy.database.SpyLocation
 import com.parcel.tools.games.games.spy.database.SpyLocationManagerException
 
-class SpySessionManagerException(message: String): GameSessionManagerException(message)
+
 
 /**
  * Управляет сессиями инры в шпиона
@@ -45,12 +45,53 @@ object SpySessionManager :
             throw SpySessionException("Session $sessionId does not exist. Maybe someone finished the game.")
     }
 
+    /*******ЛОКАЦИИ******/
+    /**
+     * Возвращает список основных локаций.
+     */
+
+    fun getAllLocationList() :List<SpyLocation> {
+        return Globals.spyLocationManager.getAllLocations()
+    }
+
 
     /**
-     * Возвращает списо к локаций.
+     * Обновить список локаций в игре
+     * @param useUserLocations нужно ли использовать локации пользователя.
      */
-    fun getLocationList() :List<SpyLocation> {
-        return Globals.spyLocationManager.getAllLocations()
+    fun updateLocations(sessionId: Long, sessionPas: Long, userName: String,
+                        useUserLocations: Boolean = false) : Boolean
+    {
+        logger.info("updateLocations($sessionId, $sessionPas, $userName)")
+        return getSession(sessionId, sessionPas).updateLocations(useUserLocations)
+    }
+
+
+    /**
+     * Получить список основных локаций (те что в оригинале)
+     */
+    fun  getMainLocations(sessionId: Long, sessionPas: Long, userName: String) : List<String>
+    {
+        logger.info("getMainLocations($sessionId, $sessionPas, $userName)")
+        return getSession(sessionId, sessionPas).getMainLocations()
+    }
+
+    /**
+     * Получить список основных локаций (те что в оригинале)
+     */
+    fun  getMainLocations() : List<String>
+    {
+        logger.info("getMainLocations()")
+        return Globals.spyLocationManager.getLocatioinsByRole("ADMIN")
+    }
+
+    /**
+     * Получить список локаций пользователя администратора игры.
+     */
+    fun getUserLocations(sessionId: Long, sessionPas: Long, userName: String) : List<String>
+    {
+        logger.info("getUserLocations($sessionId, $sessionPas, $userName)")
+        return getSession(sessionId, sessionPas).getUserLocations()
     }
 
     /**

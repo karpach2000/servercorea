@@ -74,17 +74,23 @@ class ThirtyYearsWebSocketController : TextWebSocketHandler() {
         override fun SHOW_RESULTS_event(table: String) {
             request(Commands.SHOW_RESULTS_EVENT, table)
         }
+        /**
+         * Запустить таймер.
+         */
+        override fun START_TIMER_event(miles: Long) {
+            request(Commands.START_TIMER_EVENT, miles.toString())
+        }
 
         override fun addUserEvent(userList: String) {
-            request(Commands.ADD_USER, userList)
+            request(Commands.ADD_USER_EVENT, userList)
         }
 
         override fun startGameEvent() {
-            request(Commands.START_GAME)
+            request(Commands.START_GAME_EVENT)
         }
 
         override fun stopGameEvent(spyName: String) {
-            request(Commands.STOP_GAME)
+            request(Commands.STOP_GAME_EVENT)
         }
 
         /**
@@ -172,57 +178,48 @@ class ThirtyYearsWebSocketController : TextWebSocketHandler() {
      */
     private fun webPageRequestsParser(session: WebSocketSession, inMessage: ThirtyYearsMessage)
     {
-        if(inMessage.command==Commands.PING)
-        {
-            sendMessage(session, Commands.PONG, "", true)
+        try {
+            if (inMessage.command == Commands.PING) {
+                sendMessage(session, Commands.PONG, "", true)
+            } else if (inMessage.command == Commands.CONNECT) {
+                val id = inMessage.sessionId
+                val pas = inMessage.sessionPas
+                val name = inMessage.userName
+                logger.info("Web socket connection subscribe. id: $id, pas: $pas name: $name")
+                val thirtyYearsEventHandler = ThirtyYearsEventHandler(session, name)
+                thirtyYearsEventHandler.userName = name
+                thirtyYearsEventHandler.sessionPas = pas
+                thirtyYearsEventHandler.sessionId = id
+                ThirtyYearsSessionManager.addSession(id, pas)
+                ThirtyYearsSessionManager.subscribeGameSessionEvent(id, pas, thirtyYearsEventHandler)
+                sendMessage(session, Commands.CONNECT, "", true)
+            } else if (inMessage.command == Commands.ADD_USER) {
+                ThirtyYearsSessionManager.addUser(inMessage.sessionId, inMessage.sessionPas, inMessage.userName)
+                sendMessage(session, Commands.ADD_USER, "", true)
+            } else if (inMessage.command == Commands.START_GAME) {
+                ThirtyYearsSessionManager.startGame(inMessage.sessionId, inMessage.sessionPas)
+                sendMessage(session, Commands.START_GAME, "", true)
+            } else if (inMessage.command == Commands.SET_REAL_EXCUTE) {
+                ThirtyYearsSessionManager.setRealExcude(inMessage.sessionId, inMessage.sessionPas,
+                        inMessage.userName, inMessage.data)
+                sendMessage(session, Commands.SET_REAL_EXCUTE, "", true)
+            } else if (inMessage.command == Commands.SET_FALSH_EXCUTE) {
+                ThirtyYearsSessionManager.setFalshExcute(inMessage.sessionId, inMessage.sessionPas,
+                        inMessage.userName, inMessage.data)
+                sendMessage(session, Commands.SET_FALSH_EXCUTE, "", true)
+            } else if (inMessage.command == Commands.SET_VOTE) {
+                ThirtyYearsSessionManager.vote(inMessage.sessionId, inMessage.sessionPas,
+                        inMessage.userName, inMessage.data)
+                sendMessage(session, Commands.SET_VOTE, "", true)
+            } else if (inMessage.command == Commands.ROUND) {
+                ThirtyYearsSessionManager.round(inMessage.sessionId, inMessage.sessionPas,
+                        inMessage.userName)
+                sendMessage(session, Commands.ROUND, "", true)
+            }
         }
-        else if(inMessage.command == Commands.CONNECT)
+        catch(ex: Exception)
         {
-            val id= inMessage.sessionId
-            val pas = inMessage.sessionPas
-            val name = inMessage.userName
-            logger.info("Web socket connection subscribe. id: $id, pas: $pas name: $name")
-            val thirtyYearsEventHandler = ThirtyYearsEventHandler(session, name)
-            thirtyYearsEventHandler.userName = name
-            thirtyYearsEventHandler.sessionPas = pas
-            thirtyYearsEventHandler.sessionId = id
-            ThirtyYearsSessionManager.addSession(id, pas)
-            ThirtyYearsSessionManager.subscribeGameSessionEvent(id, pas, thirtyYearsEventHandler)
-            sendMessage(session, Commands.CONNECT,"", true)
-        }
-        else if(inMessage.command == Commands.ADD_USER)
-        {
-            ThirtyYearsSessionManager.addUser(inMessage.sessionId, inMessage.sessionPas, inMessage.userName)
-            sendMessage(session, Commands.ADD_USER,"", true)
-        }
-        else if(inMessage.command == Commands.START_GAME)
-        {
-            ThirtyYearsSessionManager.startGame(inMessage.sessionId, inMessage.sessionPas)
-            sendMessage(session, Commands.START_GAME,"", true)
-        }
-        else if(inMessage.command == Commands.SET_REAL_EXCUTE)
-        {
-            ThirtyYearsSessionManager.setRealExcude(inMessage.sessionId, inMessage.sessionPas,
-                    inMessage.userName, inMessage.data)
-            sendMessage(session, Commands.SET_REAL_EXCUTE,"", true)
-        }
-        else if(inMessage.command == Commands.SET_FALSH_EXCUTE)
-        {
-            ThirtyYearsSessionManager.setFalshExcute(inMessage.sessionId, inMessage.sessionPas,
-                    inMessage.userName, inMessage.data)
-            sendMessage(session, Commands.SET_FALSH_EXCUTE,"", true)
-        }
-        else if(inMessage.command == Commands.SET_VOTE)
-        {
-            ThirtyYearsSessionManager.vote(inMessage.sessionId, inMessage.sessionPas,
-                    inMessage.userName, inMessage.data)
-            sendMessage(session, Commands.SET_VOTE,"", true)
-        }
-        else if(inMessage.command == Commands.ROUND)
-        {
-            ThirtyYearsSessionManager.round(inMessage.sessionId, inMessage.sessionPas,
-                    inMessage.userName)
-            sendMessage(session, Commands.ROUND,"", true)
+            sendMessage(session, Commands.ERROR, "${ex.message}", true)
         }
     }
 

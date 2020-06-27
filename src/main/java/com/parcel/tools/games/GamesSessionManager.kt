@@ -1,5 +1,6 @@
 package com.parcel.tools.games
 
+import com.parcel.tools.games.games.cards.CardsSessionManager
 import com.parcel.tools.games.games.spy.*
 import com.parcel.tools.games.gamesession.GamesSession
 import com.parcel.tools.games.gamesuser.GameUser
@@ -51,6 +52,15 @@ abstract class GamesSessionManager<U : GameUser, E:GameEvent, GS: GamesSession<U
         return false
     }
 
+    /**
+     * Выставить имя пользователя (зарегестрированного) создавшего игру.
+     */
+    fun setRegisteredGameCreator(sessionId: Long, sessionPas: Long, userName: String, gameCreator: String)
+    {
+        logger.info("setGameCreator($sessionId, $sessionPas $userName,$gameCreator)")
+        getSession(sessionId, sessionPas).registeredGameCreator=gameCreator
+    }
+
 
     /*******USERS**********/
 
@@ -70,6 +80,7 @@ abstract class GamesSessionManager<U : GameUser, E:GameEvent, GS: GamesSession<U
         logger.info("usersInGameCount($sessionId, $sessionPas)")
         return getSession(sessionId, sessionPas).usersInGameCount()
     }
+
 
 
 
@@ -141,6 +152,19 @@ abstract class GamesSessionManager<U : GameUser, E:GameEvent, GS: GamesSession<U
     /******СТАТИСТИКА************/
     fun countSessions() = gameSessions.size
 
+    /**
+     * Получает Id всех текущих игр.
+     */
+    fun getGameIdList(): ArrayList<Long>
+    {
+        val ids = ArrayList<Long>()
+        for(gs in gameSessions)
+        {
+            ids.add(gs.sessionId)
+        }
+        return ids
+    }
+
 
     /********СБОРЩИКИ МУСОРА*******/
 
@@ -149,7 +173,13 @@ abstract class GamesSessionManager<U : GameUser, E:GameEvent, GS: GamesSession<U
         logger.info("START DESTRUCTOR!")
         while (true)
         {
-            removeOldGames()
+            try {
+                removeOldGames()
+            }
+            catch (e: Exception)
+            {
+                logger.error(e.message)
+            }
             Thread.sleep(destructorPeriod)
         }
     }
@@ -158,12 +188,14 @@ abstract class GamesSessionManager<U : GameUser, E:GameEvent, GS: GamesSession<U
     {
         logger.debug("Removing old games.")
         val current = System.currentTimeMillis()
+        val oldGames = ArrayList<GamesSession<U, E>>()
         for(gs in gameSessions)
         {
             if(current- gs.startTime> this.gameLifeTime) {
                 logger.info("Removing game: ${gs.sessionId}")
-                gameSessions.remove(gs)
+                oldGames.add(gs)
             }
         }
+        oldGames.forEach { gameSessions.remove(it) }
     }
 }

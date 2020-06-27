@@ -39,6 +39,10 @@ class SpyWebSocketController : TextWebSocketHandler()  {
             sendMessage("spyIsNotSecretEvent$SEPORATOR$spyName")
         }
 
+        override fun updateLocationList(locations: String) {
+            sendMessage("updateLocationList$SEPORATOR$locations")
+        }
+
         fun updateSession(session: WebSocketSession)
         {
             this.session = session

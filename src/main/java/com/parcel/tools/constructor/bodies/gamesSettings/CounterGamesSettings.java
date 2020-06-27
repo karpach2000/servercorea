@@ -14,7 +14,7 @@ public class CounterGamesSettings extends Counter {
     public CounterGamesSettings()
     {
         try {
-            locations = SpySessionManager.INSTANCE.getLocationList();
+            locations = SpySessionManager.INSTANCE.getAllLocationList();
         }
         catch(Exception e)
         {

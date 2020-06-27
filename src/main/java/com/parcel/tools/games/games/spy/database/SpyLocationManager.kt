@@ -45,6 +45,25 @@ open class SpyLocationManager {
         }
     }
 
+    /**
+     * Получить имена локации принадлежащие пользоватею.
+     */
+    fun getLocatioinsByLogin(login: String): List<String>
+    {
+        logger.info("getLocatioinsByRole($login)")
+        return jdbcTemplate!!.query("SELECT * FROM get_spy_locations_by_login('$login')",
+                StringRowMapper())
+    }
+    /**
+     * Получить имена локации в соответсвии с ролью.
+     */
+    fun getLocatioinsByRole(role: String): List<String>
+    {
+        logger.info("getLocatioinsByRole($role)")
+        return jdbcTemplate!!.query("SELECT * FROM get_spy_locations_and_login_by_role('$role')",
+                StringRowMapper())
+    }
+
     fun getLocationsUser(location: String): String
     {
         logger.info("getLocationsUser($location)")

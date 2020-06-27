@@ -50,13 +50,20 @@ function onConnectionMessage(evt) {
             "!!!Шпион: "+data + "!!!\n" + document.getElementById("gamerInformation").textContent
         alert("Шпион " + data)
     }
+    else if(command=="updateLocationList")
+    {
+        spyWebsocketConnection.send("ok")
+        LocationsTable.generateTables(data)
+        LocationsTable.show()
+    }
 }
 
 /**********POSITIONS****************/
 function beforGamePosition() {
     document.getElementById("user").hidden      = true;
     document.getElementById("game").hidden      = true;
-    document.getElementById("gameInfo").hidden  = true;
+    document.getElementById("spy_mainLocations").hidden  = true;
+    //document.getElementById("spy_userLocations").hidden  = false;
     document.getElementById("beforGame").hidden = false;
 
     document.getElementById("leftTip").innerHTML =  '<p>Убедитесь, что все желающие знают ID и пароль сессии! '+
@@ -67,7 +74,8 @@ function beforGamePosition() {
 function stopGamePosition() {
     document.getElementById("user").hidden      = false;
     document.getElementById("game").hidden      = true;
-    document.getElementById("gameInfo").hidden  = true;
+    document.getElementById("spy_mainLocations").hidden  = true;
+    //document.getElementById("spy_userLocations").hidden  = true;
     document.getElementById("beforGame").hidden = true;
 
     document.getElementById("leftTip").innerHTML =  '<p>Для создания новой игры:</p>'+
@@ -87,7 +95,8 @@ function stopGamePosition() {
 function gamePosition(location,isSpy) {
     document.getElementById("user").hidden      = true;
     document.getElementById("game").hidden      = false;
-    document.getElementById("gameInfo").hidden  = false;
+    document.getElementById("spy_mainLocations").hidden  = false;
+    //5document.getElementById("spy_userLocations").hidden  = false;
     document.getElementById("beforGame").hidden = true;
 
     //role
@@ -107,7 +116,51 @@ function gamePosition(location,isSpy) {
 }
 
 /***********************************/
+
+/**
+ * Хочу быть ведущим.
+ * (пользователь получает возможность добавить свои локации)
+ */
+function spy_wanToBeaLeader()
+{
+    becomeRegisteredGameCreator()
+    var useMyLocations = document.getElementById("spy_useMyLocations").checked
+    updateLocations(useMyLocations )
+}
+
+function becomeRegisteredGameCreator()
+{
+    var xmlHttp = new XMLHttpRequest();
+    var userName = document.getElementById("userName").value
+    var sessionId = document.getElementById("sessionId").value
+    var sessionPas = document.getElementById("sessionPas").value
+    xmlHttp.open("GET", "/games/becomeRegisteredGameCreator?userName="+userName+"&sessionId="+sessionId+
+        "&sessionPas="+sessionPas, false); // false for synchronous request
+    xmlHttp.send(null);
+}
+function updateLocations(useUserLocations)
+{
+    var xmlHttp = new XMLHttpRequest();
+    var userName = document.getElementById("userName").value
+    var sessionId = document.getElementById("sessionId").value
+    var sessionPas = document.getElementById("sessionPas").value
+    xmlHttp.open("GET", "/games/updateLocations?userName="+userName+"&sessionId="+sessionId+
+        "&sessionPas="+sessionPas+"&useUserLocations="+useUserLocations, false); // false for synchronous request
+    xmlHttp.send(null);
+}
+
+
+
+
+
+
+
 var getUserAction = false
+
+
+
+
+
 
 function spy_login() {
     var xmlHttp = new XMLHttpRequest();
