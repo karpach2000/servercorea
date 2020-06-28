@@ -69,6 +69,7 @@ class ThirtyYearsTest {
 
         println("\nSTART_GAME")
         pages[0].startGame()
+        Thread.sleep(100)//иначе тесты убегают вперед
         printPages()
 
         println("\nADD EXCUDE")

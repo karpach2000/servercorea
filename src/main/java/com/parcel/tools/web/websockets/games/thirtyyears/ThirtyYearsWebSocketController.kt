@@ -198,8 +198,9 @@ class ThirtyYearsWebSocketController : TextWebSocketHandler() {
                 ThirtyYearsSessionManager.addUser(inMessage.sessionId, inMessage.sessionPas, inMessage.userName)
 
             } else if (inMessage.command == Commands.START_GAME) {
-                ThirtyYearsSessionManager.startGame(inMessage.sessionId, inMessage.sessionPas)
                 sendMessage(session, Commands.START_GAME, "", true)
+                ThirtyYearsSessionManager.startGame(inMessage.sessionId, inMessage.sessionPas)
+
             } else if (inMessage.command == Commands.SET_REAL_EXCUTE) {
                 ThirtyYearsSessionManager.setRealExcude(inMessage.sessionId, inMessage.sessionPas,
                         inMessage.userName, inMessage.data)
