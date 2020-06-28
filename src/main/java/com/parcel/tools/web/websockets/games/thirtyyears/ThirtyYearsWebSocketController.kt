@@ -268,11 +268,11 @@ class ThirtyYearsWebSocketController : TextWebSocketHandler() {
     private fun sendMessage(session: WebSocketSession, command: Commands,data: String ="",
                             isAnserOnRequest :Boolean = false, messageStatus : MessageStatus = MessageStatus.GOOD)
     {
-
         val message = ThirtyYearsMessage(-1, -1, "")
         message.command = command
         message.data=data
         message.isAnserOnRequest = isAnserOnRequest
+        message.messageStatus = messageStatus
         val tx = message.toJson()
         logger.info("TX(server):${tx} ")
         session.sendMessage(TextMessage(tx))
