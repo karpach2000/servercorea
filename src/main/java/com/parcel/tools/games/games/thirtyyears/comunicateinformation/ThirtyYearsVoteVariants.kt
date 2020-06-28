@@ -7,12 +7,16 @@ import com.parcel.tools.games.games.thirtyyears.ThirtyYearsUser
 
 class ThirtyYearsVoteVariants() {
 
+    /**
+     *
+     */
     constructor(user: ThirtyYearsUser, trueTeller: ThirtyYearsUser, users: ArrayList<ThirtyYearsUser>):this()
     {
         this.user = user
         this.trueTeller = trueTeller
         this.users = users
     }
+
 
     class TableRow
     {
@@ -27,7 +31,9 @@ class ThirtyYearsVoteVariants() {
     }
 
     /**
-     * Данные таблицы отображаемой пользователям.
+     *
+     * Класс описывающий варианты за кого может проголосовать пользователь.
+     * (серриализуется в JSON)
      */
     class Table{
         /**
