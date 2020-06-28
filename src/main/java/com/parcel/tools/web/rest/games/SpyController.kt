@@ -47,7 +47,7 @@ class SpyController {
                          @RequestParam("sessionId") sessionId: String = "",
                          @RequestParam("sessionPas") sessionPas: String = ""): String {
         logger.info("addSession($userName, $sessionId, $sessionPas)")
-        return SpySessionManager.addSession(sessionId.toLong(), sessionPas.toLong()).toString()
+        return SpySessionManager.addSessionIfNotExist(sessionId.toLong(), sessionPas.toLong()).toString()
     }
 
     @RequestMapping("/games/spy_addUser")

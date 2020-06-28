@@ -132,9 +132,18 @@ class WebPage(val sessionId: Long,val sessionPass: Long,val name: String)
     /**
      * Добавить пользователя.
      */
-    fun connect()
+    fun createSessionIfNotExists()
     {
-        request(Commands.CONNECT)
+        request(Commands.CREATE_SESSION_IF_NOT_EXIST)
+    }
+
+    /**
+     * Добавить пользователя.
+     */
+    fun connectToSession()
+    {
+        request(Commands.CONNECT_TO_SESSION)
+
     }
 
     /**

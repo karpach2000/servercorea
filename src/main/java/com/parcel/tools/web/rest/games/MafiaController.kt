@@ -41,7 +41,7 @@ class MafiaController {
                             @RequestParam("sessionId") sessionId: String = "",
                             @RequestParam("sessionPas") sessionPas: String = ""): String {
         logger.info("addSession($userName, $sessionId, $sessionPas)")
-        return MafiaSessionManager.addSession(sessionId.toLong(), sessionPas.toLong()).toString()
+        return MafiaSessionManager.addSessionIfNotExist(sessionId.toLong(), sessionPas.toLong()).toString()
     }
 
     @RequestMapping("/games/mafia_addUser")

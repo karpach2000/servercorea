@@ -62,14 +62,16 @@ class ThirtyYearsTest {
         println("_____ROUND1_____")
         println("________________\n")
         println("\nCONNECT")
-        pages.forEach{it.connect()}
+        pages[0].createSessionIfNotExists()
+        for(i in 1 until pages.size)
+            pages[i].connectToSession()
 
         println("\nADD USER")
         pages.forEach{it.addUser()}
 
         println("\nSTART_GAME")
         pages[0].startGame()
-        Thread.sleep(100)//иначе тесты убегают вперед
+        Thread.sleep(500)//иначе тесты убегают вперед
         printPages()
 
         println("\nADD EXCUDE")

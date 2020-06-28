@@ -61,7 +61,13 @@ abstract class  GamesSession<U : GameUser, E: GameEvent>(val sessionId: Long, va
 
     /******USERS*******/
 
+
+
+
+
     abstract fun addUser(name: String) :Boolean
+
+
 
     protected fun addUser(user: U): Boolean
     {

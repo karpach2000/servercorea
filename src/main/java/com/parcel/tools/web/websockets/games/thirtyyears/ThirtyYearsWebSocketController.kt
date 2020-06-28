@@ -2,6 +2,7 @@ package com.parcel.tools.web.websockets.games.thirtyyears
 
 import com.parcel.tools.games.games.thirtyyears.ThirtyYearsEvent
 import com.parcel.tools.games.games.thirtyyears.ThirtyYearsSessionManager
+import com.parcel.tools.web.websockets.games.thirtyyears.json.MessageStatus
 import com.parcel.tools.web.websockets.games.thirtyyears.json.ThirtyYearsMessage
 import org.springframework.stereotype.Component
 import org.springframework.web.socket.CloseStatus
@@ -181,7 +182,7 @@ class ThirtyYearsWebSocketController : TextWebSocketHandler() {
         try {
             if (inMessage.command == Commands.PING) {
                 sendMessage(session, Commands.PONG, "", true)
-            } else if (inMessage.command == Commands.CONNECT) {
+            } else if (inMessage.command == Commands.CREATE_SESSION_IF_NOT_EXIST) {
                 val id = inMessage.sessionId
                 val pas = inMessage.sessionPas
                 val name = inMessage.userName
@@ -190,9 +191,36 @@ class ThirtyYearsWebSocketController : TextWebSocketHandler() {
                 thirtyYearsEventHandler.userName = name
                 thirtyYearsEventHandler.sessionPas = pas
                 thirtyYearsEventHandler.sessionId = id
-                ThirtyYearsSessionManager.addSession(id, pas)
-                ThirtyYearsSessionManager.subscribeGameSessionEvent(id, pas, thirtyYearsEventHandler)
-                sendMessage(session, Commands.CONNECT, "", true)
+                if(ThirtyYearsSessionManager.addSessionIfNotExist(id, pas)) {
+                    ThirtyYearsSessionManager.subscribeGameSessionEvent(id, pas, thirtyYearsEventHandler)
+                    sendMessage(session, Commands.CREATE_SESSION_IF_NOT_EXIST, "", true)
+                }
+                else
+                {
+                    sendMessage(session, Commands.CREATE_SESSION_IF_NOT_EXIST,
+                            "SESSION_IS_EXIST", true, MessageStatus.ERROR)
+
+                }
+            }
+            else if (inMessage.command == Commands.CONNECT_TO_SESSION) {
+                val id = inMessage.sessionId
+                val pas = inMessage.sessionPas
+                val name = inMessage.userName
+                logger.info("Web socket connection subscribe. id: $id, pas: $pas name: $name")
+                val thirtyYearsEventHandler = ThirtyYearsEventHandler(session, name)
+                thirtyYearsEventHandler.userName = name
+                thirtyYearsEventHandler.sessionPas = pas
+                thirtyYearsEventHandler.sessionId = id
+                if(ThirtyYearsSessionManager.isSessionExists(id)) {
+                    ThirtyYearsSessionManager.subscribeGameSessionEvent(id, pas, thirtyYearsEventHandler)
+                    sendMessage(session, Commands.CONNECT_TO_SESSION, "", true)
+                }
+                else
+                {
+                    sendMessage(session, Commands.CONNECT_TO_SESSION,
+                            "SESSION_IS_NOT_EXIST", true, MessageStatus.ERROR)
+
+                }
             } else if (inMessage.command == Commands.ADD_USER) {
                 sendMessage(session, Commands.ADD_USER, "", true)
                 ThirtyYearsSessionManager.addUser(inMessage.sessionId, inMessage.sessionPas, inMessage.userName)
@@ -221,14 +249,15 @@ class ThirtyYearsWebSocketController : TextWebSocketHandler() {
         }
         catch(ex: Exception)
         {
-            sendMessage(session, Commands.ERROR, "${ex.message}", true)
+            sendMessage(session, inMessage.command, "${ex.message}", true,
+            MessageStatus.FATAL)
         }
     }
 
 
 
-    private fun sendMessage(session: WebSocketSession,
-                             command: Commands, data: String ="", isAnserOnRequest :Boolean = false)
+    private fun sendMessage(session: WebSocketSession, command: Commands,data: String ="",
+                            isAnserOnRequest :Boolean = false, messageStatus : MessageStatus = MessageStatus.GOOD)
     {
 
         val message = ThirtyYearsMessage(-1, -1, "")

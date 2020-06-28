@@ -2,10 +2,6 @@ package com.parcel.tools.games.games.thirtyyears
 
 import com.parcel.tools.games.GameSessionManagerException
 import com.parcel.tools.games.GamesSessionManager
-import com.parcel.tools.games.games.spy.SpyEvent
-import com.parcel.tools.games.games.spy.SpySession
-import com.parcel.tools.games.games.spy.SpySessionManager
-import com.parcel.tools.games.games.spy.SpyUser
 
 class ThirtyYearsSessionManagerException(message: String): GameSessionManagerException(message)
 
@@ -43,7 +39,8 @@ object ThirtyYearsSessionManager :
 
 
 
-    override fun addSession(sessionId: Long, sessionPas: Long)
-            = addSession(ThirtyYearsSession(sessionId, sessionPas))
+    override fun addSessionIfNotExist(sessionId: Long, sessionPas: Long)
+            = addSessionIfNotExist(ThirtyYearsSession(sessionId, sessionPas))
+
 
 }
