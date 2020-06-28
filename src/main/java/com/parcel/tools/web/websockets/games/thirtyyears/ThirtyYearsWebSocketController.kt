@@ -2,6 +2,7 @@ package com.parcel.tools.web.websockets.games.thirtyyears
 
 import com.parcel.tools.games.games.thirtyyears.ThirtyYearsEvent
 import com.parcel.tools.games.games.thirtyyears.ThirtyYearsSessionManager
+import com.parcel.tools.games.games.thirtyyears.ThirtyYearsSessionNotFatalException
 import com.parcel.tools.web.websockets.games.thirtyyears.json.MessageStatus
 import com.parcel.tools.web.websockets.games.thirtyyears.json.ThirtyYearsMessage
 import org.springframework.stereotype.Component
@@ -226,8 +227,16 @@ class ThirtyYearsWebSocketController : TextWebSocketHandler() {
                 ThirtyYearsSessionManager.addUser(inMessage.sessionId, inMessage.sessionPas, inMessage.userName)
 
             } else if (inMessage.command == Commands.START_GAME) {
-                sendMessage(session, Commands.START_GAME, "", true)
-                ThirtyYearsSessionManager.startGame(inMessage.sessionId, inMessage.sessionPas)
+
+                try {
+                    ThirtyYearsSessionManager.startGame(inMessage.sessionId, inMessage.sessionPas)
+                    sendMessage(session, Commands.START_GAME, "", true)
+                }
+                catch(ex: ThirtyYearsSessionNotFatalException)
+                {
+                    sendMessage(session, Commands.START_GAME, ex.message.toString(), true,
+                    MessageStatus.ERROR)
+                }
 
             } else if (inMessage.command == Commands.SET_REAL_EXCUTE) {
                 ThirtyYearsSessionManager.setRealExcude(inMessage.sessionId, inMessage.sessionPas,
