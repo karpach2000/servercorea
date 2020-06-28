@@ -34,6 +34,7 @@ let GameState = {
                  *      передается имя пользователя, id и пароль сессии.
                  */
                 logger('[info] CONNECT action');
+                showAlert('Есть контакт! ', 'green')
                 webSocket.makeRequest('ADD_USER')
                 break;
 

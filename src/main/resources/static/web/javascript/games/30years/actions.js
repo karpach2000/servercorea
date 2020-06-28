@@ -48,8 +48,9 @@ function showAlert(message, color = 'orange') {
     document.getElementById("alertContainer").append(div)
 }
 
-$("#addUser").click(function() {
-    logger("[action] нажата кнопка 'Добавить себя'");
+$("#createGame").click(function() {
+    logger("[action] нажата кнопка 'Создать игру'");
+    document.getElementById('createGameLoader').hidden = true
 
     if (field_userName.value == "") {
         logger('[warning] Пустое поле "Имя пользователя"');
@@ -64,11 +65,42 @@ $("#addUser").click(function() {
         showAlert('Заполните поле "Пароль сессии"')
         return
     }
-    showAlert('Вроде все правильно', 'green')
 
-    //request to server
+    document.getElementById('createGameLoader').hidden = false
+        //request to server
     webSocket.makeRequest('CONNECT')
 });
+
+$("#joinGame").click(function() {
+    logger("[action] нажата кнопка 'Присоединиться к игре'");
+    document.getElementById('joinGameLoader').hidden = true
+
+    if (field_userName.value == "") {
+        logger('[warning] Пустое поле "Имя пользователя"');
+        showAlert('Заполните поле "Имя пользователя"')
+        return
+    } else if (field_sessionId.value == "") {
+        logger('[warning] Пустое поле "ID сессии"');
+        showAlert('Заполните поле "ID сессии"')
+        return
+    } else if (field_sessionPas.value == "") {
+        logger('[warning] Пустое поле "Пароль сессии"');
+        showAlert('Заполните поле "Пароль сессии"')
+        return
+    }
+
+    document.getElementById('joinGameLoader').hidden = false
+        //request to server
+    webSocket.makeRequest('CONNECT')
+});
+
+$('#startGame').click(function() {
+    webSocket.makeRequest('START_GAME')
+})
+
+$('#stopGame').click(function() {
+    webSocket.makeRequest('STOP_GAME')
+})
 
 function initProgressBar(ms = 30000) {
     setProgressBarAttr(100, ms)

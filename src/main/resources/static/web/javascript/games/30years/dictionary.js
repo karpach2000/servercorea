@@ -20,3 +20,10 @@ const prefix = 'Пресвятые боеголовки! '
 const progressBar_left = document.getElementById('progress-blue')
 const progressBar_done = document.getElementById('progress-red')
 const progressBar = document.getElementById('progress-div')
+
+//Buttons
+const btn_startGame = document.getElementById('startGame')
+const btn_stopGame = document.getElementById('stopGame')
+const btn_invite = document.getElementById('invite')
+const btn_joinGame = document.getElementById('joinGame')
+const btn_createGame = document.getElementById('createGame')
