@@ -96,6 +96,7 @@ class ThirtyYearsSession(sessionId: Long, sessionPas: Long) :
         }
         else if(users.count()<ThirtyYearsSettings.points.usersMin)
         {
+            logger.warn("REQUIRED_USERS_${ThirtyYearsSettings.points.usersMin}_HAVE_${users.count()}")
             throw ThirtyYearsSessionNotFatalException("REQUIRED_USERS_${ThirtyYearsSettings.points.usersMin}")
         }
     }
