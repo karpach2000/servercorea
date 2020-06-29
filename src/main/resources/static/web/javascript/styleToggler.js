@@ -9,6 +9,22 @@ function toggleMenu() {
     } else {
         toggleForUser(currentUser);
     }
+
+    if ((location.search != '') && (location.hash != '')) preloadInputs();
+}
+
+function preloadInputs() {
+    const rule = /[^\d]/g
+    let id = location.search.replace(rule, '')
+    let ps = location.hash.replace(rule, '')
+    console.log('id=' + id + ' pass=' + ps);
+
+    if (id.length > 0 && ps.length > 0 && document.getElementById('userName')) {
+        document.getElementById('sessionId').value = id
+        document.getElementById('sessionPas').value = ps
+    }
+    history.replaceState({}, 'input', location.pathname)
+
 }
 
 function toggleForAnon() {
