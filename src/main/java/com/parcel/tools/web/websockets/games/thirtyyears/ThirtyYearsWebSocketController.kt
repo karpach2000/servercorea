@@ -155,24 +155,32 @@ class ThirtyYearsWebSocketController : TextWebSocketHandler() {
         super.handleTextMessage(session, message)
         val rx = message.payload
 
-        val inMessage = ThirtyYearsMessage(rx)
-        //Если Веб страница сделала реквест мне
-        if (!inMessage.isAnserOnRequest)
-        {
-            logger.info("RX(server):${rx} ")
-            //тебе все дальнейшие действия необходимо запустить в в отдельном потоке т.к.
-            //они создают реквеств которые ожидают ответы улавливаемые этим методом,
-            //который сука синхронизирован
-            Thread(Runnable { webPageRequestsParser(session, inMessage)}).start()
+        try {
+            val inMessage = ThirtyYearsMessage(rx)
+            //Если Веб страница сделала реквест мне
+            if (!inMessage.isAnserOnRequest)
+            {
+                logger.info("RX(server):${rx} ")
+                //тебе все дальнейшие действия необходимо запустить в в отдельном потоке т.к.
+                //они создают реквеств которые ожидают ответы улавливаемые этим методом,
+                //который сука синхронизирован
+                Thread(Runnable { webPageRequestsParser(session, inMessage)}).start()
+            }
+            //Если я сделал реквес веб странице
+            else
+            {
+                logger.info("RX(client):${rx} ")
+                val event = ThirtyYearsSessionManager.getGameSessionEvents(
+                        inMessage.sessionId, inMessage.sessionPas, inMessage.userName)
+                event.setInMessage(message.payload)
+            }
         }
-        //Если я сделал реквес веб странице
-        else
+        catch (ex: java.lang.Exception)
         {
-            logger.info("RX(client):${rx} ")
-            val event = ThirtyYearsSessionManager.getGameSessionEvents(
-                    inMessage.sessionId, inMessage.sessionPas, inMessage.userName)
-            event.setInMessage(message.payload)
+            logger.error("MESSAGE_PARSING_ERROR")
+            sendMessage(session, Commands.ERROR, "MESSAGE_PARSING_ERROR", true, MessageStatus.ERROR)
         }
+
     }
 
     /**
@@ -254,6 +262,11 @@ class ThirtyYearsWebSocketController : TextWebSocketHandler() {
                 ThirtyYearsSessionManager.round(inMessage.sessionId, inMessage.sessionPas,
                         inMessage.userName)
                 sendMessage(session, Commands.ROUND, "", true)
+            }
+            else
+            {
+                logger.warn("Unsorted command")
+                sendMessage(session, inMessage.command, "COMMAND_NO_SUPPORTED", true, MessageStatus.ERROR)
             }
         }
         catch(ex: Exception)
