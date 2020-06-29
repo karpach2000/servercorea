@@ -94,7 +94,7 @@ class ThirtyYearsSession(sessionId: Long, sessionPas: Long) :
             //преводим игру в состояние введения реальной отмазки
             goTo_ENTER_REAL_EXCUTE_event()
         }
-        else if(users.count()<=ThirtyYearsSettings.points.usersMin)
+        else if(users.count()<ThirtyYearsSettings.points.usersMin)
         {
             throw ThirtyYearsSessionNotFatalException("REQUIRED_USERS_${ThirtyYearsSettings.points.usersMin}")
         }

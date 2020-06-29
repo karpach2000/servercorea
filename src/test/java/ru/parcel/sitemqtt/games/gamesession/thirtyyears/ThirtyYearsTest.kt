@@ -20,9 +20,9 @@ class ThirtyYearsTest {
 
     init {
         pages.add(page1)
-        pages.add(page2)
-        pages.add(page3)
-        pages.add(page4)
+        //pages.add(page2)
+        //pages.add(page3)
+        //pages.add(page4)
 
         excude.add("Жирная жопа")
         excude.add("Худые ляшки")
