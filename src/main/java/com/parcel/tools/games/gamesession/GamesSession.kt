@@ -6,7 +6,7 @@ import com.parcel.tools.games.gamesession.timer.GameSessionTimer
 import com.parcel.tools.games.gamesuser.GameUser
 
 class GameSessionException(message: String): Exception(message )
-
+class GameSessionNotFatalException(message: String):Exception(message)
 abstract class  GamesSession<U : GameUser, E: GameEvent>(val sessionId: Long, val sessionPas: Long) {
 
     private val logger = org.apache.log4j.Logger.getLogger(GamesSession::class.java!!)
@@ -61,7 +61,13 @@ abstract class  GamesSession<U : GameUser, E: GameEvent>(val sessionId: Long, va
 
     /******USERS*******/
 
+
+
+
+
     abstract fun addUser(name: String) :Boolean
+
+
 
     protected fun addUser(user: U): Boolean
     {
@@ -85,7 +91,7 @@ abstract class  GamesSession<U : GameUser, E: GameEvent>(val sessionId: Long, va
         else if(!started && userExist)
         {
             logger.warn("A user with the same name already exists.")
-            throw GameSessionException("A user with the same name already exists.")
+            throw GameSessionException("USER_EXISTS")
         }
         else
         {

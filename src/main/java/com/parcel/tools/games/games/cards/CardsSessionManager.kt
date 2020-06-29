@@ -38,7 +38,7 @@ object CardsSessionManager :
 */
     /*********УПРАВЛЕНИЕ СЕССИЯМИ**********/
 
-    override fun addSession(sessionId: Long, sessionPas: Long) = addSession(CardsSession(sessionId, sessionPas))
+    override fun addSessionIfNotExist(sessionId: Long, sessionPas: Long) = addSessionIfNotExist(CardsSession(sessionId, sessionPas))
     /*   override fun addSession(gamesSession: CardsSession): Boolean {
            logger.info("addCardsSession(${gamesSession.sessionId}, ${gamesSession.sessionPas})")
            if (!isSessionExists(gamesSession.sessionId)) {

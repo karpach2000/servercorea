@@ -38,7 +38,7 @@ class CardsController {
             @RequestParam("sessionId") sessionId: String = "",
             @RequestParam("sessionPas") sessionPas: String = ""): String {
         logger.info("addCardsSession($sessionId, $sessionPas)")
-        return CardsSessionManager.addSession(sessionId.toLong(), sessionPas.toLong()).toString()
+        return CardsSessionManager.addSessionIfNotExist(sessionId.toLong(), sessionPas.toLong()).toString()
     }
 
     @RequestMapping("/games/cards_addUser")

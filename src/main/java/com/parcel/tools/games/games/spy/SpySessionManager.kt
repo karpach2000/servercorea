@@ -1,7 +1,6 @@
 package com.parcel.tools.games.games.spy
 
 import com.parcel.tools.Globals
-import com.parcel.tools.games.GameSessionManagerException
 import com.parcel.tools.games.GamesSessionManager
 import com.parcel.tools.games.games.spy.database.SpyLocation
 import com.parcel.tools.games.games.spy.database.SpyLocationManagerException
@@ -150,8 +149,8 @@ object SpySessionManager :
 
     /*********УПРАВЛЕНИЕ СЕССИЯМИ**********/
 
-    override fun addSession(sessionId: Long, sessionPas: Long)
-            = addSession(SpySession(sessionId, sessionPas))
+    override fun addSessionIfNotExist(sessionId: Long, sessionPas: Long)
+            = addSessionIfNotExist(SpySession(sessionId, sessionPas))
 
 
 

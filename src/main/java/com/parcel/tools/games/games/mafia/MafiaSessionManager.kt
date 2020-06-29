@@ -116,6 +116,6 @@ object MafiaSessionManager :
 
     /*********УПРАВЛЕНИЕ СЕССИЯМИ**********/
 
-    override fun addSession(sessionId: Long, sessionPas: Long)
-            = addSession(MafiaSession(sessionId, sessionPas))
+    override fun addSessionIfNotExist(sessionId: Long, sessionPas: Long)
+            = addSessionIfNotExist(MafiaSession(sessionId, sessionPas))
 }

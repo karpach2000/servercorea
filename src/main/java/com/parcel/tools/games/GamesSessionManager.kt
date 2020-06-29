@@ -88,9 +88,13 @@ abstract class GamesSessionManager<U : GameUser, E:GameEvent, GS: GamesSession<U
 
     /*********УПРАВЛЕНИЕ СЕССИЯМИ**********/
 
-    abstract fun addSession(sessionId: Long, sessionPas: Long): Boolean
+    abstract fun addSessionIfNotExist(sessionId: Long, sessionPas: Long): Boolean
 
-    protected fun addSession(gamesSession: GS): Boolean
+    /**
+     * Добавить сессию если последняя не существует.
+     * @return false если сессия уже существовала.
+     */
+    protected fun addSessionIfNotExist(gamesSession: GS): Boolean
     {
         logger.info("addSession(${gamesSession.sessionId}, ${gamesSession.sessionPas})")
         if(!isSessionExists(gamesSession.sessionId))
@@ -105,7 +109,10 @@ abstract class GamesSessionManager<U : GameUser, E:GameEvent, GS: GamesSession<U
         }
     }
 
-    protected fun isSessionExists(sessionId: Long): Boolean
+
+
+
+    fun isSessionExists(sessionId: Long): Boolean
     {
         gameSessions.forEach {
             if(it.sessionId == sessionId)

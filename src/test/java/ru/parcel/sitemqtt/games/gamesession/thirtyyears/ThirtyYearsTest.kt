@@ -10,7 +10,7 @@ class ThirtyYearsTest {
     //private var webSocketClient = WebsocketClientEndpoint("ws://127.0.0.1:8080/games/thirtyyears/ws")
 
     val page1 = WebPage(14, 88, "Petr")
-    val page2 = WebPage(14, 88, "Victor")
+    val page2 = WebPage(14, 88, "SashaGrey")
     val page3 = WebPage(14, 88, "Gena")
     val page4 = WebPage(14, 88, "Vasa")
 
@@ -62,13 +62,16 @@ class ThirtyYearsTest {
         println("_____ROUND1_____")
         println("________________\n")
         println("\nCONNECT")
-        pages.forEach{it.connect()}
+        pages[0].createSessionIfNotExists()
+        for(i in 1 until pages.size)
+            pages[i].connectToSession()
 
         println("\nADD USER")
         pages.forEach{it.addUser()}
 
         println("\nSTART_GAME")
         pages[0].startGame()
+        Thread.sleep(500)//иначе тесты убегают вперед
         printPages()
 
         println("\nADD EXCUDE")
