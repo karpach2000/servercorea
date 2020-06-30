@@ -202,12 +202,11 @@ class ThirtyYearsWebSocketController : TextWebSocketHandler() {
                 thirtyYearsEventHandler.sessionId = id
                 if(ThirtyYearsSessionManager.addSessionIfNotExist(id, pas)) {
                     ThirtyYearsSessionManager.subscribeGameSessionEvent(id, pas, thirtyYearsEventHandler)
-                    sendMessage(session, Commands.CREATE_SESSION_IF_NOT_EXIST, "", true)
+                    sendMessageAnser(session, inMessage)
                 }
                 else
                 {
-                    sendMessage(session, Commands.CREATE_SESSION_IF_NOT_EXIST,
-                            "SESSION_IS_EXIST", true, MessageStatus.ERROR)
+                    sendMessageAnser(session, inMessage, "SESSION_IS_EXIST", MessageStatus.ERROR)
 
                 }
             }
@@ -222,66 +221,75 @@ class ThirtyYearsWebSocketController : TextWebSocketHandler() {
                 thirtyYearsEventHandler.sessionId = id
                 if(ThirtyYearsSessionManager.isSessionExists(id)) {
                     ThirtyYearsSessionManager.subscribeGameSessionEvent(id, pas, thirtyYearsEventHandler)
-                    sendMessage(session, Commands.CONNECT_TO_SESSION, "", true)
+                    sendMessageAnser(session, inMessage)
                 }
                 else
                 {
-                    sendMessage(session, Commands.CONNECT_TO_SESSION,
-                            "SESSION_IS_NOT_EXIST", true, MessageStatus.ERROR)
+                    sendMessageAnser(session, inMessage, "SESSION_IS_NOT_EXIST", MessageStatus.ERROR)
 
                 }
             } else if (inMessage.command == Commands.ADD_USER) {
-                sendMessage(session, Commands.ADD_USER, "", true)
+                sendMessageAnser(session, inMessage)
                 ThirtyYearsSessionManager.addUser(inMessage.sessionId, inMessage.sessionPas, inMessage.userName)
 
             } else if (inMessage.command == Commands.START_GAME) {
 
                 try {
                     ThirtyYearsSessionManager.startGame(inMessage.sessionId, inMessage.sessionPas)
-                    sendMessage(session, Commands.START_GAME, "", true)
+                    sendMessageAnser(session, inMessage)
                 }
                 catch(ex: ThirtyYearsSessionNotFatalException)
                 {
-                    sendMessage(session, Commands.START_GAME, ex.message.toString(), true,
-                    MessageStatus.ERROR)
+                    sendMessageAnser(session, inMessage, ex.message.toString(), MessageStatus.ERROR)
                 }
 
             } else if (inMessage.command == Commands.SET_REAL_EXCUTE) {
                 ThirtyYearsSessionManager.setRealExcude(inMessage.sessionId, inMessage.sessionPas,
                         inMessage.userName, inMessage.data)
-                sendMessage(session, Commands.SET_REAL_EXCUTE, "", true)
+                sendMessageAnser(session, inMessage)
             } else if (inMessage.command == Commands.SET_FALSH_EXCUTE) {
                 ThirtyYearsSessionManager.setFalshExcute(inMessage.sessionId, inMessage.sessionPas,
                         inMessage.userName, inMessage.data)
-                sendMessage(session, Commands.SET_FALSH_EXCUTE, "", true)
+                sendMessageAnser(session, inMessage)
             } else if (inMessage.command == Commands.SET_VOTE) {
                 ThirtyYearsSessionManager.vote(inMessage.sessionId, inMessage.sessionPas,
                         inMessage.userName, inMessage.data)
-                sendMessage(session, Commands.SET_VOTE, "", true)
+                sendMessageAnser(session, inMessage )
             } else if (inMessage.command == Commands.ROUND) {
                 ThirtyYearsSessionManager.round(inMessage.sessionId, inMessage.sessionPas,
                         inMessage.userName)
-                sendMessage(session, Commands.ROUND, "", true)
+                sendMessageAnser(session, inMessage )
             }
             else
             {
                 logger.warn("Unsorted command")
-                sendMessage(session, inMessage.command, "COMMAND_NO_SUPPORTED", true, MessageStatus.ERROR)
+                sendMessageAnser(session, inMessage, "COMMAND_NO_SUPPORTED",  MessageStatus.ERROR)
             }
         }
         catch(ex: Exception)
         {
-            sendMessage(session, inMessage.command, "${ex.message}", true,
-            MessageStatus.FATAL)
+            sendMessageAnser(session, inMessage, "${ex.message}",  MessageStatus.FATAL)
         }
     }
 
 
+    /**
+     * Сгенерировать ответ на сообщение.
+     */
+    private fun sendMessageAnser(session: WebSocketSession, inMessage: ThirtyYearsMessage, data: String ="",
+                                 messageStatus : MessageStatus = MessageStatus.GOOD) =
+            sendMessage(session, inMessage.command, data, true, messageStatus,
+            inMessage.sessionId, inMessage.sessionPas, inMessage.userName)
 
+
+    /**
+     * Отправить сообщение WEB страницам.
+     */
     private fun sendMessage(session: WebSocketSession, command: Commands,data: String ="",
-                            isAnserOnRequest :Boolean = false, messageStatus : MessageStatus = MessageStatus.GOOD)
+                            isAnserOnRequest :Boolean = false, messageStatus : MessageStatus = MessageStatus.GOOD,
+                            sessionId: Long =-1, sessioinPas: Long =-1, userName: String = "")
     {
-        val message = ThirtyYearsMessage(-1, -1, "")
+        val message = ThirtyYearsMessage(sessionId, sessioinPas, userName)
         message.command = command
         message.data=data
         message.isAnserOnRequest = isAnserOnRequest
