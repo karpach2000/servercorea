@@ -9,6 +9,9 @@ import com.parcel.tools.games.gamesuser.GameUser
 
 open class  GameSessionManagerException(message: String):Exception(message)
 class GameSessionNotFatalException(message: String):Exception(message)
+{
+    constructor(gameErrors: GameErrors):this(gameErrors.toString())
+}
 
 abstract class GamesSessionManager<U : GameUser, E:GameEvent, GS: GamesSession<U, E>>(){
     private val gameLifeTime = 60L*60L*1000L*2
@@ -38,7 +41,7 @@ abstract class GamesSessionManager<U : GameUser, E:GameEvent, GS: GamesSession<U
         else
         {
             logger.warn("Game $sessionId not exists.")
-            throw ThirtyYearsSessionNotFatalException("GAME_NOT_EXISTS")
+            throw GameSessionNotFatalException(GameErrors.GAME_IS_NOT_EXIST)
         }
     }
 

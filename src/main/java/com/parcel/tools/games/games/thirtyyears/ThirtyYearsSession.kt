@@ -9,6 +9,9 @@ import com.parcel.tools.games.gamesession.GamesSession
 
 class ThirtyYearsSessionException(message: String):Exception(message)
 class ThirtyYearsSessionNotFatalException(message: String):Exception(message)
+{
+    constructor(thirtyYearsErrors: ThirtyYearsErrors):this(thirtyYearsErrors.toString())
+}
 
 /**
  * Объект игры 30 лет.

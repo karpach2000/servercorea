@@ -3,6 +3,7 @@ package com.parcel.tools.web.websockets.games.thirtyyears
 import com.parcel.tools.games.games.thirtyyears.ThirtyYearsEvent
 import com.parcel.tools.games.games.thirtyyears.ThirtyYearsSessionManager
 import com.parcel.tools.games.games.thirtyyears.ThirtyYearsSessionNotFatalException
+import com.parcel.tools.games.gamesession.GameSessionNotFatalException
 import com.parcel.tools.web.websockets.games.thirtyyears.json.MessageStatus
 import com.parcel.tools.web.websockets.games.thirtyyears.json.ThirtyYearsMessage
 import org.springframework.stereotype.Component
@@ -233,16 +234,8 @@ class ThirtyYearsWebSocketController : TextWebSocketHandler() {
                 ThirtyYearsSessionManager.addUser(inMessage.sessionId, inMessage.sessionPas, inMessage.userName)
 
             } else if (inMessage.command == Commands.START_GAME) {
-
-                try {
                     ThirtyYearsSessionManager.startGame(inMessage.sessionId, inMessage.sessionPas)
                     sendMessageAnser(session, inMessage)
-                }
-                catch(ex: ThirtyYearsSessionNotFatalException)
-                {
-                    sendMessageAnser(session, inMessage, ex.message.toString(), MessageStatus.ERROR)
-                }
-
             } else if (inMessage.command == Commands.SET_REAL_EXCUTE) {
                 ThirtyYearsSessionManager.setRealExcude(inMessage.sessionId, inMessage.sessionPas,
                         inMessage.userName, inMessage.data)
@@ -265,6 +258,18 @@ class ThirtyYearsWebSocketController : TextWebSocketHandler() {
                 logger.warn("Unsorted command")
                 sendMessageAnser(session, inMessage, "COMMAND_NO_SUPPORTED",  MessageStatus.ERROR)
             }
+        }
+        catch (ex: GameSessionNotFatalException)
+        {
+            sendMessageAnser(session, inMessage, "${ex.message}",  MessageStatus.ERROR)
+        }
+        catch (ex: ThirtyYearsSessionNotFatalException)
+        {
+            sendMessageAnser(session, inMessage, "${ex.message}",  MessageStatus.ERROR)
+        }
+        catch (ex: GameSessionNotFatalException)
+        {
+            sendMessageAnser(session, inMessage, "${ex.message}",  MessageStatus.ERROR)
         }
         catch(ex: Exception)
         {
