@@ -9,7 +9,7 @@ let GameState = {
      * по итогам получения команд через вебсокет
      * 
      * Пока здесь в кучу и ответы сервера, и события
-     * @param {{command:string,data:string,isAnswer:boolean,userName:string,sessionId:number, sessionPas:number}} incoming 
+     * @param {{command:string,data:string,isAnswer:boolean,userName:string,sessionId:number, sessionPas:number,messageStatus:string}} incoming 
      * - содержимое JSON, пришедшего с сервера
      */
     eventListener(incoming) {
@@ -25,19 +25,43 @@ let GameState = {
                 logger('[error] сервер вернул ошибку: \n' + incoming.data)
                 break;
 
-            case "CONNECT":
-                /** Соединится с сервером.
-                 *  Установление соединения
+            case "CONNECT_TO_SESSION":
+                /**
+                 * Подсоединится к существующей.
+                 *
+                 *              Устанговление соединения для соединения с существующей скссией
                  *  1) Web страница при необходимости взаимодействия с сервером игры при помощи
                  *      веб сокетов устанавливает коннект.
-                 *  2) Web страница отправляет реквест с командой CONNECT в котором соответсвующих полях
+                 *  2) Web страница отправляет реквест с командой CONNECT_TO_SESSION в котором соответсвующих полях
                  *      передается имя пользователя, id и пароль сессии.
                  */
                 logger('[info] CONNECT action');
-                showAlert('Есть контакт! ', 'green')
-                webSocket.makeRequest('ADD_USER')
+                if (incoming.messageStatus == 'GOOD') {
+                    showAlert('Есть контакт! ', 'green')
+                    webSocket.makeRequest('ADD_USER')
+                } else {
+                    showAlert(incoming.messageStatus + ' ' + incoming.data, 'orange')
+                }
                 break;
 
+            case "CREATE_SESSION_IF_NOT_EXIST":
+                /**
+                 * Создать новую сессию.
+                 *
+                 *              Устанговление соединения для создания новой сессии
+                 *  1) Web страница при необходимости взаимодействия с сервером игры при помощи
+                 *      веб сокетов устанавливает коннект.
+                 *  2) Web страница отправляет реквест с командой CREATE_SESSION_IF_NOT_EXIST в котором соответсвующих полях
+                 *      передается имя пользователя, id и пароль сессии.
+                 */
+                logger('[info] CREATE_SESSION action');
+                if (incoming.messageStatus == 'GOOD') {
+                    showAlert('Есть контакт! ', 'green')
+                    webSocket.makeRequest('ADD_USER')
+                } else {
+                    showAlert(incoming.messageStatus + ' ' + incoming.data, 'orange')
+                }
+                break;
 
             case "ADD_USER":
                 /** Добавить пользователя.
@@ -45,10 +69,14 @@ let GameState = {
                  */
                 logger('[action] ADD_USER action');
                 //это должно будет уехать в стейты
-                document.getElementById('userlogin').hidden = true;
-                document.getElementById('userList').hidden = false;
-                document.getElementById('beforeGame').hidden = true;
-                document.getElementById('inGame').hidden = false;
+                if (incoming.messageStatus == 'GOOD') {
+                    document.getElementById('userlogin').hidden = true;
+                    document.getElementById('userList').hidden = false;
+                    document.getElementById('beforeGame').hidden = true;
+                    document.getElementById('inGame').hidden = false;
+                } else {
+                    showAlert(incoming.messageStatus + ' ' + incoming.data, 'orange')
+                }
                 break;
 
             case "ADD_USER_EVENT":
@@ -110,7 +138,7 @@ let GameState = {
                 document.getElementById("awful-event").innerHTML = incoming.data
                 break;
 
-            case "SENTER_FALSH_EXCUTE_EVENT":
+            case "ENTER_FALSH_EXCUTE_EVENT":
                 /** Введение фальшивой отмазки.
                  *  Сервер игры рассылает WEB страницам событие от которого необходимо отмазаться
                  *  так как это бы сделал игрок, чье событие сейчас отображается.

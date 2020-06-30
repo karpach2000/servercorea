@@ -68,7 +68,7 @@ $("#createGame").click(function() {
 
     document.getElementById('createGameLoader').hidden = false
         //request to server
-    webSocket.makeRequest('CONNECT')
+    webSocket.makeRequest('CREATE_SESSION_IF_NOT_EXIST')
 });
 
 $("#joinGame").click(function() {
@@ -91,7 +91,7 @@ $("#joinGame").click(function() {
 
     document.getElementById('joinGameLoader').hidden = false
         //request to server
-    webSocket.makeRequest('CONNECT')
+    webSocket.makeRequest('CONNECT_TO_SESSION')
 });
 
 $('#startGame').click(function() {
