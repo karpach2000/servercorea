@@ -9,6 +9,9 @@ import com.parcel.tools.games.gamesession.GamesSession
 
 class ThirtyYearsSessionException(message: String):Exception(message)
 class ThirtyYearsSessionNotFatalException(message: String):Exception(message)
+{
+    constructor(thirtyYearsErrors: ThirtyYearsErrors):this(thirtyYearsErrors.toString())
+}
 
 /**
  * Объект игры 30 лет.
@@ -94,9 +97,10 @@ class ThirtyYearsSession(sessionId: Long, sessionPas: Long) :
             //преводим игру в состояние введения реальной отмазки
             goTo_ENTER_REAL_EXCUTE_event()
         }
-        else if(users.count()<=ThirtyYearsSettings.points.usersMin)
+        else if(users.count()<ThirtyYearsSettings.points.usersMin)
         {
-            throw ThirtyYearsSessionNotFatalException("REQUIRED_USERS_${ThirtyYearsSettings.points.usersMin}")
+            logger.warn("REQUIRED_USERS_${ThirtyYearsSettings.points.usersMin}_HAVE_${users.count()}")
+            throw ThirtyYearsSessionNotFatalException("${ThirtyYearsErrors.REQUIRED_USERS}_${ThirtyYearsSettings.points.usersMin}")
         }
     }
 

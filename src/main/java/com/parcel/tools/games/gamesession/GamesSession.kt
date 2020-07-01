@@ -1,12 +1,13 @@
 package com.parcel.tools.games.gamesession
 
+import com.parcel.tools.games.GameErrors
 import com.parcel.tools.games.GameEvent
 import com.parcel.tools.games.GameSessionManagerException
 import com.parcel.tools.games.gamesession.timer.GameSessionTimer
 import com.parcel.tools.games.gamesuser.GameUser
 
 class GameSessionException(message: String): Exception(message )
-class GameSessionNotFatalException(message: String):Exception(message)
+class GameSessionNotFatalException(error: GameErrors):Exception(error.toString())
 abstract class  GamesSession<U : GameUser, E: GameEvent>(val sessionId: Long, val sessionPas: Long) {
 
     private val logger = org.apache.log4j.Logger.getLogger(GamesSession::class.java!!)
@@ -76,7 +77,7 @@ abstract class  GamesSession<U : GameUser, E: GameEvent>(val sessionId: Long, va
         if(started && !userExist)
         {
             logger.warn("Game  started.")
-            throw GameSessionException("The game is already running.")
+            throw GameSessionNotFatalException(GameErrors.GAME_IS_ALREADY_RUNUNG)
         }
         else if(started && userExist)
         {
@@ -86,12 +87,12 @@ abstract class  GamesSession<U : GameUser, E: GameEvent>(val sessionId: Long, va
         }
         else if(user.name.length<1) {
             logger.warn("To short user name.")
-            throw GameSessionException("To short user name.")
+            throw GameSessionNotFatalException(GameErrors.TO_SHORT_USER_NAME)
         }
         else if(!started && userExist)
         {
             logger.warn("A user with the same name already exists.")
-            throw GameSessionException("USER_EXISTS")
+            throw GameSessionNotFatalException(GameErrors.USER_EXISTS)
         }
         else
         {

@@ -68,7 +68,7 @@ class ThirtyYearsTest {
 
         println("\nADD USER")
         pages.forEach{it.addUser()}
-
+        Thread.sleep(500)//иначе тесты убегают вперед
         println("\nSTART_GAME")
         pages[0].startGame()
         Thread.sleep(500)//иначе тесты убегают вперед

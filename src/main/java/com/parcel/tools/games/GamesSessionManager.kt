@@ -2,10 +2,16 @@ package com.parcel.tools.games
 
 import com.parcel.tools.games.games.cards.CardsSessionManager
 import com.parcel.tools.games.games.spy.*
+import com.parcel.tools.games.games.thirtyyears.ThirtyYearsSessionNotFatalException
+import com.parcel.tools.games.games.thirtyyears.settings.ThirtyYearsSettings
 import com.parcel.tools.games.gamesession.GamesSession
 import com.parcel.tools.games.gamesuser.GameUser
 
 open class  GameSessionManagerException(message: String):Exception(message)
+class GameSessionNotFatalException(message: String):Exception(message)
+{
+    constructor(gameErrors: GameErrors):this(gameErrors.toString())
+}
 
 abstract class GamesSessionManager<U : GameUser, E:GameEvent, GS: GamesSession<U, E>>(){
     private val gameLifeTime = 60L*60L*1000L*2
@@ -35,7 +41,7 @@ abstract class GamesSessionManager<U : GameUser, E:GameEvent, GS: GamesSession<U
         else
         {
             logger.warn("Game $sessionId not exists.")
-            return false
+            throw GameSessionNotFatalException(GameErrors.GAME_IS_NOT_EXIST)
         }
     }
 
