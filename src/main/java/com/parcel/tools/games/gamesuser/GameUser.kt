@@ -10,5 +10,10 @@ abstract class GameUser (val name:String) {
      */
     val gameUserVote = GameUserVote()
 
+    /**
+     * Идентефикатор по которому можно отличить 2 разных пользователей с одинаковыми именами пользователя
+     */
+    var identeficator = ""
+
 
 }

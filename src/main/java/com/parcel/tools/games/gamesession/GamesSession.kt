@@ -68,6 +68,12 @@ abstract class  GamesSession<U : GameUser, E: GameEvent>(val sessionId: Long, va
 
     abstract fun addUser(name: String) :Boolean
 
+    fun setIdenteficatorToUser(name: String, identeficator :String = "") : Boolean
+    {
+        getUser(name).identeficator = identeficator
+        return true
+    }
+
 
 
     protected fun addUser(user: U): Boolean
@@ -150,6 +156,23 @@ abstract class  GamesSession<U : GameUser, E: GameEvent>(val sessionId: Long, va
     fun deSubscribeGameEvents(gameEvent: E)
     {
         this.gameEvent.remove(gameEvent)
+    }
+
+    /**
+     * Удалить подписчика на игру из списка подписчиков.
+     * @param identeficator иденотефикатор полдписчика
+     * @return true - нашли и удалили, false - не неашли
+     */
+    fun deSubscribeGameEvents(identeficator: String): Boolean
+    {
+        for (ge in gameEvent){
+            if(ge.identeficator==identeficator)
+            {
+                this.gameEvent.remove(ge)
+                return true
+            }
+        }
+        return false
     }
 
     private fun addUserEvent(userList: String)

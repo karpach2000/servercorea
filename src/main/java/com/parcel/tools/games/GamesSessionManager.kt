@@ -75,6 +75,11 @@ abstract class GamesSessionManager<U : GameUser, E:GameEvent, GS: GamesSession<U
         logger.info("addUser($sessionId, $sessionPas $userName)")
         return getSession(sessionId, sessionPas).addUser(userName)
     }
+    fun setIdenteficatorToUser(sessionId: Long, sessionPas: Long, userName: String, identeficator: String) : Boolean
+    {
+        logger.info("setIdenteficatorToUser($sessionId, $sessionPas $userName $identeficator)")
+        return getSession(sessionId, sessionPas).setIdenteficatorToUser(userName, identeficator)
+    }
 
     fun getUsers(sessionId: Long, sessionPas: Long):String {
         logger.info("getUsers($sessionId, $sessionPas)")
@@ -157,8 +162,21 @@ abstract class GamesSessionManager<U : GameUser, E:GameEvent, GS: GamesSession<U
 
     fun deSubscribeGameSessionEvent(sessionId: Long, sessionPas: Long, event: E)
     {
-        if(SpySessionManager.isSessionExists(sessionId))
+        if(isSessionExists(sessionId))
             getSession(sessionId, sessionPas).deSubscribeGameEvents(event)
+    }
+    /**
+     * Удалить подписчика на игру из списка подписчиков.
+     * @param identeficator иденотефикатор полдписчика
+     * @return true - нашли и удалили, false - не неашли
+     */
+    fun deSubscribeGameSessionEvent(identeficator: String): Boolean
+    {
+        for(gs in gameSessions){
+            if(gs.deSubscribeGameEvents(identeficator))
+                return true
+        }
+        return false
     }
 
 

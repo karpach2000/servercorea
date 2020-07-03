@@ -74,7 +74,7 @@ class ThirtyYearsSession(sessionId: Long, sessionPas: Long) :
         gameSessionTimer.subscribeTimerEvents(thirtyYearsTimerEvent)
     }
 
-    override fun addUser(name: String): Boolean {
+    override fun addUser(name: String ): Boolean {
        val user = ThirtyYearsUser(name)
         return super.addUser(user)
     }
