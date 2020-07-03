@@ -6,7 +6,8 @@ let debug = true
      * @param {boolean} force - команда форсированного логгирования
      */
 function logger(data, force = false) {
-    if (debug || force) console.log(data);
+    let now = new Date()
+    if (debug || force) console.log(`${("0" + now.getHours()).slice(-2)}:${("0" + now.getMinutes()).slice(-2)}:${("0" + now.getSeconds()).slice(-2)}.${("00" + now.getMilliseconds()).slice(-3)} ${data}`);
 }
 
 // объекты HTML превращаем в константы, чтобы потом с ними работать как с объектами js

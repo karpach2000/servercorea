@@ -87,7 +87,7 @@ let GameState = {
                 logger('[event] сервер прислал список игроков: \n' + incoming.data);
                 let userList = incoming.data.split('\n')
                 for (let i in userList) userList[i] = userList[i].trim()
-                logger(userList);
+                logger('[info] ' + userList);
 
                 updateUserList(userList);
                 break;
