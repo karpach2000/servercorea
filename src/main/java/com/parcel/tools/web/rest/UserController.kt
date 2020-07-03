@@ -30,9 +30,7 @@ class UserController {
         return "redirect:/"
     }
 
-    /**
-     * Разлогинится.
-     */
+
     @RequestMapping("/session/getCurrentLogin")
     @Throws(IOException::class)
     @ResponseBody

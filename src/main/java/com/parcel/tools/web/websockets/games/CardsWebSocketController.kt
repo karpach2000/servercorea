@@ -18,6 +18,7 @@ class CardsWebSocketController : TextWebSocketHandler() {
 
     class CardsEventHandler(private var session: WebSocketSession, private var name: String) : CardsEvent {
         override var userName = ""
+        override var identeficator=""
 
         override fun addUserEvent(userList: String) {
             sendMessage("addUserEvent$SEPORATOR$userList")

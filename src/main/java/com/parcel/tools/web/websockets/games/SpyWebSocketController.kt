@@ -22,7 +22,7 @@ class SpyWebSocketController : TextWebSocketHandler()  {
     {
 
         override var userName = ""
-
+        override var identeficator=""
         override fun addUserEvent(userList: String) {
             sendMessage("addUserEvent$SEPORATOR$userList")
         }

@@ -25,7 +25,7 @@ class MafiaWebSocketController: TextWebSocketHandler()  {
          * Имя пользователяя которому должен прилететь Event.
          */
         override var userName : String = ""
-
+        override var identeficator=""
 
         private fun sendMessage(message: String)
         {

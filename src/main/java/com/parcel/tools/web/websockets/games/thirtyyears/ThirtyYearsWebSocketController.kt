@@ -6,6 +6,8 @@ import com.parcel.tools.games.games.thirtyyears.ThirtyYearsSessionNotFatalExcept
 import com.parcel.tools.games.gamesession.GameSessionNotFatalException
 import com.parcel.tools.web.websockets.games.thirtyyears.json.MessageStatus
 import com.parcel.tools.web.websockets.games.thirtyyears.json.ThirtyYearsMessage
+import org.springframework.security.core.Authentication
+import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.stereotype.Component
 import org.springframework.web.socket.CloseStatus
 import org.springframework.web.socket.TextMessage
@@ -27,6 +29,10 @@ class ThirtyYearsWebSocketController : TextWebSocketHandler() {
          * Имя пользователяя которому должен прилететь Event.
          */
         override var userName : String = ""
+        /**
+         * Идентефикатор по которому можно отличить 2 разных пользователей с одинаковыми именами пользователя
+         */
+        override var identeficator = ""
 
         var sessionId = 0L
         var sessionPas = 0L
@@ -143,6 +149,9 @@ class ThirtyYearsWebSocketController : TextWebSocketHandler() {
     @Override
     override fun afterConnectionClosed(session: WebSocketSession, status: CloseStatus) {
         logger.info("Web socket connection closed.")
+        //session.
+        val id = getUserIdenteficator(session)
+        ThirtyYearsSessionManager.deSubscribeGameSessionEvent(id)
         super.afterConnectionClosed(session, status)
     }
     @Override
@@ -201,6 +210,7 @@ class ThirtyYearsWebSocketController : TextWebSocketHandler() {
                 thirtyYearsEventHandler.userName = name
                 thirtyYearsEventHandler.sessionPas = pas
                 thirtyYearsEventHandler.sessionId = id
+                thirtyYearsEventHandler.identeficator = getUserIdenteficator(session)
                 if(ThirtyYearsSessionManager.addSessionIfNotExist(id, pas)) {
                     ThirtyYearsSessionManager.subscribeGameSessionEvent(id, pas, thirtyYearsEventHandler)
                     sendMessageAnser(session, inMessage)
@@ -220,6 +230,7 @@ class ThirtyYearsWebSocketController : TextWebSocketHandler() {
                 thirtyYearsEventHandler.userName = name
                 thirtyYearsEventHandler.sessionPas = pas
                 thirtyYearsEventHandler.sessionId = id
+                thirtyYearsEventHandler.identeficator = getUserIdenteficator(session)
                 if(ThirtyYearsSessionManager.isSessionExists(id)) {
                     ThirtyYearsSessionManager.subscribeGameSessionEvent(id, pas, thirtyYearsEventHandler)
                     sendMessageAnser(session, inMessage)
@@ -232,6 +243,7 @@ class ThirtyYearsWebSocketController : TextWebSocketHandler() {
             } else if (inMessage.command == Commands.ADD_USER) {
                 sendMessageAnser(session, inMessage)
                 ThirtyYearsSessionManager.addUser(inMessage.sessionId, inMessage.sessionPas, inMessage.userName)
+
 
             } else if (inMessage.command == Commands.START_GAME) {
                     ThirtyYearsSessionManager.startGame(inMessage.sessionId, inMessage.sessionPas)
@@ -303,6 +315,23 @@ class ThirtyYearsWebSocketController : TextWebSocketHandler() {
         logger.info("TX(server):${tx} ")
         session.sendMessage(TextMessage(tx))
 
+    }
+
+    /**
+     * Получить идентефикатор по которому можно отличить 2 разных пользователей с одинаковыми именами пользователя
+     */
+    private fun getUserIdenteficator(session: WebSocketSession): String
+    {
+    /*
+        val auth: Authentication = SecurityContextHolder.getContext().authentication
+        val name: String = auth.getName() //get logged in username
+        if(name!="anonymousUser")
+            return name
+        else
+            return auth.hashCode().toString()
+
+     */
+        return session.id
     }
 
 
