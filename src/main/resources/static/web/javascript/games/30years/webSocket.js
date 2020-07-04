@@ -29,12 +29,15 @@ webSocket.onclose = function(event) {
     }
 };
 
+/** обертка для отправки запроса на сервер. принимает на вход данные,
+ *  которые в теории могут меняться, форматирует в JSON и отправляет в вебсокет
+ *  @param {string} command - сама команда
+ */
 webSocket.makeRequest = function(command, data = '', isAnswer = 'false', status = 'GOOD') {
     let message = `{'userName':'${field_userName.value}','sessionId':'${field_sessionId.value==""?-1:field_sessionId.value}','sessionPas':'${field_sessionPas.value==""?-1:field_sessionPas.value}','command':'${command}','data':'${data}','isAnserOnRequest':'${isAnswer}','messageStatus':'${status}'}`
-    logger(`[outcoming] Данные отправлены на сервер:\n ${message}`);
+    logger(`[outcoming] данные отправлены на сервер:\n ${message}`);
     this.send(message)
 }
-
 
 // /** 
 //  * Обертка для GET-запросов.

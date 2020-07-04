@@ -9,10 +9,13 @@ let GameState = {
      * по итогам получения команд через вебсокет
      * 
      * Пока здесь в кучу и ответы сервера, и события
-     * @param {{command:string,data:string,isAnswer:boolean,userName:string,sessionId:number, sessionPas:number,messageStatus:string}} incoming 
+     * @param {{command:string,data:string,isAnserOnRequest:boolean,userName:string,sessionId:number, sessionPas:number,messageStatus:string}} incoming 
      * - содержимое JSON, пришедшего с сервера
      */
     eventListener(incoming) {
+        //response
+        if (incoming.isAnserOnRequest == false) webSocket.makeRequest(incoming.command, '', true)
+
         switch (incoming.command) {
 
             case "PONG":
