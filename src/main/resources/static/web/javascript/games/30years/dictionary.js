@@ -15,6 +15,8 @@ function logger(data, force = false) {
 const field_userName = document.getElementById("userName")
 const field_sessionId = document.getElementById("sessionId")
 const field_sessionPas = document.getElementById("sessionPas")
+const field_realExcute = document.getElementById('real-excute')
+const field_falseExcute = document.getElementById('false-excute')
 
 const prefix = 'Пресвятые боеголовки! '
 
@@ -28,3 +30,5 @@ const btn_stopGame = document.getElementById('stopGame')
 const btn_invite = document.getElementById('invite')
 const btn_joinGame = document.getElementById('joinGame')
 const btn_createGame = document.getElementById('createGame')
+const btn_realExcute = document.getElementById('real-exec-btn')
+const btn_falseExcute = document.getElementById('false-exec-btn')

@@ -2,6 +2,10 @@ $(function() {
     $('[data-toggle="tooltip"]').tooltip()
 })
 
+/**
+ * при добавлении юзера в лобби, перерисовывает таблицу
+ * @param {} array массив пользователей
+ */
 function updateUserList(array) {
     document.getElementById("userTable").innerHTML = ''
     for (let i = 0; i < array.length - 1; i++) {
@@ -26,6 +30,7 @@ function updateUserList(array) {
         document.getElementById("userTable").append(row)
     }
 }
+
 /**
  * Функция выводит алерт в виде модуля на странице, без блокирующего алерта
  * @param {string} message - выводимое сообщение, к которому добавится префикс
@@ -48,7 +53,7 @@ function showAlert(message, color = 'orange') {
     document.getElementById("alertContainer").append(div)
 }
 
-$("#createGame").click(function() {
+btn_createGame.onclick = function() {
     logger("[action] нажата кнопка 'Создать игру'");
     document.getElementById('createGameLoader').hidden = true
 
@@ -69,9 +74,10 @@ $("#createGame").click(function() {
     document.getElementById('createGameLoader').hidden = false
         //request to server
     webSocket.makeRequest('CREATE_SESSION_IF_NOT_EXIST')
-});
+}
 
-$("#joinGame").click(function() {
+
+btn_joinGame.onclick = function() {
     logger("[action] нажата кнопка 'Присоединиться к игре'");
     document.getElementById('joinGameLoader').hidden = true
 
@@ -92,7 +98,7 @@ $("#joinGame").click(function() {
     document.getElementById('joinGameLoader').hidden = false
         //request to server
     webSocket.makeRequest('CONNECT_TO_SESSION')
-});
+}
 
 $('#startGame').click(function() {
     webSocket.makeRequest('START_GAME')
@@ -101,6 +107,20 @@ $('#startGame').click(function() {
 $('#stopGame').click(function() {
     webSocket.makeRequest('STOP_GAME')
 })
+
+function enterRealExcute() {
+    logger('[action] отправляем реальную отмазку')
+    let excute = field_realExcute.value;
+    webSocket.makeRequest('SET_REAL_EXCUTE', excute)
+}
+btn_realExcute.onclick = enterRealExcute
+
+function enterFalseExcute() {
+    logger('[action] отправляем поддельную отмазку')
+    let excute = field_falseExcute.value;
+    webSocket.makeRequest('SET_FALSH_EXCUTE', excute)
+}
+btn_falseExcute.onclick = enterFalseExcute
 
 function initProgressBar(ms = 30000) {
     setProgressBarAttr(100, ms)
@@ -125,7 +145,7 @@ function countDownProgressBar(persent, ms, step) {
         setProgressBarAttr(-1, ms)
         return logger('[info] Время вышло!')
     } else {
-        logger('[info] Осталось миллисекунд:' + ms)
+        // logger('[info] Осталось миллисекунд:' + ms)
         setTimeout(countDownProgressBar, step, persent - 0.5, ms - step, step);
     }
 }
