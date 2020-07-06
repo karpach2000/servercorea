@@ -20,10 +20,6 @@ const field_falseExcute = document.getElementById('false-excute')
 
 const prefix = 'Пресвятые боеголовки! '
 
-const progressBar_left = document.getElementById('progress-blue')
-const progressBar_done = document.getElementById('progress-red')
-const progressBar = document.getElementById('progress-div')
-
 //Buttons
 const btn_startGame = document.getElementById('startGame')
 const btn_stopGame = document.getElementById('stopGame')
@@ -32,3 +28,29 @@ const btn_joinGame = document.getElementById('joinGame')
 const btn_createGame = document.getElementById('createGame')
 const btn_realExcute = document.getElementById('real-exec-btn')
 const btn_falseExcute = document.getElementById('false-exec-btn')
+
+
+const UserTable = document.getElementById("userTable")
+const AlertContainer = document.getElementById("alertContainer")
+    /**
+     * frames in main gamefield 
+     */
+const Frames = {
+    /** форма входа*/
+    Login: document.getElementById('userlogin'),
+    /** таблица пользователей */
+    UserList: document.getElementById('userList'),
+
+    Loader: document.getElementById('loader'),
+    ProgressBar: {
+        main: document.getElementById('progress-div'),
+        left: document.getElementById('progress-blue'),
+        done: document.getElementById('progress-red'),
+    },
+    BeforeGame: document.getElementById('beforeGame'),
+    Lobby: document.getElementById('inLobby'),
+    RealEx: document.getElementById('realExec'),
+    FalseEx: document.getElementById('falseExec'),
+    Voter: document.getElementById('voterFrame'),
+    Results: document.getElementById('resultsFrame'),
+}

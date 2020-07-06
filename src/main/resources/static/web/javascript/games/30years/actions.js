@@ -7,7 +7,7 @@ $(function() {
  * @param {} array массив пользователей
  */
 function updateUserList(array) {
-    document.getElementById("userTable").innerHTML = ''
+    UserTable.innerHTML = ''
     for (let i = 0; i < array.length - 1; i++) {
         let row = document.createElement('tr');
         row.innerHTML =
@@ -27,7 +27,7 @@ function updateUserList(array) {
             array[i] +
             '</td>' +
             '<td>?</td>'
-        document.getElementById("userTable").append(row)
+        UserTable.append(row)
     }
 }
 
@@ -50,7 +50,7 @@ function showAlert(message, color = 'orange') {
     div.innerHTML = '<strong>' + prefix + message + '</strong>' +
         '<button type="button" class="close" data-dismiss="alert" aria-label="Close">' +
         '<span aria-hidden="true">&times;</span></button>';
-    document.getElementById("alertContainer").append(div)
+    AlertContainer.append(div)
 }
 
 btn_createGame.onclick = function() {
@@ -124,13 +124,13 @@ btn_falseExcute.onclick = enterFalseExcute
 
 function initProgressBar(ms = 30000) {
     setProgressBarAttr(100, ms)
-    progressBar.hidden = false //потом уйдет в стейты
+    Frames.ProgressBar.main.hidden = false //потом уйдет в стейты
     countDownProgressBar(100, ms, ~~(ms / 200))
 
 }
 
 function resetProgressBar() {
-    progressBar.hidden = true
+    Frames.ProgressBar.main.hidden = true
 }
 
 /**
@@ -159,18 +159,18 @@ function countDownProgressBar(persent, ms, step) {
 function setProgressBarAttr(persent, ms) { //#fixme: if ms not defined, ms = 0. WTF?!
 
     if (persent > 30) {
-        progressBar_left.childNodes[1].innerText = ~~(ms / 1000)
-        progressBar_done.childNodes[1].innerText = ''
+        Frames.ProgressBar.left.childNodes[1].innerText = ~~(ms / 1000)
+        Frames.ProgressBar.done.childNodes[1].innerText = ''
     } else if (persent < 0) {
-        progressBar_left.childNodes[1].innerText = ''
-        progressBar_done.childNodes[1].innerText = 'Время вышло!'
+        Frames.ProgressBar.left.childNodes[1].innerText = ''
+        Frames.ProgressBar.done.childNodes[1].innerText = 'Время вышло!'
     } else {
-        progressBar_left.childNodes[1].innerText = ''
-        progressBar_done.childNodes[1].innerText = ~~(ms / 1000)
+        Frames.ProgressBar.left.childNodes[1].innerText = ''
+        Frames.ProgressBar.done.childNodes[1].innerText = ~~(ms / 1000)
     }
 
-    progressBar_left.setAttribute('aria-valuenow', persent)
-    progressBar_left.setAttribute('style', 'width: ' + persent + '%')
-    progressBar_done.setAttribute('aria-valuenow', (100 - persent))
-    progressBar_done.setAttribute('style', 'width: ' + (100 - persent) + '%')
+    Frames.ProgressBar.left.setAttribute('aria-valuenow', persent)
+    Frames.ProgressBar.left.setAttribute('style', 'width: ' + persent + '%')
+    Frames.ProgressBar.done.setAttribute('aria-valuenow', (100 - persent))
+    Frames.ProgressBar.done.setAttribute('style', 'width: ' + (100 - persent) + '%')
 }

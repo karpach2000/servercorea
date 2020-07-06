@@ -9,51 +9,76 @@ let GameState = {
      * @param {string} frame LOGIN, LOBBY, START_GAME, ENTER_EXCUTE, VOTE, SHOW_RESULTS
      */
     switchFrame(frame) {
+        Frames.Loader.hidden = false;
+        Frames.BeforeGame.hidden = true;
+        Frames.Lobby.hidden = true;
+        Frames.RealEx.hidden = true;
+        Frames.FalseEx.hidden = true;
+        Frames.Voter.hidden = true;
+        Frames.Results.hidden = true;
+
+        // document.getElementById('joinGameLoader').hidden = true
+        // document.getElementById('createGameLoader').hidden = true
+
         switch (frame) {
+
             case ('LOGIN'):
                 //страница только открыта, или завершена игра
 
                 //left frame
-                document.getElementById('userlogin').hidden = false;
-                document.getElementById('userList').hidden = true;
+                Frames.Login.hidden = false;
+                Frames.UserList.hidden = true;
                 //right frame
-                document.getElementById('beforeGame').hidden = false;
-                document.getElementById('inGame').hidden = true;
+                Frames.BeforeGame.hidden = false;
+                Frames.Loader.hidden = true;
                 //another elements
-                document.getElementById('joinGameLoader').hidden = true
-                document.getElementById('createGameLoader').hidden = true
+
                 break
 
             case ('LOBBY'):
                 //сессия создана, юзер добавился, но игра не стартовала
 
                 //left frame
-                document.getElementById('userlogin').hidden = true;
-                document.getElementById('userList').hidden = false;
+                Frames.Login.hidden = true;
+                Frames.UserList.hidden = false;
                 //right frame
-                document.getElementById('beforeGame').hidden = false;
-                document.getElementById('inGame').hidden = true;
+                Frames.Lobby.hidden = false;
+                Frames.Loader.hidden = true;
                 //another elements
-                document.getElementById('joinGameLoader').hidden = true
-                document.getElementById('createGameLoader').hidden = true
-                break
-
-            case ('START_GAME'):
 
                 break
 
-            case ('ENTER_EXCUTE'):
+            case ('ENTER_REAL_EXCUTE'):
+                //right frame
+                Frames.RealEx.hidden = false;
+                Frames.Loader.hidden = true;
+                //another elements
+                break
 
+            case ('ENTER_FALSH_EXCUTE'):
+                //right frame
+                Frames.FalseEx.hidden = false;
+                Frames.Loader.hidden = true;
+                //another elements
                 break
 
             case ('VOTE'):
-
+                //right frame
+                Frames.Voter.hidden = false;
+                Frames.Loader.hidden = true;
+                //another elements
                 break
 
             case ('SHOW_RESULTS'):
-
+                //right frame
+                Frames.Results.hidden = false;
+                Frames.Loader.hidden = true;
+                //another elements
                 break
 
+            case ('START_GAME'):
+                //игра стартовала, но еще никаких данных не пришло
+                //делаем ничего - остальное сделано до нас
             default:
 
                 break
@@ -135,15 +160,12 @@ let GameState = {
                 logger('[action] ADD_USER action');
                 //это должно будет уехать в стейты
                 if (incoming.messageStatus == 'GOOD') {
-                    document.getElementById('userlogin').hidden = true;
-                    document.getElementById('userList').hidden = false;
-                    document.getElementById('beforeGame').hidden = true;
-                    document.getElementById('inLobby').hidden = false;
+                    this.switchFrame('LOBBY')
                 } else {
-                    document.getElementById('joinGameLoader').hidden = true
-                    document.getElementById('createGameLoader').hidden = true
                     showAlert(incoming.messageStatus + ' ' + incoming.data, 'orange')
                 }
+                document.getElementById('joinGameLoader').hidden = true
+                document.getElementById('createGameLoader').hidden = true
                 break;
 
             case "ADD_USER_EVENT": //request
@@ -165,6 +187,7 @@ let GameState = {
                  */
                 if (incoming.messageStatus == 'GOOD') {
                     logger('[action] START_GAME action');
+                    // this.switchFrame('START_GAME')
                 } else {
                     showAlert(incoming.messageStatus + ' ' + incoming.data, 'orange')
                 }
@@ -175,7 +198,7 @@ let GameState = {
                  *  Сервер игры сообщает ВЕБ страницам от том что игра началась
                  */
                 logger('[event] START_GAME_EVENT');
-                document.getElementById('inLobby').hidden = true;
+                this.switchFrame('START_GAME')
                 break;
 
             case "STOP_GAME": //response
@@ -208,6 +231,7 @@ let GameState = {
                  */
                 logger('[event] ENTER_REAL_EXCUTE_EVENT');
                 document.getElementById("real-exec-data").innerHTML = incoming.data
+                this.switchFrame('ENTER_REAL_EXCUTE')
                 break;
 
             case "ENTER_FALSH_EXCUTE_EVENT":
@@ -218,6 +242,7 @@ let GameState = {
                  */
                 logger('[event] ENTER_FALSH_EXCUTE_EVENT');
                 document.getElementById("false-exec-data").innerHTML = incoming.data
+                this.switchFrame('ENTER_FALSH_EXCUTE')
                 break;
 
             case "VOTE_EVENT":
@@ -226,6 +251,7 @@ let GameState = {
                  *  ВЕБ страница переходит в режим голосования.
                  */
                 logger('[event] VOTE_EVENT');
+                this.switchFrame('VOTE')
                 break;
 
             case "ROUND":
@@ -242,6 +268,7 @@ let GameState = {
                  *  Страница при этом переходит в режим просмотра результатов голосования.
                  */
                 logger('[event] SHOW_RESULTS_EVENT action');
+                this.switchFrame('SHOW_RESULTS')
                 break;
 
             case "SHOW_FINAL_RESULTS_EVENT":
@@ -250,6 +277,7 @@ let GameState = {
                  *  Страница при этом переходит в режим просмотра результатов финального голосования.
                  */
                 logger('[event] SHOW_FINAL_RESULTS_EVENT action');
+                this.switchFrame('SHOW_RESULTS')
                 break;
 
             case "SET_REAL_EXCUTE":
@@ -258,6 +286,7 @@ let GameState = {
                  *  В поле data передается текс реальной отмазки.
                  */
                 logger('[action] SET_REAL_EXCUTE ')
+                this.switchFrame('START_GAME')
                 break;
 
             case "SET_FALSH_EXCUTE":
@@ -266,6 +295,7 @@ let GameState = {
                  *  В поле data передается текс фальшивой отмазки.
                  */
                 logger('[action] SET_FALSH_EXCUTE')
+                this.switchFrame('START_GAME')
                 break
 
             case "SET_VOTE":
@@ -274,6 +304,7 @@ let GameState = {
                  *  В поле data передается текс ответа, за который был отдан голос.
                  */
                 logger('[action] SET_VOTE')
+                this.switchFrame('START_GAME')
                 break
 
             default:
