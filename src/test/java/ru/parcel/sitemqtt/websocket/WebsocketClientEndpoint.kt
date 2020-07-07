@@ -20,6 +20,12 @@ open class WebsocketClientEndpoint(endpointURI: URI?) {
     private var messageHandler: WebSocketMessageInterface? = null
 
     /**
+     * Имя страницы на которой используется этот веб соккет коннектор.
+     * (нужно чтобы отличать в логах коннекторы нескольких страниц)
+     */
+    private var pageName: String = ""
+
+    /**
      * Время которое мы ждкм ответа на реквест.
      */
     private val TIMEOUT = 10000L
@@ -40,7 +46,10 @@ open class WebsocketClientEndpoint(endpointURI: URI?) {
     //private val logger = org.apache.log4j.Logger.getLogger(WebsocketClientEndpoint::class.java!!)
 
 
-    constructor(url: String):this(URI(url))
+    constructor(url: String, pageName : String):this(URI(url))
+    {
+        this.pageName = pageName
+    }
 
     init {
         try {
@@ -89,14 +98,14 @@ open class WebsocketClientEndpoint(endpointURI: URI?) {
         //если нам прислали реквест
         if (!message.isAnserOnRequest) {
             val sec = Date(System.currentTimeMillis()).seconds
-            println("$sec RX(server):$messageLine")
+            println("[$pageName]RX(server):$messageLine")
             Thread(Runnable { messageHandler!!.handleMessage(message) }).start()
 
         }
         //если ответ на реквест
         else
         {
-            println("RX(client):$messageLine")
+            println("[$pageName]RX(client):$messageLine")
             outRequestMessageBufer = message
             wateAnser = false
         }
@@ -120,7 +129,7 @@ open class WebsocketClientEndpoint(endpointURI: URI?) {
      */
     fun sendRequest(message: ThirtyYearsMessage) :ThirtyYearsMessage{
         val td = message.toJson()
-        println("TX(client):$td")
+        println("[$pageName]TX(client):$td")
         userSession!!.asyncRemote.sendText(td)
         wateAnser = true
         var timer = TIMEOUT

@@ -1,5 +1,6 @@
 package ru.parcel.sitemqtt.games.gamesession.thirtyyears
 
+import com.parcel.tools.games.games.thirtyyears.comunicateinformation.ThirtyYearsEventAndUserInformation
 import com.parcel.tools.games.games.thirtyyears.comunicateinformation.ThirtyYearsVoteInformation
 import com.parcel.tools.games.games.thirtyyears.comunicateinformation.ThirtyYearsVoteVariants
 import com.parcel.tools.web.websockets.games.thirtyyears.Commands
@@ -13,7 +14,7 @@ import ru.parcel.sitemqtt.websocket.WebsocketClientEndpoint
 class WebPage(val sessionId: Long,val sessionPass: Long,val name: String)
 {
 
-    class InRequestEvent(private  var webPage: WebPage):WebSocketMessageInterface()
+    class InRequestEvent(private  var webPage: WebPage):WebSocketMessageInterface(webPage.name)
     {
 
         override fun handleMessage(message: ThirtyYearsMessage) {
@@ -38,7 +39,10 @@ class WebPage(val sessionId: Long,val sessionPass: Long,val name: String)
             else if(message.command==Commands.ENTER_FALSH_EXCUTE_EVENT)
             {
                 webPage.round()
-                webPage.currentEvent = message.data
+                val thirtyYearsEventAndUserInformation = ThirtyYearsEventAndUserInformation()
+                thirtyYearsEventAndUserInformation.fromJson(message.data)
+                webPage.currentEvent = thirtyYearsEventAndUserInformation.event
+                webPage.currentUser = thirtyYearsEventAndUserInformation.user
                 webPage.webPageState=WebPageStates.ENTER_FALSH_EXCUTE_EVENT
             }
 
@@ -69,7 +73,7 @@ class WebPage(val sessionId: Long,val sessionPass: Long,val name: String)
 
 
 
-    private var webSocketClient = WebsocketClientEndpoint("ws://127.0.0.1:8080/games/thirtyyears/ws")
+    private var webSocketClient = WebsocketClientEndpoint("ws://127.0.0.1:8080/games/thirtyyears/ws", name)
 
 
     /**
@@ -86,7 +90,10 @@ class WebPage(val sessionId: Long,val sessionPass: Long,val name: String)
      * Отмазка пользователя
      */
     var myExcude = ""
-
+    /**
+     * Авторо события от которого все отмазываются сейчас
+     */
+    var currentUser = ""
     /**
      * Событие от которого все отмазываются сейчас
      */

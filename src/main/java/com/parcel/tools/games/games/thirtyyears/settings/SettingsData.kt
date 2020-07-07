@@ -18,16 +18,16 @@ class SettingsData {
     /**
      * Время требуемое на введение фальшивой отмазки.
      */
-    var ENTER_FALSH_EXCUTE_time = 30000L
+    var ENTER_FALSH_EXCUTE_time = 85000L
     /**
      * Время требуемое на голосование.
      */
-    var VOTE_time = 20000L
+    var VOTE_time = 90000L
 
     /**
      * Время требуемое для введения реальной отмазки.
      */
-    var ENTER_REAL_EXCUTE_time = 60000L
+    var ENTER_REAL_EXCUTE_time = 95000L
 
     /**
      * Минимальное количество игроков.
