@@ -1,5 +1,6 @@
 package com.parcel.tools.games.games.thirtyyears
 
+import com.parcel.tools.games.games.thirtyyears.comunicateinformation.ThirtyYearsEventAndUserInformation
 import com.parcel.tools.games.gamesuser.GameUser
 
 class ThirtyYearsUser (name:String) : GameUser(name) {
@@ -38,4 +39,9 @@ class ThirtyYearsUser (name:String) : GameUser(name) {
     {
         falshExcute = ""
     }
+
+    fun getThirtyYearsEventAndUserInformation() =
+            ThirtyYearsEventAndUserInformation(event, name)
+
+
 }

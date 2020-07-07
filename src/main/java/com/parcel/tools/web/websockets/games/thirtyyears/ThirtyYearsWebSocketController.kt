@@ -156,19 +156,22 @@ class ThirtyYearsWebSocketController : TextWebSocketHandler() {
     }
     @Override
     override fun afterConnectionEstablished(session: WebSocketSession) {
-        logger.info("Web socket connected")
+        logger.info("Web socket connected ${getUserIdenteficator(session)}")
         super.afterConnectionEstablished(session)
     }
 
     @Override
+    /**
+     * Событие прихода сообщения
+     * */
     override fun handleTextMessage(session: WebSocketSession, message: TextMessage) {
-        super.handleTextMessage(session, message)
-        val rx = message.payload
+        super.handleTextMessage(session, message)//хз что это(легаси от класса родителя)
+        val rx = message.payload//стринга с текстом сообщения
 
         try {
-            val inMessage = ThirtyYearsMessage(rx)
+            val inMessage = ThirtyYearsMessage(rx)//дессириализуем стрингу в объект
             //Если Веб страница сделала реквест мне
-            if (!inMessage.isAnserOnRequest)
+            if (!inMessage.isAnserOnRequest)//если не стоит флаг что это ответ на реквест, обрабатываем его как сервер
             {
                 logger.info("RX(server):${rx} ")
                 //тебе все дальнейшие действия необходимо запустить в в отдельном потоке т.к.
@@ -176,8 +179,7 @@ class ThirtyYearsWebSocketController : TextWebSocketHandler() {
                 //который сука синхронизирован
                 Thread(Runnable { webPageRequestsParser(session, inMessage)}).start()
             }
-            //Если я сделал реквес веб странице
-            else
+            else//если же флаг стоит, то это ответ на мой запрос
             {
                 logger.info("RX(client):${rx} ")
                 val event = ThirtyYearsSessionManager.getGameSessionEvents(

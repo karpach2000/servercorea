@@ -323,7 +323,7 @@ class ThirtyYearsSession(sessionId: Long, sessionPas: Long) :
     {
         gameState = GameState.ENTER_FALSH_EXCUTE
         gameEvent.forEach {
-            it.ENTER_FALSH_EXCUTE_event(users[indexThirtyYearsUserExcute].event)
+            it.ENTER_FALSH_EXCUTE_event(users[indexThirtyYearsUserExcute].getThirtyYearsEventAndUserInformation().toJson())
         }
         gameSessionTimer.stopTimer()
         gameSessionTimer.startTimer(ThirtyYearsSettings.points.ENTER_FALSH_EXCUTE_time)

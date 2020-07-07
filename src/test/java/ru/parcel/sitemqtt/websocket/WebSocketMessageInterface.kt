@@ -6,8 +6,10 @@ import javax.websocket.Session
 
 /**
  * Интерфейс обрабатывающий входные реквесты.
+ * @param pageName Имя страницы на которой используется этот веб соккет коннектор
+ * (нужно чтобы отличать в логах коннекторы нескольких страниц)
  */
-abstract class WebSocketMessageInterface {
+abstract class WebSocketMessageInterface(private val pageName:String) {
     private lateinit var userSession: Session
 
     abstract fun handleMessage(message: ThirtyYearsMessage)
@@ -21,7 +23,7 @@ abstract class WebSocketMessageInterface {
     {
         val td = message.toJson()
         val sec = Date(System.currentTimeMillis()).seconds
-        println("$sec TX(server):$td")
+        println("[$pageName]TX(server):$td")
         userSession!!.asyncRemote.sendText(td)
     }
 }
