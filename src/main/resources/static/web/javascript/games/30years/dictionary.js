@@ -54,3 +54,8 @@ const Frames = {
     Voter: document.getElementById('voterFrame'),
     Results: document.getElementById('resultsFrame'),
 }
+
+/**
+ * глобальная переменная для управления таймером
+ */
+var timerID;

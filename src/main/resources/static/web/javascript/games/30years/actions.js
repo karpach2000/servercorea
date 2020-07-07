@@ -112,6 +112,7 @@ function enterRealExcute() {
     logger('[action] отправляем реальную отмазку')
     let excute = field_realExcute.value;
     webSocket.makeRequest('SET_REAL_EXCUTE', excute)
+    resetProgressBar()
 }
 btn_realExcute.onclick = enterRealExcute
 
@@ -119,6 +120,7 @@ function enterFalseExcute() {
     logger('[action] отправляем поддельную отмазку')
     let excute = field_falseExcute.value;
     webSocket.makeRequest('SET_FALSH_EXCUTE', excute)
+    resetProgressBar()
 }
 btn_falseExcute.onclick = enterFalseExcute
 
@@ -130,7 +132,8 @@ function initProgressBar(ms = 30000) {
 }
 
 function resetProgressBar() {
-    Frames.ProgressBar.main.hidden = true
+    Frames.ProgressBar.main.hidden = true //потом уйдет в стейты
+    clearTimeout(timerID)
 }
 
 /**
@@ -146,7 +149,7 @@ function countDownProgressBar(persent, ms, step) {
         return logger('[info] Время вышло!')
     } else {
         // logger('[info] Осталось миллисекунд:' + ms)
-        setTimeout(countDownProgressBar, step, persent - 0.5, ms - step, step);
+        timerID = setTimeout(countDownProgressBar, step, persent - 0.5, ms - step, step);
     }
 }
 

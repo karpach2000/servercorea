@@ -241,8 +241,16 @@ let GameState = {
                  *  Страницы переходят в режим введения фальшивой отмазки.
                  */
                 logger('[event] ENTER_FALSH_EXCUTE_EVENT');
-                document.getElementById("false-exec-data").innerHTML = incoming.data
-                this.switchFrame('ENTER_FALSH_EXCUTE')
+                let ev = JSON.parse(incoming.data)
+                if (ev.event != field_userName.value) {
+                    document.getElementById("false-exec-data").innerHTML = ev.event
+                    document.getElementById("false-exec-user").innerHTML = ev.user
+                    this.switchFrame('ENTER_FALSH_EXCUTE')
+                } else {
+                    //если это твой эвент
+
+                }
+
                 break;
 
             case "VOTE_EVENT":
