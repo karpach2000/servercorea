@@ -32,10 +32,10 @@ class SettingsData {
     /**
      * Минимальное количество игроков.
      */
-    var usersMin = 3
+    var usersMin = 4
 
     /**
      * Максимальное количество игроков.
      */
-    var usersMax =16
+    var usersMax =8
 }
