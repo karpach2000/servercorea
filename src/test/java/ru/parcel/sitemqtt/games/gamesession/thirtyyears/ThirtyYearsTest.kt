@@ -67,43 +67,64 @@ class ThirtyYearsTest {
             pages[i].connectToSession()
 
         println("\nADD USER")
-        pages.forEach{it.addUser()}
-        Thread.sleep(500)//иначе тесты убегают вперед
+        //добавляем пользователей
+        pages.forEach{it.addUser()}; Thread.sleep(500)//иначе тесты убегают вперед
+        //проверяем статус страниц
+        checkPagesStatus(WebPageStates.ADD_USER)
+
         println("\nSTART_GAME")
-        pages[0].startGame()
-        Thread.sleep(500)//иначе тесты убегают вперед
+        //запускаем игру
+        pages[0].startGame(); Thread.sleep(500)//иначе тесты убегают вперед
+        //проверяем статус страниц
+        checkPagesStatus(WebPageStates.ENTER_REAL_EXCUTE_EVENT)
+        //распечатываем отчет
         printPages()
 
         println("\nADD EXCUDE")
+        //вводим отмазку
         for(i in 0 until pages.size)
         {
             pages[i].setRealExcude(excude[i])
         }
+        //проверяем статус страниц
+        checkPagesStatus(WebPageStates.ENTER_FALSH_EXCUTE_EVENT)
+        //распечатываем отчет
         printPages()
 
         println("\nPRINT FALSHE EXCUDE")
+        //вводим фальшивую отмазку
         for(i in 0 until pages.size)
         {
             pages[i].setFalshExcude(falshExcude[i])
         }
+        //проверяем статус страниц
+        checkPagesStatus(WebPageStates.VOTE_EVENT)
+        //распечатываем отчет
         printPages()
+        //распичатываем пришедшие варианты за кого можно проголосовать
         pages.forEach {
             println("Vote variants(${it.name}): ${it.voteVariants.toString()}")
         }
 
         println("\nVOTE")
+        //голосуем
         //page1.setVote(page1.voteVariants.table.rows[1].anser)
         page2.setVote(page2.voteVariants.table.rows[0].anser)
         page3.setVote(page3.voteVariants.table.rows[1].anser)
         page4.setVote(page4.voteVariants.table.rows[0].anser)
+        //проверяем статус страниц
+        checkPagesStatus(WebPageStates.SHOW_RESULTS_EVENT)
+        //распечатываем отчет
         printPages()
-
         println("\nSHOW_RESULTS")
         page1.voteInformation.toTextTable().printTable()
         //Thread.sleep(5000)
         println("\nROUND")
-        page1.setRound()
-        Thread.sleep(500)
+        //завершаем раунд
+        page1.setRound();Thread.sleep(500)
+        //проверяем статус страниц
+        checkPagesStatus(WebPageStates.ENTER_FALSH_EXCUTE_EVENT)
+        //распечатываем отчет
         printPages()
     }
 
@@ -116,28 +137,40 @@ class ThirtyYearsTest {
 
 
         println("\nPRINT FALSHE EXCUDE")
+        //вводим фальшивую отмазку
         for(i in 0 until pages.size)
         {
             pages[i].setFalshExcude(falshExcude[i+8])
         }
+        //проверяем статус страниц
+        checkPagesStatus(WebPageStates.VOTE_EVENT)
+        //распечатываем отчет
         printPages()
+        //распечатываем список за кого можно проголосовать
         pages.forEach {
             println("Vote variants(${it.name}): ${it.voteVariants.toString()}")
         }
 
         println("\nVOTE")
+        //голосуем
         page1.setVote(page1.voteVariants.table.rows[1].anser)
         //page2.setVote(page2.voteVariants.table.rows[0].anser)
         page3.setVote(page3.voteVariants.table.rows[1].anser)
         page4.setVote(page4.voteVariants.table.rows[0].anser)
+        //проверяем статус страниц
+        checkPagesStatus(WebPageStates.SHOW_RESULTS_EVENT)
+        //распечатываем отчет
         printPages()
 
         println("\nSHOW_RESULTS")
+        //распечатываем результаты голосования
         page1.voteInformation.toTextTable().printTable()
         //Thread.sleep(5000)
         println("\nROUND")
-        page1.setRound()
-        Thread.sleep(500)
+        page1.setRound();Thread.sleep(500)
+        //проверяем статус страниц
+        checkPagesStatus(WebPageStates.ENTER_FALSH_EXCUTE_EVENT)
+        //распечатываем отчет
         printPages()
     }
 
@@ -154,6 +187,9 @@ class ThirtyYearsTest {
         {
             pages[i].setFalshExcude(falshExcude[i+4])
         }
+        //проверяем статус страниц
+        checkPagesStatus(WebPageStates.VOTE_EVENT)
+        //распечатываем отчет
         printPages()
         pages.forEach {
             println("Vote variants(${it.name}): ${it.voteVariants.toString()}")
@@ -164,14 +200,19 @@ class ThirtyYearsTest {
         page2.setVote(page2.voteVariants.table.rows[0].anser)
         //page3.setVote(page3.voteVariants.table.rows[1].anser)
         page4.setVote(page4.voteVariants.table.rows[1].anser)
+        //проверяем статус страниц
+        checkPagesStatus(WebPageStates.SHOW_RESULTS_EVENT)
+        //распечатываем отчет
         printPages()
 
         println("\nSHOW_RESULTS")
         page1.voteInformation.toTextTable().printTable()
         //Thread.sleep(5000)
         println("\nROUND")
-        page1.setRound()
-        Thread.sleep(500)
+        page1.setRound();Thread.sleep(500)
+        //проверяем статус страниц
+        checkPagesStatus(WebPageStates.ENTER_FALSH_EXCUTE_EVENT)
+        //распечатываем отчет
         printPages()
     }
 
@@ -188,6 +229,9 @@ class ThirtyYearsTest {
         {
             pages[i].setFalshExcude(falshExcude[i+4])
         }
+        //проверяем статус страниц
+        checkPagesStatus(WebPageStates.VOTE_EVENT)
+        //распечатываем отчет
         printPages()
         pages.forEach {
             println("Vote variants(${it.name}): ${it.voteVariants.toString()}")
@@ -198,11 +242,30 @@ class ThirtyYearsTest {
         page2.setVote(page2.voteVariants.table.rows[3].anser)
         page3.setVote(page3.voteVariants.table.rows[1].anser)
         //page4.setVote(page4.voteVariants.table.rows[0].anser)
+        //проверяем статус страниц
+        checkPagesStatus(WebPageStates.SHOW_FINAL_RESULTS_EVENT)
+        //распечатываем отчет
         printPages()
 
         println("\nSHOW_RESULTS")
         page1.voteInformation.toTextTable().printTable()
-        //Thread.sleep(5000)
+    }
+
+    /**
+     * Проверить состояние веб страниц.
+     * @param ожидаемое состояние
+     */
+    private fun checkPagesStatus(state : WebPageStates)
+    {
+        pages.forEach {
+            if(it.webPageState!=state)
+            {
+                println("Ошибка проверки статуса веб страницы пользователя ${it.name}" +
+                        "Ожидали статус $state получили статус ${it.webPageState}.")
+                assert(false)
+            }
+        }
+
     }
 
     private fun printPages()
