@@ -300,6 +300,46 @@ class ThirtyYearsSession(sessionId: Long, sessionPas: Long) :
         return true
     }
 
+    /********REQUESTS*******/
+    /**
+     * Возвращает игроку текущий статус игры.
+     * Плюс создает евент досылающий информацию ор текущем состоянии страницы.
+     */
+    fun getGameStatus(userName: String) : String
+    {
+        when(gameState)
+        {
+            GameState.ENTER_FALSH_EXCUTE ->
+            {
+                val data = getUser(userName).getThirtyYearsEventAndUserInformation().toJson()
+                getGameEvents(userName).ENTER_FALSH_EXCUTE_event(data)
+            }
+            GameState.SHOW_FINAL_RESULTS -> {
+                val data = ThirtyYearsVoteInformation(getUser(userName),
+                        users[indexThirtyYearsUserExcute],users).toJson()
+                getGameEvents(userName).SHOW_FINAL_RESULTS_event(data)
+            }
+            GameState.ENTER_REAL_EXCUTE -> {
+                val data = ThirtyYearsVoteInformation(getUser(userName),
+                        users[indexThirtyYearsUserExcute],users).toJson()
+                getGameEvents(userName).SHOW_FINAL_RESULTS_event(data)
+            }
+            GameState.SHOW_RESULTS -> {
+                val data = ThirtyYearsVoteInformation(getUser(userName),
+                        users[indexThirtyYearsUserExcute],users).toJson()
+                getGameEvents(userName).SHOW_RESULTS_event(data)
+            }
+            GameState.VOTE -> {
+                val data = ThirtyYearsVoteVariants(getUser(userName),
+                        users[indexThirtyYearsUserExcute],users).toJson()
+                getGameEvents(userName).VOTE_event(data)
+            }
+
+        }
+        return gameState.toString()
+    }
+
+
     /********EVENTS *********/
 
     //STATE MASHINE

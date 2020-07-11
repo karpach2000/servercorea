@@ -267,6 +267,11 @@ class ThirtyYearsWebSocketController : TextWebSocketHandler() {
                         inMessage.userName)
                 sendMessageAnser(session, inMessage )
             }
+            else if(inMessage.command == Commands.GET_GAME_STATUS) {
+                val data = ThirtyYearsSessionManager.getGameStatus(inMessage.sessionId, inMessage.sessionPas,
+                        inMessage.userName)
+                sendMessageAnser(session, inMessage, data )
+            }
             else
             {
                 logger.warn("Unsorted command")

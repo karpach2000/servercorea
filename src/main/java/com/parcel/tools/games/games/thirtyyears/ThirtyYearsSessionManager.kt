@@ -36,6 +36,11 @@ object ThirtyYearsSessionManager :
         logger.info("round($sessionId, $sessionPas, $userName)")
         return getSession(sessionId, sessionPas).round()
     }
+    fun getGameStatus(sessionId: Long, sessionPas: Long, userName: String): String
+    {
+        logger.info("getGameStatus($sessionId, $sessionPas, $userName)")
+        return getSession(sessionId, sessionPas).getGameStatus(userName)
+    }
 
 
 

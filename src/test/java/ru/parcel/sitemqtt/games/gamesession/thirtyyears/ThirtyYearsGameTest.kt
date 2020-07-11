@@ -3,9 +3,11 @@ package ru.parcel.sitemqtt.games.gamesession.thirtyyears
 import dnl.utils.text.table.TextTable
 import org.springframework.boot.test.context.SpringBootTest
 
-
+/**
+ * Тестируем игру 30 лет по идеальному сценарию.
+ */
 @SpringBootTest
-class ThirtyYearsTest {
+class ThirtyYearsGameTest {
 
     //private var webSocketClient = WebsocketClientEndpoint("ws://127.0.0.1:8080/games/thirtyyears/ws")
 

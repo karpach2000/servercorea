@@ -1,26 +1,23 @@
 package ru.parcel.sitemqtt;
 
 import com.parcel.tools.SitemqttApplication;
-import org.junit.Ignore;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
 import ru.parcel.sitemqtt.games.gamesession.GameSessionVoteTest;
-import ru.parcel.sitemqtt.games.gamesession.thirtyyears.ThirtyYearsTest;
+import ru.parcel.sitemqtt.games.gamesession.thirtyyears.ThirtyYearsGameTest;
 
 @SpringBootTest
 public class SitemqttApplicationTests {
 
     private GlobalRandomizerTest grt = new GlobalRandomizerTest();
     private GameSessionVoteTest gameSessionVoteTest = new GameSessionVoteTest();
-    private ThirtyYearsTest thirtyYearsTest = null;
+    private ThirtyYearsGameTest thirtyYearsTest = null;
 
     public SitemqttApplicationTests()
     {
         SpringApplication.run(SitemqttApplication.class);
-        thirtyYearsTest = new ThirtyYearsTest();
+        thirtyYearsTest = new ThirtyYearsGameTest();
     }
 
     @Test
