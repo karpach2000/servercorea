@@ -4,18 +4,104 @@ let GameState = {
     myUserName: "",
     countUsers: 0,
 
+    /**
+     * функция для переключения видимости фреймов, в зависимости от состояния игры. 
+     * @param {string} frame LOGIN, LOBBY, START_GAME, ENTER_EXCUTE, VOTE, SHOW_RESULTS
+     */
+    switchFrame(frame) {
+        Frames.Loader.hidden = false;
+        Frames.BeforeGame.hidden = true;
+        Frames.Lobby.hidden = true;
+        Frames.RealEx.hidden = true;
+        Frames.FalseEx.hidden = true;
+        Frames.Voter.hidden = true;
+        Frames.Results.hidden = true;
+
+        // document.getElementById('joinGameLoader').hidden = true
+        // document.getElementById('createGameLoader').hidden = true
+
+        switch (frame) {
+
+            case ('LOGIN'):
+                //страница только открыта, или завершена игра
+
+                //left frame
+                Frames.Login.hidden = false;
+                Frames.UserList.hidden = true;
+                //right frame
+                Frames.BeforeGame.hidden = false;
+                Frames.Loader.hidden = true;
+                //another elements
+
+                break
+
+            case ('LOBBY'):
+                //сессия создана, юзер добавился, но игра не стартовала
+
+                //left frame
+                Frames.Login.hidden = true;
+                Frames.UserList.hidden = false;
+                //right frame
+                Frames.Lobby.hidden = false;
+                Frames.Loader.hidden = true;
+                //another elements
+
+                break
+
+            case ('ENTER_REAL_EXCUTE'):
+                //right frame
+                Frames.RealEx.hidden = false;
+                Frames.Loader.hidden = true;
+                //another elements
+                break
+
+            case ('ENTER_FALSH_EXCUTE'):
+                //right frame
+                Frames.FalseEx.hidden = false;
+                Frames.Loader.hidden = true;
+                //another elements
+                break
+
+            case ('VOTE'):
+                //right frame
+                Frames.Voter.hidden = false;
+                Frames.Loader.hidden = true;
+                //another elements
+                break
+
+            case ('SHOW_RESULTS'):
+                //right frame
+                Frames.Results.hidden = false;
+                Frames.Loader.hidden = true;
+                //another elements
+                break
+
+            case ('START_GAME'):
+                //игра стартовала, но еще никаких данных не пришло
+                //делаем ничего - остальное сделано до нас
+            default:
+
+                break
+        }
+
+    },
+
     /** 
      * Здесь мы во время игры переключаем внутренние состояния игры, 
      * по итогам получения команд через вебсокет
      * 
      * Пока здесь в кучу и ответы сервера, и события
-     * @param {{command:string,data:string,isAnswer:boolean,userName:string,sessionId:number, sessionPas:number,messageStatus:string}} incoming 
+     * @param {{command:string,data:string,isAnserOnRequest:boolean,userName:string,sessionId:number, sessionPas:number,messageStatus:string}} incoming 
      * - содержимое JSON, пришедшего с сервера
      */
     eventListener(incoming) {
+        //response
+        if (incoming.isAnserOnRequest == false) //request
+            webSocket.makeRequest(incoming.command, '', true)
+
         switch (incoming.command) {
 
-            case "PONG":
+            case "PONG": //response
                 /**Соединение успешно установлено */
                 logger('[info] PING PONG OK');
                 break;
@@ -25,7 +111,7 @@ let GameState = {
                 logger('[error] сервер вернул ошибку: \n' + incoming.data)
                 break;
 
-            case "CONNECT_TO_SESSION":
+            case "CONNECT_TO_SESSION": //response
                 /**
                  * Подсоединится к существующей.
                  *
@@ -40,11 +126,13 @@ let GameState = {
                     showAlert('Есть контакт! ', 'green')
                     webSocket.makeRequest('ADD_USER')
                 } else {
+                    document.getElementById('joinGameLoader').hidden = true
+                    document.getElementById('createGameLoader').hidden = true
                     showAlert(incoming.messageStatus + ' ' + incoming.data, 'orange')
                 }
                 break;
 
-            case "CREATE_SESSION_IF_NOT_EXIST":
+            case "CREATE_SESSION_IF_NOT_EXIST": //response
                 /**
                  * Создать новую сессию.
                  *
@@ -59,27 +147,28 @@ let GameState = {
                     showAlert('Есть контакт! ', 'green')
                     webSocket.makeRequest('ADD_USER')
                 } else {
+                    document.getElementById('joinGameLoader').hidden = true
+                    document.getElementById('createGameLoader').hidden = true
                     showAlert(incoming.messageStatus + ' ' + incoming.data, 'orange')
                 }
                 break;
 
-            case "ADD_USER":
+            case "ADD_USER": //response
                 /** Добавить пользователя.
                  *  Веб страница сообщает серверу игры о том что она добавляет пользователя.
                  */
                 logger('[action] ADD_USER action');
                 //это должно будет уехать в стейты
                 if (incoming.messageStatus == 'GOOD') {
-                    document.getElementById('userlogin').hidden = true;
-                    document.getElementById('userList').hidden = false;
-                    document.getElementById('beforeGame').hidden = true;
-                    document.getElementById('inGame').hidden = false;
+                    this.switchFrame('LOBBY')
                 } else {
                     showAlert(incoming.messageStatus + ' ' + incoming.data, 'orange')
                 }
+                document.getElementById('joinGameLoader').hidden = true
+                document.getElementById('createGameLoader').hidden = true
                 break;
 
-            case "ADD_USER_EVENT":
+            case "ADD_USER_EVENT": //request
                 /** Событие добавить пользователя.
                  *  Сервер игры сообщает ВЕБ страницам от том, был добавлен пользователь
                  *  (в поле дата при этом передается список всех пользователей)
@@ -87,40 +176,46 @@ let GameState = {
                 logger('[event] сервер прислал список игроков: \n' + incoming.data);
                 let userList = incoming.data.split('\n')
                 for (let i in userList) userList[i] = userList[i].trim()
-                logger(userList);
+                logger('[info] ' + userList);
 
                 updateUserList(userList);
                 break;
 
-            case "START_GAME":
+            case "START_GAME": //response
                 /** Команда начала игры (TX).
                  *  Страница сообщает серверу игры о том что пользователь нажал кнопку начала игры.
                  */
-                logger('[action] START_GAME action');
+                if (incoming.messageStatus == 'GOOD') {
+                    logger('[action] START_GAME action');
+                    // this.switchFrame('START_GAME')
+                } else {
+                    showAlert(incoming.messageStatus + ' ' + incoming.data, 'orange')
+                }
                 break;
 
-            case "START_GAME_EVENT":
+            case "START_GAME_EVENT": //request
                 /** Событие начала игры.
                  *  Сервер игры сообщает ВЕБ страницам от том что игра началась
                  */
                 logger('[event] START_GAME_EVENT');
+                this.switchFrame('START_GAME')
                 break;
 
-            case "STOP_GAME":
+            case "STOP_GAME": //response
                 /** Команда остановки игры.
                  *  Веб страница сообщает серверу игры о том что пользователь нажал кнопку окончания игры.
                  */
                 logger('[action] STOP_GAME action');
                 break;
 
-            case "STOP_GAME_EVENT":
+            case "STOP_GAME_EVENT": //request
                 /** Команда остановки игры.
                  *  Сервер игры сообщает ВЕБ страницам от том что игра закончилась.
                  */
                 logger('[event] STOP_GAME_EVENT');
                 break;
 
-            case "START_TIMER_EVENT":
+            case "START_TIMER_EVENT": //request
                 /** Запуск таймера.
                  *  Сервер игры сообщает ВЕБ страницам от том что игра закончилась.
                  *  В поле дата передается время оставшееся до истиечения срока работы таймера (мс)
@@ -129,13 +224,14 @@ let GameState = {
                 initProgressBar(incoming.data)
                 break;
 
-            case "ENTER_REAL_EXCUTE_EVENT":
+            case "ENTER_REAL_EXCUTE_EVENT": //request
                 /** Введение реальной отмазки.
                  *  Сервер игры рассылает WEB страницам событие от которого необходимо отмазаться.
                  *  Страницы переходят в режим введения реальной отмазки.
                  */
                 logger('[event] ENTER_REAL_EXCUTE_EVENT');
-                document.getElementById("awful-event").innerHTML = incoming.data
+                document.getElementById("real-exec-data").innerHTML = incoming.data
+                this.switchFrame('ENTER_REAL_EXCUTE')
                 break;
 
             case "ENTER_FALSH_EXCUTE_EVENT":
@@ -145,7 +241,16 @@ let GameState = {
                  *  Страницы переходят в режим введения фальшивой отмазки.
                  */
                 logger('[event] ENTER_FALSH_EXCUTE_EVENT');
-                document.getElementById("awful-event").innerHTML = incoming.data
+                let ev = JSON.parse(incoming.data)
+                if (ev.event != field_userName.value) {
+                    document.getElementById("false-exec-data").innerHTML = ev.event
+                    document.getElementById("false-exec-user").innerHTML = ev.user
+                    this.switchFrame('ENTER_FALSH_EXCUTE')
+                } else {
+                    //если это твой эвент
+
+                }
+
                 break;
 
             case "VOTE_EVENT":
@@ -154,6 +259,7 @@ let GameState = {
                  *  ВЕБ страница переходит в режим голосования.
                  */
                 logger('[event] VOTE_EVENT');
+                this.switchFrame('VOTE')
                 break;
 
             case "ROUND":
@@ -170,6 +276,7 @@ let GameState = {
                  *  Страница при этом переходит в режим просмотра результатов голосования.
                  */
                 logger('[event] SHOW_RESULTS_EVENT action');
+                this.switchFrame('SHOW_RESULTS')
                 break;
 
             case "SHOW_FINAL_RESULTS_EVENT":
@@ -178,6 +285,7 @@ let GameState = {
                  *  Страница при этом переходит в режим просмотра результатов финального голосования.
                  */
                 logger('[event] SHOW_FINAL_RESULTS_EVENT action');
+                this.switchFrame('SHOW_RESULTS')
                 break;
 
             case "SET_REAL_EXCUTE":
@@ -186,6 +294,7 @@ let GameState = {
                  *  В поле data передается текс реальной отмазки.
                  */
                 logger('[action] SET_REAL_EXCUTE ')
+                this.switchFrame('START_GAME')
                 break;
 
             case "SET_FALSH_EXCUTE":
@@ -194,6 +303,7 @@ let GameState = {
                  *  В поле data передается текс фальшивой отмазки.
                  */
                 logger('[action] SET_FALSH_EXCUTE')
+                this.switchFrame('START_GAME')
                 break
 
             case "SET_VOTE":
@@ -202,6 +312,7 @@ let GameState = {
                  *  В поле data передается текс ответа, за который был отдан голос.
                  */
                 logger('[action] SET_VOTE')
+                this.switchFrame('START_GAME')
                 break
 
             default:

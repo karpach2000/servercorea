@@ -2,8 +2,12 @@ $(function() {
     $('[data-toggle="tooltip"]').tooltip()
 })
 
+/**
+ * при добавлении юзера в лобби, перерисовывает таблицу
+ * @param {} array массив пользователей
+ */
 function updateUserList(array) {
-    document.getElementById("userTable").innerHTML = ''
+    UserTable.innerHTML = ''
     for (let i = 0; i < array.length - 1; i++) {
         let row = document.createElement('tr');
         row.innerHTML =
@@ -23,9 +27,10 @@ function updateUserList(array) {
             array[i] +
             '</td>' +
             '<td>?</td>'
-        document.getElementById("userTable").append(row)
+        UserTable.append(row)
     }
 }
+
 /**
  * Функция выводит алерт в виде модуля на странице, без блокирующего алерта
  * @param {string} message - выводимое сообщение, к которому добавится префикс
@@ -45,10 +50,10 @@ function showAlert(message, color = 'orange') {
     div.innerHTML = '<strong>' + prefix + message + '</strong>' +
         '<button type="button" class="close" data-dismiss="alert" aria-label="Close">' +
         '<span aria-hidden="true">&times;</span></button>';
-    document.getElementById("alertContainer").append(div)
+    AlertContainer.append(div)
 }
 
-$("#createGame").click(function() {
+btn_createGame.onclick = function() {
     logger("[action] нажата кнопка 'Создать игру'");
     document.getElementById('createGameLoader').hidden = true
 
@@ -69,9 +74,10 @@ $("#createGame").click(function() {
     document.getElementById('createGameLoader').hidden = false
         //request to server
     webSocket.makeRequest('CREATE_SESSION_IF_NOT_EXIST')
-});
+}
 
-$("#joinGame").click(function() {
+
+btn_joinGame.onclick = function() {
     logger("[action] нажата кнопка 'Присоединиться к игре'");
     document.getElementById('joinGameLoader').hidden = true
 
@@ -92,7 +98,7 @@ $("#joinGame").click(function() {
     document.getElementById('joinGameLoader').hidden = false
         //request to server
     webSocket.makeRequest('CONNECT_TO_SESSION')
-});
+}
 
 $('#startGame').click(function() {
     webSocket.makeRequest('START_GAME')
@@ -102,15 +108,32 @@ $('#stopGame').click(function() {
     webSocket.makeRequest('STOP_GAME')
 })
 
+function enterRealExcute() {
+    logger('[action] отправляем реальную отмазку')
+    let excute = field_realExcute.value;
+    webSocket.makeRequest('SET_REAL_EXCUTE', excute)
+    resetProgressBar()
+}
+btn_realExcute.onclick = enterRealExcute
+
+function enterFalseExcute() {
+    logger('[action] отправляем поддельную отмазку')
+    let excute = field_falseExcute.value;
+    webSocket.makeRequest('SET_FALSH_EXCUTE', excute)
+    resetProgressBar()
+}
+btn_falseExcute.onclick = enterFalseExcute
+
 function initProgressBar(ms = 30000) {
     setProgressBarAttr(100, ms)
-    progressBar.hidden = false //потом уйдет в стейты
+    Frames.ProgressBar.main.hidden = false //потом уйдет в стейты
     countDownProgressBar(100, ms, ~~(ms / 200))
 
 }
 
 function resetProgressBar() {
-    progressBar.hidden = true
+    Frames.ProgressBar.main.hidden = true //потом уйдет в стейты
+    clearTimeout(timerID)
 }
 
 /**
@@ -125,8 +148,8 @@ function countDownProgressBar(persent, ms, step) {
         setProgressBarAttr(-1, ms)
         return logger('[info] Время вышло!')
     } else {
-        logger('[info] Осталось миллисекунд:' + ms)
-        setTimeout(countDownProgressBar, step, persent - 0.5, ms - step, step);
+        // logger('[info] Осталось миллисекунд:' + ms)
+        timerID = setTimeout(countDownProgressBar, step, persent - 0.5, ms - step, step);
     }
 }
 
@@ -139,18 +162,18 @@ function countDownProgressBar(persent, ms, step) {
 function setProgressBarAttr(persent, ms) { //#fixme: if ms not defined, ms = 0. WTF?!
 
     if (persent > 30) {
-        progressBar_left.childNodes[1].innerText = ~~(ms / 1000)
-        progressBar_done.childNodes[1].innerText = ''
+        Frames.ProgressBar.left.childNodes[1].innerText = ~~(ms / 1000)
+        Frames.ProgressBar.done.childNodes[1].innerText = ''
     } else if (persent < 0) {
-        progressBar_left.childNodes[1].innerText = ''
-        progressBar_done.childNodes[1].innerText = 'Время вышло!'
+        Frames.ProgressBar.left.childNodes[1].innerText = ''
+        Frames.ProgressBar.done.childNodes[1].innerText = 'Время вышло!'
     } else {
-        progressBar_left.childNodes[1].innerText = ''
-        progressBar_done.childNodes[1].innerText = ~~(ms / 1000)
+        Frames.ProgressBar.left.childNodes[1].innerText = ''
+        Frames.ProgressBar.done.childNodes[1].innerText = ~~(ms / 1000)
     }
 
-    progressBar_left.setAttribute('aria-valuenow', persent)
-    progressBar_left.setAttribute('style', 'width: ' + persent + '%')
-    progressBar_done.setAttribute('aria-valuenow', (100 - persent))
-    progressBar_done.setAttribute('style', 'width: ' + (100 - persent) + '%')
+    Frames.ProgressBar.left.setAttribute('aria-valuenow', persent)
+    Frames.ProgressBar.left.setAttribute('style', 'width: ' + persent + '%')
+    Frames.ProgressBar.done.setAttribute('aria-valuenow', (100 - persent))
+    Frames.ProgressBar.done.setAttribute('style', 'width: ' + (100 - persent) + '%')
 }
