@@ -5,18 +5,14 @@ import org.springframework.boot.test.context.SpringBootTest
 
 private val TIMEOUT = 5L
 
-/**
- * Тестируем игру 30 лет по идеальному сценарию.
- */
 @SpringBootTest
-class ThirtyYearsGameTest {
+class DisconnectTest {
 
-    //private var webSocketClient = WebsocketClientEndpoint("ws://127.0.0.1:8080/games/thirtyyears/ws")
 
-    val page1 = WebPage(14, 88, "Petr")
-    val page2 = WebPage(14, 88, "SashaGrey")
-    val page3 = WebPage(14, 88, "Gena")
-    val page4 = WebPage(14, 88, "Vasa")
+    val page1 = WebPage(13, 87, "Petr")
+    val page2 = WebPage(13, 87, "SashaGrey")
+    val page3 = WebPage(13, 87, "Gena")
+    val page4 = WebPage(13, 87, "Vasa")
 
     val pages = ArrayList<WebPage>()
     val excude = ArrayList<String>()
@@ -48,17 +44,15 @@ class ThirtyYearsGameTest {
 
     }
 
+
     fun test()
     {
 
-        println("\n___________________________")
-        println("_____ThirtyYearsGameTest_____")
+        println("\n_______________________")
+        println("_____DisconnectTest_____")
         println("__________________________\n\n")
-
         round1()
-        round2()
-        round3()
-        round4()
+
 
 
 
@@ -84,6 +78,8 @@ class ThirtyYearsGameTest {
         println("\nSTART_GAME")
         //запускаем игру
         pages[0].startGame(); Thread.sleep(TIMEOUT)//иначе тесты убегают вперед
+        //проверяем удаление и добавление
+        deleteAndAddPage("SashaGrey")
         //проверяем статус страниц
         checkPagesStatus(WebPageStates.ENTER_REAL_EXCUTE_EVENT)
         //распечатываем отчет
@@ -95,6 +91,8 @@ class ThirtyYearsGameTest {
         {
             pages[i].setRealExcude(excude[i])
         }
+        //проверяем удаление и добавление
+        deleteAndAddPage("SashaGrey")
         //проверяем статус страниц
         checkPagesStatus(WebPageStates.ENTER_FALSH_EXCUTE_EVENT)
         //распечатываем отчет
@@ -106,6 +104,8 @@ class ThirtyYearsGameTest {
         {
             pages[i].setFalshExcude(falshExcude[i])
         }
+        //проверяем удаление и добавление
+        deleteAndAddPage("SashaGrey")
         //проверяем статус страниц
         checkPagesStatus(WebPageStates.VOTE_EVENT)
         //распечатываем отчет
@@ -118,9 +118,9 @@ class ThirtyYearsGameTest {
         println("\nVOTE")
         //голосуем
         //page1.setVote(page1.voteVariants.table.rows[1].anser)
-        page2.setVote(page2.voteVariants.table.rows[0].anser)
-        page3.setVote(page3.voteVariants.table.rows[1].anser)
-        page4.setVote(page4.voteVariants.table.rows[0].anser)
+        pages[1].setVote(pages[1].voteVariants.table.rows[0].anser)
+        pages[2].setVote(pages[2].voteVariants.table.rows[1].anser)
+        pages[3].setVote(pages[3].voteVariants.table.rows[0].anser)
         //проверяем статус страниц
         checkPagesStatus(WebPageStates.SHOW_RESULTS_EVENT)
         //распечатываем отчет
@@ -131,133 +131,32 @@ class ThirtyYearsGameTest {
         println("\nROUND")
         //завершаем раунд
         page1.setRound();Thread.sleep(TIMEOUT)
+        //проверяем удаление и добавление
+        deleteAndAddPage("SashaGrey")
         //проверяем статус страниц
         checkPagesStatus(WebPageStates.ENTER_FALSH_EXCUTE_EVENT)
         //распечатываем отчет
         printPages()
+        Thread.sleep(TIMEOUT)
     }
 
-    fun round2()
+
+    fun deleteAndAddPage(name: String)
     {
-        println("\n________________")
-        println("_____ROUND2_____")
-        println("________________\n")
-
-
-
-        println("\nPRINT FALSHE EXCUDE")
-        //вводим фальшивую отмазку
-        for(i in 0 until pages.size)
+        for(p in pages)
         {
-            pages[i].setFalshExcude(falshExcude[i+8])
-        }
-        //проверяем статус страниц
-        checkPagesStatus(WebPageStates.VOTE_EVENT)
-        //распечатываем отчет
-        printPages()
-        //распечатываем список за кого можно проголосовать
-        pages.forEach {
-            println("Vote variants(${it.name}): ${it.voteVariants.toString()}")
+            if(p.name == name){
+                p.disconnect()
+                pages.remove(p)
+                break
+            }
         }
 
-        println("\nVOTE")
-        //голосуем
-        page1.setVote(page1.voteVariants.table.rows[1].anser)
-        //page2.setVote(page2.voteVariants.table.rows[0].anser)
-        page3.setVote(page3.voteVariants.table.rows[1].anser)
-        page4.setVote(page4.voteVariants.table.rows[0].anser)
-        //проверяем статус страниц
-        checkPagesStatus(WebPageStates.SHOW_RESULTS_EVENT)
-        //распечатываем отчет
-        printPages()
-
-        println("\nSHOW_RESULTS")
-        //распечатываем результаты голосования
-        page1.voteInformation.toTextTable().printTable()
-        //Thread.sleep(5000)
-        println("\nROUND")
-        page1.setRound();Thread.sleep(TIMEOUT)
-        //проверяем статус страниц
-        checkPagesStatus(WebPageStates.ENTER_FALSH_EXCUTE_EVENT)
-        //распечатываем отчет
-        printPages()
-    }
-
-    fun round3()
-    {
-        println("\n________________")
-        println("_____ROUND3_____")
-        println("________________\n")
-
-
-
-        println("\nPRINT FALSHE EXCUDE")
-        for(i in 0 until pages.size)
-        {
-            pages[i].setFalshExcude(falshExcude[i+4])
-        }
-        //проверяем статус страниц
-        checkPagesStatus(WebPageStates.VOTE_EVENT)
-        //распечатываем отчет
-        printPages()
-        pages.forEach {
-            println("Vote variants(${it.name}): ${it.voteVariants.toString()}")
-        }
-
-        println("\nVOTE")
-        page1.setVote(page1.voteVariants.table.rows[1].anser)
-        page2.setVote(page2.voteVariants.table.rows[0].anser)
-        //page3.setVote(page3.voteVariants.table.rows[1].anser)
-        page4.setVote(page4.voteVariants.table.rows[1].anser)
-        //проверяем статус страниц
-        checkPagesStatus(WebPageStates.SHOW_RESULTS_EVENT)
-        //распечатываем отчет
-        printPages()
-
-        println("\nSHOW_RESULTS")
-        page1.voteInformation.toTextTable().printTable()
-        //Thread.sleep(5000)
-        println("\nROUND")
-        page1.setRound();Thread.sleep(TIMEOUT)
-        //проверяем статус страниц
-        checkPagesStatus(WebPageStates.ENTER_FALSH_EXCUTE_EVENT)
-        //распечатываем отчет
-        printPages()
-    }
-
-    fun round4()
-    {
-        println("\n________________")
-        println("_____ROUND4_____")
-        println("________________\n")
-
-
-
-        println("\nPRINT FALSHE EXCUDE")
-        for(i in 0 until pages.size)
-        {
-            pages[i].setFalshExcude(falshExcude[i+4])
-        }
-        //проверяем статус страниц
-        checkPagesStatus(WebPageStates.VOTE_EVENT)
-        //распечатываем отчет
-        printPages()
-        pages.forEach {
-            println("Vote variants(${it.name}): ${it.voteVariants.toString()}")
-        }
-
-        println("\nVOTE")
-        page1.setVote(page1.voteVariants.table.rows[1].anser)
-        page2.setVote(page2.voteVariants.table.rows[3].anser)
-        page3.setVote(page3.voteVariants.table.rows[1].anser)
-        //page4.setVote(page4.voteVariants.table.rows[0].anser)
-        //проверяем статус страниц
-        checkPagesStatus(WebPageStates.SHOW_FINAL_RESULTS_EVENT)
-        //распечатываем отчет
-        printPages()
-
-        println("\nSHOW_RESULTS")
-        page1.voteInformation.toTextTable().printTable()
+        val newPage = WebPage(13, 87, name)
+        pages.add(newPage)
+        newPage.connectToSession()
+        newPage.getGameStatus()
+        Thread.sleep(TIMEOUT)
     }
 
     /**

@@ -135,6 +135,10 @@ class WebPage(val sessionId: Long,val sessionPass: Long,val name: String)
     }
 
 
+    fun disconnect()
+    {
+        webSocketClient.userSession!!.close()
+    }
 
     /**
      * Добавить пользователя.
@@ -208,6 +212,14 @@ class WebPage(val sessionId: Long,val sessionPass: Long,val name: String)
     fun setRound()
     {
         request(Commands.ROUND)
+    }
+
+    /**
+     * Получаем статус текущей игры.
+     */
+    fun getGameStatus()
+    {
+        request(Commands.GET_GAME_STATUS)
     }
 
 

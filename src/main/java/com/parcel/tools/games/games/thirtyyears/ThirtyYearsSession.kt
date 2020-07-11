@@ -322,7 +322,7 @@ class ThirtyYearsSession(sessionId: Long, sessionPas: Long) :
             GameState.ENTER_REAL_EXCUTE -> {
                 val data = ThirtyYearsVoteInformation(getUser(userName),
                         users[indexThirtyYearsUserExcute],users).toJson()
-                getGameEvents(userName).SHOW_FINAL_RESULTS_event(data)
+                getGameEvents(userName).ENTER_REAL_EXCUTE_event(data)
             }
             GameState.SHOW_RESULTS -> {
                 val data = ThirtyYearsVoteInformation(getUser(userName),
