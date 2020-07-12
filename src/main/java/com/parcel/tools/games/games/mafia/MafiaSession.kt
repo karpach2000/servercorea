@@ -34,8 +34,8 @@ class MafiaSession(sessionId: Long, sessionPas: Long) :  GamesSession<MafiaUser,
     {
         logger.info("getLeader()")
         users.forEach {
-            if(it.role == MafiaUserRoles.LEADING) {
-                return it.name
+            if(it.mafiaUserRole == MafiaUserRoles.LEADING) {
+                return it.name!!
             }
         }
         return ""
@@ -47,21 +47,31 @@ class MafiaSession(sessionId: Long, sessionPas: Long) :  GamesSession<MafiaUser,
         if(!started)
         {
             users.forEach {
-                if(it.role == MafiaUserRoles.LEADING) {
-                    it.role = MafiaUserRoles.CITIZEN
+                if(it.mafiaUserRole == MafiaUserRoles.LEADING) {
+                    it.mafiaUserRole = MafiaUserRoles.CITIZEN
                 }
             }
-            getUser(name).role = MafiaUserRoles.LEADING
+            getUser(name).mafiaUserRole = MafiaUserRoles.LEADING
             chndgeLeaderEvent(name)
             return true
         }
         throw MafiaSessionException("Can`t change leader. Game started.")
     }
     /*******USERS******/
+
+    override fun getAllUsers():String
+    {
+        var userList =""
+        users.forEach {
+            userList = userList+ "    " +it.name + "\n"
+        }
+        return userList
+    }
+
     fun getRole(userName: String): String
     {
         logger.debug("getRole($userName)")
-        return getUser(userName).role.toString()
+        return getUser(userName).mafiaUserRole.toString()
     }
 
     override fun addUser(name: String) :Boolean {
@@ -70,7 +80,7 @@ class MafiaSession(sessionId: Long, sessionPas: Long) :  GamesSession<MafiaUser,
         {
             logger.info("User '$name' is leader.")
             firstUserAdded = true
-            mu.role = MafiaUserRoles.LEADING
+            mu.mafiaUserRole = MafiaUserRoles.LEADING
         }
         else if(started)
             updateVoteTableEvent()//что бы при переподключении обновлялись данные
@@ -86,10 +96,10 @@ class MafiaSession(sessionId: Long, sessionPas: Long) :  GamesSession<MafiaUser,
     {
         logger.debug("getUsersForVoteСitizen($userName)")
         var ans = ""
-        if(getUser(userName).role!=MafiaUserRoles.LEADING && getUser(userName).isAlife) {
+        if(getUser(userName).mafiaUserRole!=MafiaUserRoles.LEADING && getUser(userName).isAlife) {
             val SEPORATOR = "_"
             users.forEach {
-                if (it.isAlife && it.role!=MafiaUserRoles.LEADING) {
+                if (it.isAlife && it.mafiaUserRole!=MafiaUserRoles.LEADING) {
                     ans = ans + it.name + SEPORATOR
                 }
             }
@@ -104,10 +114,10 @@ class MafiaSession(sessionId: Long, sessionPas: Long) :  GamesSession<MafiaUser,
     {
         logger.debug("getUsersForVoteMafia($userName)")
         var ans = ""
-        if(getUser(userName).role==MafiaUserRoles.MAFIA && getUser(userName).isAlife) {
+        if(getUser(userName).mafiaUserRole==MafiaUserRoles.MAFIA && getUser(userName).isAlife) {
             val SEPORATOR = "_"
             users.forEach {
-                if (it.isAlife && it.role!=MafiaUserRoles.LEADING) {
+                if (it.isAlife && it.mafiaUserRole!=MafiaUserRoles.LEADING) {
                     ans = ans + it.name + SEPORATOR
                 }
             }
@@ -129,9 +139,9 @@ class MafiaSession(sessionId: Long, sessionPas: Long) :  GamesSession<MafiaUser,
             logger.info("startGame()...")
             mafiaSessionState = MafiaSessionState.CITIZEN_VOTE
             val mafiaNames = generateMafia()
-            mafiaNames.forEach { this.getUser(it).role = MafiaUserRoles.MAFIA }
+            mafiaNames.forEach { this.getUser(it).mafiaUserRole = MafiaUserRoles.MAFIA }
             val sheriffNames = generateSheriff()
-            sheriffNames.forEach { this.getUser(it).role = MafiaUserRoles.SHERIFF }
+            sheriffNames.forEach { this.getUser(it).mafiaUserRole = MafiaUserRoles.SHERIFF }
             startGameEvent()
             updateVoteTableEvent()
         }
@@ -178,7 +188,7 @@ class MafiaSession(sessionId: Long, sessionPas: Long) :  GamesSession<MafiaUser,
     fun mafiaVoteResult(userName: String):String
     {
         logger.debug("mafiaVoteResult($userName)")
-        if(getUser(userName).role!=MafiaUserRoles.LEADING)
+        if(getUser(userName).mafiaUserRole!=MafiaUserRoles.LEADING)
         {
             throw MafiaSessionException("Only leader can end vote.")
         }
@@ -203,7 +213,7 @@ class MafiaSession(sessionId: Long, sessionPas: Long) :  GamesSession<MafiaUser,
     fun cityzenVoteResult(userName: String):String
     {
         logger.debug("cityzenVoteResult($userName)")
-        if(getUser(userName).role!=MafiaUserRoles.LEADING)
+        if(getUser(userName).mafiaUserRole!=MafiaUserRoles.LEADING)
         {
             throw MafiaSessionException("Only leader can end vote.")
         }
@@ -233,7 +243,7 @@ class MafiaSession(sessionId: Long, sessionPas: Long) :  GamesSession<MafiaUser,
             if(it.votedCount>votesMax)
             {
                 votesMax = it.votedCount
-                maxVoteUser = it.name
+                maxVoteUser = it.name!!
             }
             it.clearVote()
         }
@@ -248,7 +258,7 @@ class MafiaSession(sessionId: Long, sessionPas: Long) :  GamesSession<MafiaUser,
     fun selectCheckUserSheriff(userName: String, checkedUserName: String)
     {
         logger.debug("selectCheckUserSheriff($userName, $checkedUserName)")
-        if(checkedUserName != "" && getUser(userName).role == MafiaUserRoles.SHERIFF)
+        if(checkedUserName != "" && getUser(userName).mafiaUserRole == MafiaUserRoles.SHERIFF)
         {
             this.selectedUserForSherifCheck = checkedUserName
             sheriffCheckSelectEvent(checkedUserName)
@@ -286,13 +296,13 @@ class MafiaSession(sessionId: Long, sessionPas: Long) :  GamesSession<MafiaUser,
     {
         logger.debug("getCheckUserSheriffVariants($userName")
         val sheriff = getUser(userName)
-        return if(sheriff.role==MafiaUserRoles.SHERIFF)
+        return if(sheriff.mafiaUserRole==MafiaUserRoles.SHERIFF)
         {
             val usersAvalable = ArrayList<String>()
             users.forEach {
-                if(it.role!=MafiaUserRoles.LEADING && it.name!=userName &&
+                if(it.mafiaUserRole!=MafiaUserRoles.LEADING && it.name!=userName &&
                         !sheriff.sheriffOptions.checkedUserNames.contains(it.name))
-                    usersAvalable.add(it.name)
+                    usersAvalable.add(it.name!!)
             }
             toCsvLine(usersAvalable)
         }
@@ -310,7 +320,7 @@ class MafiaSession(sessionId: Long, sessionPas: Long) :  GamesSession<MafiaUser,
     {
         for (user in users)
         {
-            if(user.role == MafiaUserRoles.SHERIFF)
+            if(user.mafiaUserRole == MafiaUserRoles.SHERIFF)
                 return true
         }
         return false
@@ -323,7 +333,7 @@ class MafiaSession(sessionId: Long, sessionPas: Long) :  GamesSession<MafiaUser,
     {
         for (user in users)
         {
-            if(user.role == MafiaUserRoles.SHERIFF)
+            if(user.mafiaUserRole == MafiaUserRoles.SHERIFF)
                 return user
         }
         throw MafiaSessionException("There is no sherif in this game.")
@@ -346,12 +356,12 @@ class MafiaSession(sessionId: Long, sessionPas: Long) :  GamesSession<MafiaUser,
 
         val mafiaNames = ArrayList<String>()
         val users = ArrayList<MafiaUser>()
-        this.users.forEach { if(it.role == MafiaUserRoles.CITIZEN)users.add(it) }
+        this.users.forEach { if(it.mafiaUserRole == MafiaUserRoles.CITIZEN)users.add(it) }
         var mafiaCount = countMafiaGamersIsNecessary()
         while(mafiaCount>0)
         {
             val i = GlobalRandomiser.getRundom(users.size)
-            mafiaNames.add(users[i].name)
+            mafiaNames.add(users[i].name!!)
             users.removeAt(i)
             mafiaCount --
         }
@@ -370,13 +380,13 @@ class MafiaSession(sessionId: Long, sessionPas: Long) :  GamesSession<MafiaUser,
 
         val sheriffNames = ArrayList<String>()
         val users = ArrayList<MafiaUser>()
-        this.users.forEach { if(it.role == MafiaUserRoles.CITIZEN)users.add(it) }
+        this.users.forEach { if(it.mafiaUserRole == MafiaUserRoles.CITIZEN)users.add(it) }
         //количество шерифов
         var sheriffCount = countSheriffGamersIsNecessary()
         while(sheriffCount>0)
         {
             val i = GlobalRandomiser.getRundom(users.size)
-            sheriffNames.add(users[i].name)
+            sheriffNames.add(users[i].name!!)
             users.removeAt(i)
             sheriffCount --
         }
@@ -428,7 +438,7 @@ class MafiaSession(sessionId: Long, sessionPas: Long) :  GamesSession<MafiaUser,
     fun sheriffCheckSelectEvent(checkUserName: String)
     {
         gameEvent.forEach {
-            if(getUser(it.userName).role==MafiaUserRoles.LEADING)
+            if(getUser(it.userName).mafiaUserRole==MafiaUserRoles.LEADING)
             {
                 it.sheriffCheckedUser(checkUserName)
             }

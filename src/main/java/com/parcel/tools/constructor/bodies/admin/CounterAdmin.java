@@ -6,18 +6,18 @@ import java.util.List;
 
 import com.parcel.tools.Globals;
 import com.parcel.tools.constructor.bodies.Counter;
-import com.parcel.tools.constructor.database.users.Users;
+import com.parcel.tools.constructor.database.users.User;
 
 public class CounterAdmin  extends Counter {
 
     public String descriptionText="Администрирование пользователей.";
-    public List<Users> users = new ArrayList<Users>();
+    public List<User> users = new ArrayList<User>();
     public CounterAdmin()
     {
         getUsers();
     }
 
-    private List<Users> getUsers()
+    private List<User> getUsers()
     {
         users = Globals.INSTANCE.getUserManager().getAllUsers();
         return users;

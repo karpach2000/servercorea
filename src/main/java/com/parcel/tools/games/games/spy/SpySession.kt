@@ -49,7 +49,7 @@ class SpySession(sessionId: Long, sessionPas: Long) : GamesSession<SpyUser, SpyE
             //выбираем шпиона
             val spyIndex = GlobalRandomiser.getRundom(users.size)
             users[spyIndex].spy = true
-            gameResult = users[spyIndex].name
+            gameResult = users[spyIndex].name!!
             logger.info("Spy is: $gameResult")
             logger.info("...Game started")
 
@@ -60,6 +60,15 @@ class SpySession(sessionId: Long, sessionPas: Long) : GamesSession<SpyUser, SpyE
 
 
     //users
+
+    override fun getAllUsers():String
+    {
+        var userList =""
+        users.forEach {
+            userList = userList+ "    " +it.name + "\n"
+        }
+        return userList
+    }
 
     override fun addUser(name: String) =
             addUser(com.parcel.tools.games.games.spy.SpyUser(name))

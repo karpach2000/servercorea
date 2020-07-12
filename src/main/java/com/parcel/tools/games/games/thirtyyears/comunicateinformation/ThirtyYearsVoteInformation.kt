@@ -111,7 +111,7 @@ class ThirtyYearsVoteInformation() {
         table.event = trueTeller.event
         users.forEach {
             val tr = TableRow()
-            tr.name = it.name
+            tr.name = it.name!!
 
             if(it.name == trueTeller.name) {
                 tr.trueTeller = true

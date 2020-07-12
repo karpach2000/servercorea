@@ -1,5 +1,6 @@
 package com.parcel.tools.games.gamesession
 
+import com.google.gson.GsonBuilder
 import com.parcel.tools.games.GameErrors
 import com.parcel.tools.games.GameEvent
 import com.parcel.tools.games.GameSessionManagerException
@@ -79,7 +80,7 @@ abstract class  GamesSession<U : GameUser, E: GameEvent>(val sessionId: Long, va
     protected fun addUser(user: U): Boolean
     {
         logger.debug("addUser(${user.name})...")
-        val userExist = isUserExist(user.name)
+        val userExist = isUserExist(user.name!!)
         if(started && !userExist)
         {
             logger.warn("Game  started.")
@@ -91,7 +92,7 @@ abstract class  GamesSession<U : GameUser, E: GameEvent>(val sessionId: Long, va
             addUserEvent(getAllUsers())
             return true
         }
-        else if(user.name.length<1) {
+        else if(user.name!!.length<1) {
             logger.warn("To short user name.")
             throw GameSessionNotFatalException(GameErrors.TO_SHORT_USER_NAME)
         }
@@ -109,13 +110,11 @@ abstract class  GamesSession<U : GameUser, E: GameEvent>(val sessionId: Long, va
             return true
         }
     }
-    fun getAllUsers():String
+    open fun getAllUsers():String
     {
-        var userList =""
-        users.forEach {
-            userList = userList+ "    " +it.name + "\n"
-        }
-        return userList
+        var builder =  GsonBuilder()
+        var gson = builder.create()
+        return gson.toJson(users)
     }
 
     private fun isUserExist(name: String): Boolean

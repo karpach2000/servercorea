@@ -23,7 +23,7 @@ class MafiaUser(name:String) : GameUser(name) {
     /**
      * Роль пользователя в игре.
      */
-    var role = MafiaUserRoles.CITIZEN
+    var mafiaUserRole = MafiaUserRoles.CITIZEN
 
     /**
      * Информация о том жив пользователь или уже нет.

@@ -9,7 +9,7 @@ class UserInformation() {
 
     constructor(user: CardsUser, usersCount: Int, allUsers: String)
             : this() {
-        name = user.name
+        name = user.name!!
         userCard = user.userCard
         this.usersCount = usersCount
         this.allUsers = allUsers

@@ -90,7 +90,7 @@ class MafiaVoteInformation(
         users.forEach {
 
             val tr = TableRow()
-            tr.name = it.name
+            tr.name = it.name!!
             tr.isAlife = it.isAlife.toString()
 
             //маркер что строка относится к пользователю
@@ -99,7 +99,7 @@ class MafiaVoteInformation(
 
 
             /*****ИНФА ДЛЯ ВЕДУЩЕГО*****/
-            if(user.role==MafiaUserRoles.LEADING)
+            if(user.mafiaUserRole==MafiaUserRoles.LEADING)
             {
                 tr.sheriffChecked = it.sheriffOptions.checked.toString()
             }
@@ -108,7 +108,7 @@ class MafiaVoteInformation(
 
             /***ПОДСЧЕТ ГОЛОСОВ*****/
             //горожане не видят как голосует мафия
-            if(user.role != MafiaUserRoles.MAFIA && user.role != MafiaUserRoles.LEADING && this.mafiaSessionState == MafiaSessionState.MAFIA_VOTE)
+            if(user.mafiaUserRole != MafiaUserRoles.MAFIA && user.mafiaUserRole != MafiaUserRoles.LEADING && this.mafiaSessionState == MafiaSessionState.MAFIA_VOTE)
             {
                 tr.voteCount = "SECRET"
             }
@@ -118,31 +118,31 @@ class MafiaVoteInformation(
 
             /****РОЛИ*****/
             //горожане не видят ролей пользователей
-            if (user.role == MafiaUserRoles.CITIZEN) {
-                if(it.isAlife && it.role!=MafiaUserRoles.LEADING && it.name!=user.name)
+            if (user.mafiaUserRole == MafiaUserRoles.CITIZEN) {
+                if(it.isAlife && it.mafiaUserRole!=MafiaUserRoles.LEADING && it.name!=user.name)
                     tr.role = "SECRET"
                 else
-                    tr.role = it.role.toString()
+                    tr.role = it.mafiaUserRole.toString()
 
             }
             //шериф не видит ролей пользователей
-            else if(user.role == MafiaUserRoles.SHERIFF || it.role== MafiaUserRoles.LEADING)
+            else if(user.mafiaUserRole == MafiaUserRoles.SHERIFF || it.mafiaUserRole== MafiaUserRoles.LEADING)
             {
                 //но если он проверил пользователя то видит
-                if(user.sheriffOptions.checkedUserNames.contains(it.name)||it.role==MafiaUserRoles.LEADING || it.name==user.name)
-                    tr.role = it.role.toString()
+                if(user.sheriffOptions.checkedUserNames.contains(it.name!!)||it.mafiaUserRole==MafiaUserRoles.LEADING || it.name==user.name)
+                    tr.role = it.mafiaUserRole.toString()
                 else
                     tr.role = "SECRET"
             }
             //мафиозе видят только мафиозе, горожан, лидера. Остальных игроков принимают за горожан (пока аони живы).
-            else if (user.role == MafiaUserRoles.MAFIA) {
-                if(!it.isAlife || it.role== MafiaUserRoles.LEADING || it.role==MafiaUserRoles.MAFIA || it.role==MafiaUserRoles.CITIZEN)
-                    tr.role = it.role.toString()
+            else if (user.mafiaUserRole == MafiaUserRoles.MAFIA) {
+                if(!it.isAlife || it.mafiaUserRole== MafiaUserRoles.LEADING || it.mafiaUserRole==MafiaUserRoles.MAFIA || it.mafiaUserRole==MafiaUserRoles.CITIZEN)
+                    tr.role = it.mafiaUserRole.toString()
                 else
                     tr.role = MafiaUserRoles.CITIZEN.toString()
 
-            } else if (user.role == MafiaUserRoles.LEADING) {
-                tr.role = it.role.toString()
+            } else if (user.mafiaUserRole == MafiaUserRoles.LEADING) {
+                tr.role = it.mafiaUserRole.toString()
             }
 
             table.rows.add(tr)

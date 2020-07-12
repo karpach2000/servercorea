@@ -120,7 +120,7 @@ class ThirtyYearsSession(sessionId: Long, sessionPas: Long) :
         users.forEach {
             if(it.falshExcute==anser || it.excute==anser)//AHTUNG BAG AND COSTILE
             {
-                voteName=it.name
+                voteName= it.name!!
             }
         }
         val ans = super.gameSessionVote.vote(userName, voteName)
@@ -196,7 +196,7 @@ class ThirtyYearsSession(sessionId: Long, sessionPas: Long) :
 
             //если все проголосовали
             if(countThirtyYearsUserVote>=users.size-1 || gameSessionTimer.checkTimer()) {
-                updatePoints(users[indexThirtyYearsUserExcute].name)
+                updatePoints(users[indexThirtyYearsUserExcute].name!!)
                 gameSessionTimer.stopTimer()
                 if (indexThirtyYearsUserExcute < users.size-1) {
                     goTo_SHOW_RESULTS_event()

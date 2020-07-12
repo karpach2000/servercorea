@@ -60,7 +60,7 @@ class GameSessionVoteTest {
 
         var i = 0
         votesOrder.forEach {
-            gsv.vote(gameUsers[i].name, it)
+            gsv.vote(gameUsers[i].name!!, it)
             i++
         }
     }
@@ -80,7 +80,7 @@ class GameSessionVoteTest {
 
         var i = 0
         votesOrder.forEach {
-            gsv.vote(gameUsers[i].name, it)
+            gsv.vote(gameUsers[i].name!!, it)
             i++
         }
     }
@@ -100,7 +100,7 @@ class GameSessionVoteTest {
 
         var i = 0
         votesOrder.forEach {
-            gsv.vote(gameUsers[i].name, it)
+            gsv.vote(gameUsers[i].name!!, it)
             i++
         }
     }

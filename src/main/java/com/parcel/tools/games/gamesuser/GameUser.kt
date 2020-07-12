@@ -1,13 +1,18 @@
 package com.parcel.tools.games.gamesuser
 
+import com.google.gson.annotations.Expose
+import com.parcel.tools.constructor.database.users.User
+
+
 /**
  * Класс описывающий абстрактного пользователя.
  */
-abstract class GameUser (val name:String) {
+abstract class GameUser (name:String) : User(name){
 
     /**
      * Используется как свойство в классе GameUser при голосовани.
      */
+    @Expose(serialize = false, deserialize =false)
     val gameUserVote = GameUserVote()
 
     /**

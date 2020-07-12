@@ -10,7 +10,7 @@ class UserInformation() {
     constructor(user: SpyUser, location:String, usersCount: Int, allUsers: String)
             :this()
     {
-        name=user.name
+        name= user.name!!
         spy = user.spy
         this.location = location
         this.usersCount = usersCount

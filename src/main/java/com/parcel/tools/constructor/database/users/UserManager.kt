@@ -35,12 +35,12 @@ open class UserManager {
         Globals.userManager = this
     }
 
-    internal inner class GetUsersRowMapper : RowMapper<Users> {
+    internal inner class GetUsersRowMapper : RowMapper<User> {
         @Throws(SQLException::class)
-        override fun mapRow(rs: ResultSet, rowNum: Int): Users {
-            val user = Users()
+        override fun mapRow(rs: ResultSet, rowNum: Int): User {
+            val user = User()
             //user.id = rs.getInt("id")
-            user.login = rs.getString("user_login")
+            user.name = rs.getString("user_login")
             user.password=rs.getString("user_password")
             user.setRole(rs.getString("user_role"))
             return user
@@ -65,14 +65,14 @@ open class UserManager {
         }
     }
 
-    fun getAllUsers(): List<Users>
+    fun getAllUsers(): List<User>
     {
         logger.info("getAllUsers()")
         return jdbcTemplate!!.query("SELECT * FROM get_users_whith_roles()",
                 GetUsersRowMapper())
     }
 
-    fun addUser(user: Users) = addUser(user.login!!, user.password!!, user.role!!.user_role)
+    fun addUser(user: User) = addUser(user.name!!, user.password!!, user.role!!.user_role)
 
     fun addUser(login:String, password: String, role: String = "USER" )
     {

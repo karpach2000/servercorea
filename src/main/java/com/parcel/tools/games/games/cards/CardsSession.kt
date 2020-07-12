@@ -35,6 +35,16 @@ class CardsSession(sessionId: Long, sessionPas: Long) : GamesSession<CardsUser, 
 
     //users
 
+
+    override fun getAllUsers():String
+    {
+        var userList =""
+        users.forEach {
+            userList = userList+ "    " +it.name + "\n"
+        }
+        return userList
+    }
+
     private fun getAllCardsUsers(user: String): String {
         var userList = ""
         users.forEach {
