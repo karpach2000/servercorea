@@ -173,10 +173,12 @@ let GameState = {
                  *  Сервер игры сообщает ВЕБ страницам от том, был добавлен пользователь
                  *  (в поле дата при этом передается список всех пользователей)
                  */
-                logger('[event] сервер прислал список игроков: \n' + incoming.data);
-                let userList = incoming.data.split('\n')
-                for (let i in userList) userList[i] = userList[i].trim()
-                logger('[info] ' + userList);
+                let userArray = JSON.parse(incoming.data)
+                let userList = [];
+                for (let i = 0; i < userArray.length; i++) {
+                    userList.push(userArray[i].name)
+                }
+                logger('[event] сервер прислал список игроков: ' + userList);
 
                 updateUserList(userList);
                 break;
@@ -242,13 +244,16 @@ let GameState = {
                  */
                 logger('[event] ENTER_FALSH_EXCUTE_EVENT');
                 let ev = JSON.parse(incoming.data)
-                if (ev.event != field_userName.value) {
+                logger(`name: ${ev.user}, event: ${ev.event}`)
+                logger('event - ' + ev.user)
+                logger('field - ' + field_userName.value)
+                if (ev.user != field_userName.value) {
                     document.getElementById("false-exec-data").innerHTML = ev.event
                     document.getElementById("false-exec-user").innerHTML = ev.user
                     this.switchFrame('ENTER_FALSH_EXCUTE')
                 } else {
                     //если это твой эвент
-
+                    logger('[info] они врут про тебя, наслаждайся')
                 }
 
                 break;

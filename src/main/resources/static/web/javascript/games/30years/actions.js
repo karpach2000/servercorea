@@ -8,7 +8,7 @@ $(function() {
  */
 function updateUserList(array) {
     UserTable.innerHTML = ''
-    for (let i = 0; i < array.length - 1; i++) {
+    for (let i = 0; i < array.length; i++) {
         let row = document.createElement('tr');
         row.innerHTML =
             '<td class="av p-0">' +

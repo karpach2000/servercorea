@@ -13,7 +13,7 @@ webSocket.onopen = function(event) {
 };
 
 webSocket.onmessage = function(event) {
-    logger(`[incoming] Данные получены с сервера:\n ${event.data}`);
+    logger(`[RX] ${event.data}`);
     let incoming = JSON.parse(event.data)
         // console.log(incoming);
     GameState.eventListener(incoming)
@@ -35,7 +35,7 @@ webSocket.onclose = function(event) {
  */
 webSocket.makeRequest = function(command, data = '', isAnswer = 'false', status = 'GOOD') {
     let message = `{'userName':'${field_userName.value}','sessionId':'${field_sessionId.value==""?-1:field_sessionId.value}','sessionPas':'${field_sessionPas.value==""?-1:field_sessionPas.value}','command':'${command}','data':'${data}','isAnserOnRequest':'${isAnswer}','messageStatus':'${status}'}`
-    logger(`[outcoming] данные отправлены на сервер:\n ${message}`);
+    logger(`[TX] ${message}`);
     this.send(message)
 }
 
