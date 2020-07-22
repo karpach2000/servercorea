@@ -243,11 +243,11 @@ let GameState = {
                  *  Страницы переходят в режим введения фальшивой отмазки.
                  */
                 logger('[event] ENTER_FALSH_EXCUTE_EVENT');
-                let ev = JSON.parse(incoming.data)
-                logger(`name: ${ev.user}, event: ${ev.event}`)
-                if (ev.user != field_userName.value) {
-                    document.getElementById("false-exec-data").innerHTML = ev.event
-                    document.getElementById("false-exec-user").innerHTML = ev.user
+                let evEx = JSON.parse(incoming.data)
+                logger(`name: ${evEx.user}, event: ${evEx.event}`)
+                if (evEx.user != field_userName.value) {
+                    document.getElementById("false-exec-data").innerHTML = evEx.event
+                    document.getElementById("false-exec-user").innerHTML = evEx.user
                     this.switchFrame('ENTER_FALSH_EXCUTE')
                 } else {
                     //если это твой эвент
@@ -264,6 +264,7 @@ let GameState = {
 
                 // {
                 //     "event":"Кальянная на яблочково",
+                //     "eventHolder":"Petr"
                 //     "myQuestion":false,
                 //     "rows":[
                 //         {
@@ -284,8 +285,24 @@ let GameState = {
 
                 logger('[event] VOTE_EVENT');
 
-                let ev = JSON.parse(incoming.data)
-                logger(`event: ${ev.event}, myQuestion: ${ev.myQuestion},answers: ${ev.rows}`)
+                let evVt = JSON.parse(incoming.data)
+                logger(`event: ${evVt.event},evHolder: ${evVt.eventHolder}, myQuestion: ${evVt.myQuestion},answers: ${evVt.rows}`)
+
+                // вынести в отдельную функцию
+                if (evVt.myQuestion != true)
+                    Frames.Voter.innerHTML = `<h3>Как думаешь, как ${evVt.eventHolder} будет отмазываться от ${evVt.event}?</h3>`
+                else
+                    Frames.Voter.innerHTML = `<h3>По мнению других, вот так бы ты отмазывался от ${evVt.event}:</h3>`
+
+                for (let i = 0; i < evVt.rows.length; i++) {
+                    let btn = document.createElement('button');
+                    btn.innerHTML = evVt.rows[i].anser
+                    btn.className = 'btn btn-primary btn-block btn-lg'
+                    if (evVt.rows[i].itsMe)
+                        btn.setAttribute(disabled, true)
+                    Frames.Voter.append(btn)
+                }
+                // конец функции
 
                 this.switchFrame('VOTE')
                 break;
@@ -343,8 +360,8 @@ let GameState = {
                 //    ]
                 //  }
 
-                let ev = JSON.parse(incoming.data)
-                logger(`event: ${ev.event},variants: ${ev.rows}`)
+                let evRes = JSON.parse(incoming.data)
+                logger(`event: ${evRes.event},variants: ${evRes.rows}`)
 
                 logger('[event] SHOW_RESULTS_EVENT action');
                 this.switchFrame('SHOW_RESULTS')
