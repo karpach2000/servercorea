@@ -245,8 +245,6 @@ let GameState = {
                 logger('[event] ENTER_FALSH_EXCUTE_EVENT');
                 let ev = JSON.parse(incoming.data)
                 logger(`name: ${ev.user}, event: ${ev.event}`)
-                logger('event - ' + ev.user)
-                logger('field - ' + field_userName.value)
                 if (ev.user != field_userName.value) {
                     document.getElementById("false-exec-data").innerHTML = ev.event
                     document.getElementById("false-exec-user").innerHTML = ev.user
@@ -263,7 +261,32 @@ let GameState = {
                  *  Сервер игры рассылает WEB страницам варианты за кого можно проголосовать.
                  *  ВЕБ страница переходит в режим голосования.
                  */
+
+                // {
+                //     "event":"Кальянная на яблочково",
+                //     "myQuestion":false,
+                //     "rows":[
+                //         {
+                //             "anser":"Жирная жопа",
+                //             "itsMe":false
+                //         },{
+                //             "anser":"_Худые ляшки",
+                //             "itsMe":true
+                //         },{
+                //             "anser":"_Я унылое говно",
+                //             "itsMe":false
+                //         },{
+                //             "anser":"_Понос",
+                //             "itsMe":false
+                //         }
+                //     ]
+                // }
+
                 logger('[event] VOTE_EVENT');
+
+                let ev = JSON.parse(incoming.data)
+                logger(`event: ${ev.event}, myQuestion: ${ev.myQuestion},answers: ${ev.rows}`)
+
                 this.switchFrame('VOTE')
                 break;
 
@@ -280,6 +303,49 @@ let GameState = {
                  *  Сервер игры рассылает WEB страницам результаты голосования.
                  *  Страница при этом переходит в режим просмотра результатов голосования.
                  */
+
+                //{
+                //    "event":"Кальянная на яблочково",
+                //    "rows":[
+                //      {
+                //        "name":"Petr",
+                //        "trueTeller":true,
+                //        "excude":"Жирная жопа",
+                //        "selectedAuthor":"",
+                //        "itsMe":true,
+                //        "pointsCount":2,
+                //        "totalPointsCount":2
+                //      },{
+                //        "name":"SashaGrey",
+                //        "trueTeller":false,
+                //        "excude":"_Худые ляшки",
+                //        "selectedAuthor":"Petr",
+                //        "itsMe":false,
+                //        "pointsCount":11,
+                //        "totalPointsCount":11
+                //      },{
+                //        "name":"Gena",
+                //        "trueTeller":false,
+                //        "excude":"_Я унылое говно",
+                //        "selectedAuthor":"SashaGrey",
+                //        "itsMe":false,
+                //        "pointsCount":0,
+                //        "totalPointsCount":0
+                //      },{
+                //        "name":"Vasa",
+                //        "trueTeller":false,
+                //        "excude":"_Понос",
+                //        "selectedAuthor":"Petr",
+                //        "itsMe":false,
+                //        "pointsCount":10,
+                //        "totalPointsCount":10
+                //      }
+                //    ]
+                //  }
+
+                let ev = JSON.parse(incoming.data)
+                logger(`event: ${ev.event},variants: ${ev.rows}`)
+
                 logger('[event] SHOW_RESULTS_EVENT action');
                 this.switchFrame('SHOW_RESULTS')
                 break;
@@ -316,6 +382,8 @@ let GameState = {
                  *  ВЕБ страница сообщает серверу игры за какой вароиант проголосовал пользователь.
                  *  В поле data передается текс ответа, за который был отдан голос.
                  */
+
+                //отправляем такое сообщение {"userName":"SashaGrey","sessionId":14,"sessionPas":88,"command":"SET_VOTE","data":"Жирная жопа","isAnserOnRequest":false,"messageStatus":"GOOD"}
                 logger('[action] SET_VOTE')
                 this.switchFrame('START_GAME')
                 break
