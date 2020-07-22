@@ -42,6 +42,12 @@ class ThirtyYearsVoteVariants() {
         var event = ""
 
         /**
+         * Человек который вводил реальную отмазку от эього евента
+         *
+         */
+        var eventHolder = ""
+
+        /**
          * Я автор данного вопроса.
          */
         var myQuestion = false
@@ -92,6 +98,7 @@ class ThirtyYearsVoteVariants() {
     {
         table.event = trueTeller.event
         table.myQuestion = user.event==trueTeller.event
+        table.eventHolder = trueTeller.name!!
         //if(checkCanIVote())
             users.forEach {
                 val tr = TableRow()
