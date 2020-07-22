@@ -92,7 +92,7 @@ class ThirtyYearsVoteVariants() {
     {
         table.event = trueTeller.event
         table.myQuestion = user.event==trueTeller.event
-        if(checkCanIVote())
+        //if(checkCanIVote())
             users.forEach {
                 val tr = TableRow()
 
