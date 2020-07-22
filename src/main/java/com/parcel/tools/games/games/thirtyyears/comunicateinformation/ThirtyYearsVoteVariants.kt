@@ -91,6 +91,7 @@ class ThirtyYearsVoteVariants() {
     private fun putDataToTable()
     {
         table.event = trueTeller.event
+        table.myQuestion = user.event==trueTeller.event
         if(checkCanIVote())
             users.forEach {
                 val tr = TableRow()
