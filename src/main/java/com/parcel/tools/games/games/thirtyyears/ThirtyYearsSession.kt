@@ -146,9 +146,19 @@ class ThirtyYearsSession(sessionId: Long, sessionPas: Long) :
     fun setFalshExcute(userName: String, falshExcute: String):Boolean
     {
         logger.debug("setFalshExcute($userName, $falshExcute)")
-        getUser(userName).falshExcute = falshExcute
-        countThirtyYearsUserExcute++
-        updateByStateMashine()
+        if(!getUser(userName).isExcuting) {
+            getUser(userName).falshExcute = falshExcute
+            countThirtyYearsUserExcute++
+            updateByStateMashine()
+        }
+
+        else
+        {
+            val errorMessage = "${ThirtyYearsErrors.REQUIRED_USERS} This player cannot enter a fake excuse as he is currently excuse"
+            logger.error(errorMessage)
+            throw ThirtyYearsSessionNotFatalException(errorMessage)
+        }
+
         return true
     }
 
@@ -183,7 +193,7 @@ class ThirtyYearsSession(sessionId: Long, sessionPas: Long) :
         }
         else if(gameState == GameState.ENTER_FALSH_EXCUTE)
         {
-            if(countThirtyYearsUserExcute >= users.size || gameSessionTimer.checkTimer())
+            if(countThirtyYearsUserExcute >= users.size - 1 || gameSessionTimer.checkTimer())
             {
                 gameSessionTimer.stopTimer()
                 countThirtyYearsUserExcute = 0
