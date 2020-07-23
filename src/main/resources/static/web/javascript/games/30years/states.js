@@ -83,7 +83,7 @@ let GameState = {
 
                 break
         }
-
+        this.currentFrame = frame;
     },
 
     /** 
@@ -109,6 +109,7 @@ let GameState = {
             case "ERROR":
                 /** Сообщение об ошибке */
                 logger('[error] сервер вернул ошибку: \n' + incoming.data)
+                showAlert(incoming.data, 'red')
                 break;
 
             case "CONNECT_TO_SESSION": //response
@@ -252,7 +253,7 @@ let GameState = {
                 } else {
                     //если это твой эвент
                     logger('[info] они врут про тебя, наслаждайся')
-                    setTimeout(webSocket.makeRequest, 10000, 'SET_FALSH_EXCUTE', '') //костыль!!
+                        // setTimeout(webSocket.makeRequest, 10000, 'SET_FALSH_EXCUTE', '') //костыль!!
                 }
 
                 break;
@@ -287,7 +288,7 @@ let GameState = {
                 logger('[event] VOTE_EVENT');
 
                 let evVt = JSON.parse(incoming.data)
-                logger(evVt)
+                console.log(evVt)
 
                 // вынести в отдельную функцию
                 if (evVt.myQuestion != true)
@@ -300,12 +301,15 @@ let GameState = {
                     btn.innerHTML = evVt.rows[i].anser
                     btn.className = 'btn btn-primary btn-block btn-lg'
                     if (evVt.rows[i].itsMe)
-                        btn.setAttribute(disabled, true)
+                        btn.setAttribute("disabled", "disabled")
+                    else {
+                        let ans = evVt.rows[i].anser
+                        btn.setAttribute("onclick", `webSocket.makeRequest('SET_VOTE','${ans}')`)
+                    }
                     Frames.Voter.append(btn)
                 }
                 // конец функции
-
-                this.switchFrame('VOTE')
+                setTimeout(this.switchFrame, 200, 'VOTE') //костыль!!
                 break;
 
             case "ROUND":
@@ -362,10 +366,10 @@ let GameState = {
                 //  }
 
                 let evRes = JSON.parse(incoming.data)
-                logger(`event: ${evRes.event},variants: ${evRes.rows}`)
+                console.log(evRes)
 
                 logger('[event] SHOW_RESULTS_EVENT action');
-                this.switchFrame('SHOW_RESULTS')
+                setTimeout(this.switchFrame, 200, 'SHOW_RESULTS') //костыль!!
                 break;
 
             case "SHOW_FINAL_RESULTS_EVENT":
@@ -374,7 +378,7 @@ let GameState = {
                  *  Страница при этом переходит в режим просмотра результатов финального голосования.
                  */
                 logger('[event] SHOW_FINAL_RESULTS_EVENT action');
-                this.switchFrame('SHOW_RESULTS')
+                setTimeout(this.switchFrame, 200, 'SHOW_RESULTS') //костыль!!
                 break;
 
             case "SET_REAL_EXCUTE":
@@ -383,7 +387,7 @@ let GameState = {
                  *  В поле data передается текс реальной отмазки.
                  */
                 logger('[action] SET_REAL_EXCUTE ')
-                this.switchFrame('START_GAME')
+                this.switchFrame('START_GAME') //надо проверять текущее состояние
                 break;
 
             case "SET_FALSH_EXCUTE":
@@ -392,7 +396,7 @@ let GameState = {
                  *  В поле data передается текс фальшивой отмазки.
                  */
                 logger('[action] SET_FALSH_EXCUTE')
-                this.switchFrame('START_GAME')
+                this.switchFrame('START_GAME') //надо проверять текущее состояние
                 break
 
             case "SET_VOTE":
@@ -403,7 +407,7 @@ let GameState = {
 
                 //отправляем такое сообщение {"userName":"SashaGrey","sessionId":14,"sessionPas":88,"command":"SET_VOTE","data":"Жирная жопа","isAnserOnRequest":false,"messageStatus":"GOOD"}
                 logger('[action] SET_VOTE')
-                this.switchFrame('START_GAME')
+                this.switchFrame('START_GAME') //надо проверять текущее состояние
                 break
 
             default:
