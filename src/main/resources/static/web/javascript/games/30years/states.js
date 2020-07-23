@@ -248,10 +248,11 @@ let GameState = {
                 if (evEx.user != field_userName.value) {
                     document.getElementById("false-exec-data").innerHTML = evEx.event
                     document.getElementById("false-exec-user").innerHTML = evEx.user
-                    this.switchFrame('ENTER_FALSH_EXCUTE')
+                    setTimeout(this.switchFrame, 200, 'ENTER_FALSH_EXCUTE') //костыль!!
                 } else {
                     //если это твой эвент
                     logger('[info] они врут про тебя, наслаждайся')
+                    setTimeout(webSocket.makeRequest, 10000, 'SET_FALSH_EXCUTE', '') //костыль!!
                 }
 
                 break;
@@ -261,7 +262,7 @@ let GameState = {
                  *  Сервер игры рассылает WEB страницам варианты за кого можно проголосовать.
                  *  ВЕБ страница переходит в режим голосования.
                  */
-
+                // [RX] {"userName":"user1","sessionId":5,"sessionPas":5,"command":"VOTE_EVENT","data":"{\"event\":\"Кальянная на яблочково\",\"myQuestion\":true,\"rows\":[{\"anser\":\"отмазка первого\",\"itsMe\":true},{\"anser\":\"gsdf\",\"itsMe\":false},{\"anser\":\"апрар\",\"itsMe\":false},{\"anser\":\"одлдло\",\"itsMe\":false}]}","isAnserOnRequest":false,"messageStatus":"GOOD"}
                 // {
                 //     "event":"Кальянная на яблочково",
                 //     "eventHolder":"Petr"
@@ -286,7 +287,7 @@ let GameState = {
                 logger('[event] VOTE_EVENT');
 
                 let evVt = JSON.parse(incoming.data)
-                logger(`event: ${evVt.event},evHolder: ${evVt.eventHolder}, myQuestion: ${evVt.myQuestion},answers: ${evVt.rows}`)
+                logger(evVt)
 
                 // вынести в отдельную функцию
                 if (evVt.myQuestion != true)
