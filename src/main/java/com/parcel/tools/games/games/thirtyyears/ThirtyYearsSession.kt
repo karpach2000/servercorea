@@ -182,6 +182,7 @@ class ThirtyYearsSession(sessionId: Long, sessionPas: Long) :
      */
     fun updateByStateMashine()
     {
+
         if(gameState == GameState.ENTER_REAL_EXCUTE)
         {
             if(countThirtyYearsUserExcute >= users.size || gameSessionTimer.checkTimer())
@@ -372,6 +373,7 @@ class ThirtyYearsSession(sessionId: Long, sessionPas: Long) :
     private fun goTo_ENTER_FALSH_EXCUTE_event()
     {
         gameState = GameState.ENTER_FALSH_EXCUTE
+        users.forEach { it.falshExcute = "" }//чистим буфер с фальшивыми отмазками.
         gameEvent.forEach {
             it.ENTER_FALSH_EXCUTE_event(users[indexThirtyYearsUserExcute].getThirtyYearsEventAndUserInformation().toJson())
         }
