@@ -9,6 +9,8 @@ let GameState = {
      * @param {string} frame LOGIN, LOBBY, START_GAME, ENTER_EXCUTE, VOTE, SHOW_RESULTS
      */
     switchFrame(frame) {
+        this.currentFrame = frame;
+
         Frames.Loader.hidden = false;
         Frames.BeforeGame.hidden = true;
         Frames.Lobby.hidden = true;
@@ -83,7 +85,7 @@ let GameState = {
 
                 break
         }
-        this.currentFrame = frame;
+
     },
 
     /** 
@@ -249,10 +251,11 @@ let GameState = {
                 if (evEx.user != field_userName.value) {
                     document.getElementById("false-exec-data").innerHTML = evEx.event
                     document.getElementById("false-exec-user").innerHTML = evEx.user
-                    setTimeout(this.switchFrame, 200, 'ENTER_FALSH_EXCUTE') //костыль!!
+                    this.switchFrame('ENTER_FALSH_EXCUTE')
                 } else {
                     //если это твой эвент
                     logger('[info] они врут про тебя, наслаждайся')
+                    this.switchFrame('START_GAME')
                         // setTimeout(webSocket.makeRequest, 10000, 'SET_FALSH_EXCUTE', '') //костыль!!
                 }
 
@@ -290,7 +293,7 @@ let GameState = {
                     Frames.Voter.append(btn)
                 }
                 // конец функции
-                setTimeout(this.switchFrame, 200, 'VOTE') //костыль!!
+                this.switchFrame('VOTE')
                 break;
 
             case "ROUND": //response
@@ -299,6 +302,7 @@ let GameState = {
                  *  это значит что раунд окончен и все насмотрелись на результтаты голосования.
                  */
                 logger('[action] ROUND action');
+                if (this.currentFrame == 'SHOW_RESULTS') this.switchFrame('START_GAME')
                 break;
 
             case "SHOW_RESULTS_EVENT":
@@ -306,7 +310,11 @@ let GameState = {
                  *  Сервер игры рассылает WEB страницам результаты голосования.
                  *  Страница при этом переходит в режим просмотра результатов голосования.
                  */
-
+            case "SHOW_FINAL_RESULTS_EVENT":
+                /** Показывает пользователю результаты всей игры.
+                 *  Сервер игры рассылает WEB страницам результаты финального голосования.
+                 *  Страница при этом переходит в режим просмотра результатов финального голосования.
+                 */
                 logger('[event] SHOW_RESULTS_EVENT action');
                 let evRes = JSON.parse(incoming.data)
                     // console.log(evRes)
@@ -336,22 +344,13 @@ let GameState = {
                 Frames.Results.append(round)
                 break;
 
-            case "SHOW_FINAL_RESULTS_EVENT":
-                /** Показывает пользователю результаты всей игры.
-                 *  Сервер игры рассылает WEB страницам результаты финального голосования.
-                 *  Страница при этом переходит в режим просмотра результатов финального голосования.
-                 */
-                logger('[event] SHOW_FINAL_RESULTS_EVENT action');
-                setTimeout(this.switchFrame, 200, 'SHOW_RESULTS') //костыль!!
-                break;
-
             case "SET_REAL_EXCUTE":
                 /** Ввести реальную отмазку.
                  *  ВЕБ страница сообщает серверу игры реальную отмазку которую ввел пользователь.
                  *  В поле data передается текс реальной отмазки.
                  */
-                logger('[action] SET_REAL_EXCUTE ')
-                this.switchFrame('START_GAME') //надо проверять текущее состояние
+                logger('[action] SET_REAL_EXCUTE, current frame = ', this.currentFrame)
+                if (this.currentFrame == 'ENTER_REAL_EXCUTE') this.switchFrame('START_GAME')
                 break;
 
             case "SET_FALSH_EXCUTE":
@@ -359,8 +358,8 @@ let GameState = {
                  *  ВЕБ страница сообщает серверу игры фальшивую отмазку которую ввел пользователь.
                  *  В поле data передается текс фальшивой отмазки.
                  */
-                logger('[action] SET_FALSH_EXCUTE')
-                this.switchFrame('START_GAME') //надо проверять текущее состояние
+                logger('[action] SET_FALSH_EXCUTE, current frame = ', this.currentFrame)
+                if (this.currentFrame == 'ENTER_FALSH_EXCUTE') this.switchFrame('START_GAME')
                 break
 
             case "SET_VOTE":
@@ -371,7 +370,7 @@ let GameState = {
 
                 //отправляем такое сообщение {"userName":"SashaGrey","sessionId":14,"sessionPas":88,"command":"SET_VOTE","data":"Жирная жопа","isAnserOnRequest":false,"messageStatus":"GOOD"}
                 logger('[action] SET_VOTE')
-                this.switchFrame('START_GAME') //надо проверять текущее состояние
+                if (this.currentFrame == 'VOTE') this.switchFrame('START_GAME')
                 break
 
             default:
