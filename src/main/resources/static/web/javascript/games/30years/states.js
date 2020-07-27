@@ -263,27 +263,33 @@ let GameState = {
                  *  Сервер игры рассылает WEB страницам варианты за кого можно проголосовать.
                  *  ВЕБ страница переходит в режим голосования.
                  */
+<<<<<<< HEAD
 
+=======
+>>>>>>> 5332fe2ea08033ae25db5fcf88d66354b04d8d07
                 logger('[event] VOTE_EVENT');
 
                 let evVt = JSON.parse(incoming.data)
                     // console.log(evVt)
 
                 // вынести в отдельную функцию
-                if (evVt.myQuestion != true)
+                let btnColor = 'btn-primary'
+                if (evVt.myQuestion != true) {
                     Frames.Voter.innerHTML = `<h3>Как думаешь, как ${evVt.eventHolder} будет отмазываться от ${evVt.event}?</h3>`
-                else
+                } else {
                     Frames.Voter.innerHTML = `<h3>По мнению других, вот так бы ты отмазывался от ${evVt.event}:</h3>`
-
+                    btnColor = 'btn-secondary'
+                }
                 for (let i = 0; i < evVt.rows.length; i++) {
                     let btn = document.createElement('button');
                     btn.innerHTML = evVt.rows[i].anser
-                    btn.className = 'btn btn-primary btn-block btn-lg'
-                    if (evVt.rows[i].itsMe)
+                    btn.className = `btn ${btnColor} btn-block btn-lg`
+                    if (evVt.rows[i].itsMe) //my variant
                         btn.setAttribute("disabled", "disabled")
-                    else {
-                        let ans = evVt.rows[i].anser
-                        btn.setAttribute("onclick", `webSocket.makeRequest('SET_VOTE','${ans}')`)
+                    else if (evVt.myQuestion != true) { //not my variant and not my question
+                        btn.setAttribute("onclick", `webSocket.makeRequest('SET_VOTE','${evVt.rows[i].anser}')`)
+                    } else { //not my variant , but my question
+                        btn.setAttribute("onclick", `showAlert('Не тыкай, это ж они тебя раскрыть пытаются!')`)
                     }
                     Frames.Voter.append(btn)
                 }
@@ -291,7 +297,7 @@ let GameState = {
                 setTimeout(this.switchFrame, 200, 'VOTE') //костыль!!
                 break;
 
-            case "ROUND":
+            case "ROUND": //response
                 /** Закончить раунд голосования.
                  *  ВЕБ страница сообщает о том что пользователь нажал кнопку ROUND??
                  *  это значит что раунд окончен и все насмотрелись на результтаты голосования.
