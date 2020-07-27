@@ -263,32 +263,11 @@ let GameState = {
                  *  Сервер игры рассылает WEB страницам варианты за кого можно проголосовать.
                  *  ВЕБ страница переходит в режим голосования.
                  */
-                // [RX] {"userName":"user1","sessionId":5,"sessionPas":5,"command":"VOTE_EVENT","data":"{\"event\":\"Кальянная на яблочково\",\"myQuestion\":true,\"rows\":[{\"anser\":\"отмазка первого\",\"itsMe\":true},{\"anser\":\"gsdf\",\"itsMe\":false},{\"anser\":\"апрар\",\"itsMe\":false},{\"anser\":\"одлдло\",\"itsMe\":false}]}","isAnserOnRequest":false,"messageStatus":"GOOD"}
-                // {
-                //     "event":"Кальянная на яблочково",
-                //     "eventHolder":"Petr"
-                //     "myQuestion":false,
-                //     "rows":[
-                //         {
-                //             "anser":"Жирная жопа",
-                //             "itsMe":false
-                //         },{
-                //             "anser":"_Худые ляшки",
-                //             "itsMe":true
-                //         },{
-                //             "anser":"_Я унылое говно",
-                //             "itsMe":false
-                //         },{
-                //             "anser":"_Понос",
-                //             "itsMe":false
-                //         }
-                //     ]
-                // }
 
                 logger('[event] VOTE_EVENT');
 
                 let evVt = JSON.parse(incoming.data)
-                console.log(evVt)
+                    // console.log(evVt)
 
                 // вынести в отдельную функцию
                 if (evVt.myQuestion != true)
@@ -326,50 +305,33 @@ let GameState = {
                  *  Страница при этом переходит в режим просмотра результатов голосования.
                  */
 
-                //{
-                //    "event":"Кальянная на яблочково",
-                //    "rows":[
-                //      {
-                //        "name":"Petr",
-                //        "trueTeller":true,
-                //        "excude":"Жирная жопа",
-                //        "selectedAuthor":"",
-                //        "itsMe":true,
-                //        "pointsCount":2,
-                //        "totalPointsCount":2
-                //      },{
-                //        "name":"SashaGrey",
-                //        "trueTeller":false,
-                //        "excude":"_Худые ляшки",
-                //        "selectedAuthor":"Petr",
-                //        "itsMe":false,
-                //        "pointsCount":11,
-                //        "totalPointsCount":11
-                //      },{
-                //        "name":"Gena",
-                //        "trueTeller":false,
-                //        "excude":"_Я унылое говно",
-                //        "selectedAuthor":"SashaGrey",
-                //        "itsMe":false,
-                //        "pointsCount":0,
-                //        "totalPointsCount":0
-                //      },{
-                //        "name":"Vasa",
-                //        "trueTeller":false,
-                //        "excude":"_Понос",
-                //        "selectedAuthor":"Petr",
-                //        "itsMe":false,
-                //        "pointsCount":10,
-                //        "totalPointsCount":10
-                //      }
-                //    ]
-                //  }
-
-                let evRes = JSON.parse(incoming.data)
-                console.log(evRes)
-
                 logger('[event] SHOW_RESULTS_EVENT action');
+                let evRes = JSON.parse(incoming.data)
+                    // console.log(evRes)
+
+                // вынести в отдельную функцию
+                Frames.Results.innerHTML = `<h4>Вот как вы голосовали за ${evRes.event}</h4>`
+                for (let i = 0; i < evRes.rows.length; i++) {
+                    let card = document.createElement('div');
+                    evRes.rows[i].trueTeller ? card.className = 'card border border-success' : card.className = 'card border border-secondary'
+                    card.style.width = '100%'
+                    card.innerHTML = '<div class = "card-header text-secondary"> Версия принадлежит ' + evRes.rows[i].name + '</div>' +
+                        '<div class = "card-body">' +
+                        '<h3 class="card-title">' + evRes.rows[i].excude + '</h3>' +
+                        '</div>' +
+                        '<div class = "card-footer">Заработано очков: ' + evRes.rows[i].pointsCount +
+                        ' Всего очков: ' + evRes.rows[i].totalPointsCount + '</div>'
+                    Frames.Results.append(card)
+                }
+                // конец функции
+
                 setTimeout(this.switchFrame, 200, 'SHOW_RESULTS') //костыль!!
+
+                let round = document.createElement('button');
+                round.innerHTML = 'Завершить раунд'
+                round.className = 'btn btn-primary btn-block btn-lg'
+                round.setAttribute("onclick", "webSocket.makeRequest('ROUND')")
+                Frames.Results.append(round)
                 break;
 
             case "SHOW_FINAL_RESULTS_EVENT":
