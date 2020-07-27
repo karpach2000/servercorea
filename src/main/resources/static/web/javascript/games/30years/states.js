@@ -263,10 +263,6 @@ let GameState = {
                  *  Сервер игры рассылает WEB страницам варианты за кого можно проголосовать.
                  *  ВЕБ страница переходит в режим голосования.
                  */
-<<<<<<< HEAD
-
-=======
->>>>>>> 5332fe2ea08033ae25db5fcf88d66354b04d8d07
                 logger('[event] VOTE_EVENT');
 
                 let evVt = JSON.parse(incoming.data)
