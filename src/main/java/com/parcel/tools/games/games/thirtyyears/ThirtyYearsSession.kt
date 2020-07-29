@@ -79,6 +79,15 @@ class ThirtyYearsSession(sessionId: Long, sessionPas: Long) :
         return super.addUser(user)
     }
 
+    override fun stopGame():Boolean
+    {
+
+        //logger.debug("stopGame()...")
+        goTo_STOP_GAME()
+        return super.stopGame()
+    }
+
+
     override fun startGame()
     {
 
@@ -168,12 +177,24 @@ class ThirtyYearsSession(sessionId: Long, sessionPas: Long) :
     fun round(): Boolean
     {
         logger.debug("round()")
-        users[indexThirtyYearsUserExcute].isExcuting = false
-        indexThirtyYearsUserExcute++
-        users[indexThirtyYearsUserExcute].isExcuting = true
-        users.forEach { it.clear() }
-        goTo_ENTER_FALSH_EXCUTE_event()
-        return true
+
+        if(gameState == GameState.SHOW_RESULTS)
+        {
+            users[indexThirtyYearsUserExcute].isExcuting = false
+            indexThirtyYearsUserExcute++
+            users[indexThirtyYearsUserExcute].isExcuting = true
+            users.forEach { it.clear() }
+            goTo_ENTER_FALSH_EXCUTE_event()
+            return true
+        }
+        else if(gameState == GameState.SHOW_FINAL_RESULTS)
+        {
+            goTo_STOP_GAME()
+            return true
+        }
+        return false
+
+
     }
 
     /**
@@ -182,6 +203,8 @@ class ThirtyYearsSession(sessionId: Long, sessionPas: Long) :
      */
     fun updateByStateMashine()
     {
+
+
         if(gameState == GameState.ENTER_REAL_EXCUTE)
         {
             if(countThirtyYearsUserExcute >= users.size || gameSessionTimer.checkTimer())
@@ -214,6 +237,10 @@ class ThirtyYearsSession(sessionId: Long, sessionPas: Long) :
                     goTo_SHOW_FINAL_RESULTS_event()
                 countThirtyYearsUserVote=0
             }
+        }
+        else if(gameState == GameState.SHOW_RESULTS)
+        {
+            //ничего не делаем, выход из этого состояния происходит от внешней команды ROUND
         }
         else if(gameState == GameState.SHOW_RESULTS)
         {
@@ -372,6 +399,7 @@ class ThirtyYearsSession(sessionId: Long, sessionPas: Long) :
     private fun goTo_ENTER_FALSH_EXCUTE_event()
     {
         gameState = GameState.ENTER_FALSH_EXCUTE
+        users.forEach { it.falshExcute = "" }//чистим буфер с фальшивыми отмазками.
         gameEvent.forEach {
             it.ENTER_FALSH_EXCUTE_event(users[indexThirtyYearsUserExcute].getThirtyYearsEventAndUserInformation().toJson())
         }
@@ -418,6 +446,11 @@ class ThirtyYearsSession(sessionId: Long, sessionPas: Long) :
 
         }
         gameSessionVote.clear()
+    }
+
+    private fun goTo_STOP_GAME()
+    {
+        gameEvent.forEach { it.STOP_GAME_event() }
     }
 
 }

@@ -37,6 +37,7 @@ class GameSessionTimer {
     {
 
         if(!isStarted) {
+            //stopTimer()//на всякий тормозим то что уже есть
             isStarted = true
             period = time
             startMiles = System.currentTimeMillis()
@@ -73,7 +74,8 @@ class GameSessionTimer {
             Thread.sleep(CHECK_PERIOD)
         }
         timerEventsHandlers.forEach { it.timeIsOver() }
-        timerEventsHandlers.forEach { it.timerStoped(period) }
+        //timerEventsHandlers.forEach { it.timerStoped(period) }
+        stopTimer()
     }
 
     /**
@@ -101,4 +103,52 @@ class GameSessionTimer {
         timerEventsHandlers.clear()
     }
 
+}
+
+private val timer = GameSessionTimer()
+
+fun main()
+{
+
+    class TimerEvent() :TimerEventInterface
+    {
+        override fun timerStarted(value: Long) {
+            println("timerStarted($value: Long)")
+        }
+
+        override fun timerStoped(value: Long) {
+            println("timerStoped($value: Long)")
+        }
+
+        override fun timerPaused() {
+            println("timerPaused()")
+        }
+
+        override fun timeIsOver() {
+            println("timeIsOver()")
+        }
+
+    }
+    timer.subscribeTimerEvents(TimerEvent())
+    for(i in 0..3)
+    {
+        println("\nITIRATION $i")
+        timerCheckAction()
+    }
+}
+
+private fun timerCheckAction()
+{
+
+
+
+    timer.startTimer(5000)
+    println("Check timer: ${timer.checkTimer()}")
+    var i = 0
+    while (i<10000)
+    {
+        Thread.sleep(1)
+        i++
+    }
+    println("Check timer: ${timer.checkTimer()}")
 }

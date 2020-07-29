@@ -90,6 +90,10 @@ class ThirtyYearsWebSocketController : TextWebSocketHandler() {
             request(Commands.START_TIMER_EVENT, miles.toString())
         }
 
+        override fun STOP_GAME_event() {
+            request(Commands.STOP_GAME_EVENT)
+        }
+
         override fun addUserEvent(userList: String) {
             request(Commands.ADD_USER_EVENT, userList)
         }
@@ -250,6 +254,9 @@ class ThirtyYearsWebSocketController : TextWebSocketHandler() {
             } else if (inMessage.command == Commands.START_GAME) {
                     ThirtyYearsSessionManager.startGame(inMessage.sessionId, inMessage.sessionPas)
                     sendMessageAnser(session, inMessage)
+            } else if (inMessage.command == Commands.STOP_GAME) {
+                ThirtyYearsSessionManager.stopGame(inMessage.sessionId, inMessage.sessionPas)
+                sendMessageAnser(session, inMessage)
             } else if (inMessage.command == Commands.SET_REAL_EXCUTE) {
                 ThirtyYearsSessionManager.setRealExcude(inMessage.sessionId, inMessage.sessionPas,
                         inMessage.userName, inMessage.data)

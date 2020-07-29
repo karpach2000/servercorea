@@ -64,6 +64,7 @@ class ThirtyYearsVoteInformation() {
      */
     class Table{
         var event = ""
+        var  eventHolder = ""
         val rows = ArrayList<TableRow>()
     }
 
@@ -109,6 +110,7 @@ class ThirtyYearsVoteInformation() {
     private fun putDataToTable()
     {
         table.event = trueTeller.event
+        table.eventHolder = trueTeller.name!!
         users.forEach {
             val tr = TableRow()
             tr.name = it.name!!
