@@ -14,6 +14,12 @@ object ThirtyYearsSessionManager :
 
     private val logger = org.apache.log4j.Logger.getLogger(ThirtyYearsSessionManager::class.java!!)
 
+    fun stopGame(sessionId: Long, sessionPas: Long, userName: String): Boolean
+    {
+        logger.info("stopGame($sessionId, $sessionPas, $userName)")
+        return getSession(sessionId, sessionPas).stopGame()
+    }
+
     fun setRealExcude(sessionId: Long, sessionPas: Long, userName: String, excute: String): Boolean
     {
         logger.info("setRealExcude($sessionId, $sessionPas, $userName, $excute)")

@@ -53,12 +53,13 @@ abstract class  GamesSession<U : GameUser, E: GameEvent>(val sessionId: Long, va
 
     abstract fun  startGame()
 
-    fun stopGame()
+    open fun stopGame() :Boolean
     {
         logger.debug("stopGame()")
         users.clear()
         started = false
         stopGameEvent(gameResult)
+        return true
     }
 
     /******USERS*******/

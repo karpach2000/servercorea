@@ -79,6 +79,15 @@ class ThirtyYearsSession(sessionId: Long, sessionPas: Long) :
         return super.addUser(user)
     }
 
+    override fun stopGame():Boolean
+    {
+
+        //logger.debug("stopGame()...")
+        goTo_STOP_GAME()
+        return super.stopGame()
+    }
+
+
     override fun startGame()
     {
 
