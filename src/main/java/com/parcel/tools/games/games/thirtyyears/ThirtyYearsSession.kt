@@ -124,18 +124,16 @@ class ThirtyYearsSession(sessionId: Long, sessionPas: Long) :
     {
         logger.debug("vote($userName, $anser)")
 
-        var voteName = ""
         //аходим пользователя, которому принадлежит ответ
         users.forEach {
             if(it.falshExcute==anser || it.excute==anser)//AHTUNG BAG AND COSTILE
             {
-                voteName= it.name!!
+                super.gameSessionVote.vote(userName, it.name!!)
             }
         }
-        val ans = super.gameSessionVote.vote(userName, voteName)
         countThirtyYearsUserVote++
         updateByStateMashine()
-        return ans
+        return true
     }
 
     /**
