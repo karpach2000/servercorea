@@ -90,6 +90,10 @@ class ThirtyYearsWebSocketController : TextWebSocketHandler() {
             request(Commands.START_TIMER_EVENT, miles.toString())
         }
 
+        override fun STOP_GAME_event() {
+            request(Commands.STOP_GAME)
+        }
+
         override fun addUserEvent(userList: String) {
             request(Commands.ADD_USER_EVENT, userList)
         }

@@ -168,12 +168,24 @@ class ThirtyYearsSession(sessionId: Long, sessionPas: Long) :
     fun round(): Boolean
     {
         logger.debug("round()")
-        users[indexThirtyYearsUserExcute].isExcuting = false
-        indexThirtyYearsUserExcute++
-        users[indexThirtyYearsUserExcute].isExcuting = true
-        users.forEach { it.clear() }
-        goTo_ENTER_FALSH_EXCUTE_event()
-        return true
+
+        if(gameState == GameState.SHOW_RESULTS)
+        {
+            users[indexThirtyYearsUserExcute].isExcuting = false
+            indexThirtyYearsUserExcute++
+            users[indexThirtyYearsUserExcute].isExcuting = true
+            users.forEach { it.clear() }
+            goTo_ENTER_FALSH_EXCUTE_event()
+            return true
+        }
+        else if(gameState == GameState.SHOW_FINAL_RESULTS)
+        {
+            goTo_STOP_GAME()
+            return true
+        }
+        return false
+
+
     }
 
     /**
@@ -182,6 +194,7 @@ class ThirtyYearsSession(sessionId: Long, sessionPas: Long) :
      */
     fun updateByStateMashine()
     {
+
 
         if(gameState == GameState.ENTER_REAL_EXCUTE)
         {
@@ -215,6 +228,10 @@ class ThirtyYearsSession(sessionId: Long, sessionPas: Long) :
                     goTo_SHOW_FINAL_RESULTS_event()
                 countThirtyYearsUserVote=0
             }
+        }
+        else if(gameState == GameState.SHOW_RESULTS)
+        {
+            //ничего не делаем, выход из этого состояния происходит от внешней команды ROUND
         }
         else if(gameState == GameState.SHOW_RESULTS)
         {
@@ -420,6 +437,11 @@ class ThirtyYearsSession(sessionId: Long, sessionPas: Long) :
 
         }
         gameSessionVote.clear()
+    }
+
+    private fun goTo_STOP_GAME()
+    {
+        gameEvent.forEach { it.STOP_GAME_event() }
     }
 
 }

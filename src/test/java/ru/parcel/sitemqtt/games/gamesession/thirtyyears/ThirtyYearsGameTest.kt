@@ -3,7 +3,7 @@ package ru.parcel.sitemqtt.games.gamesession.thirtyyears
 import dnl.utils.text.table.TextTable
 import org.springframework.boot.test.context.SpringBootTest
 
-private val TIMEOUT = 15L
+private val TIMEOUT = 25L
 
 /**
  * Тестируем игру 30 лет по идеальному сценарию.

@@ -31,6 +31,11 @@ interface ThirtyYearsEvent : GameEvent {
      */
     fun START_TIMER_event(miles: Long)
 
+    /**
+     * Команда заканчивание игры.
+     */
+    fun STOP_GAME_event()
+
 
     /***КОММУНИКАЦИЯ****/
     fun setInMessage(message: String)
