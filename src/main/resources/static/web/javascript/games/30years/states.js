@@ -9,6 +9,8 @@ let GameState = {
      * @param {string} frame LOGIN, LOBBY, START_GAME, ENTER_EXCUTE, VOTE, SHOW_RESULTS
      */
     switchFrame(frame) {
+        this.currentFrame = frame;
+
         Frames.Loader.hidden = false;
         Frames.BeforeGame.hidden = true;
         Frames.Lobby.hidden = true;
@@ -109,6 +111,7 @@ let GameState = {
             case "ERROR":
                 /** Сообщение об ошибке */
                 logger('[error] сервер вернул ошибку: \n' + incoming.data)
+                showAlert(incoming.data, 'red')
                 break;
 
             case "CONNECT_TO_SESSION": //response
@@ -173,10 +176,12 @@ let GameState = {
                  *  Сервер игры сообщает ВЕБ страницам от том, был добавлен пользователь
                  *  (в поле дата при этом передается список всех пользователей)
                  */
-                logger('[event] сервер прислал список игроков: \n' + incoming.data);
-                let userList = incoming.data.split('\n')
-                for (let i in userList) userList[i] = userList[i].trim()
-                logger('[info] ' + userList);
+                let userArray = JSON.parse(incoming.data)
+                let userList = [];
+                for (let i = 0; i < userArray.length; i++) {
+                    userList.push(userArray[i].name)
+                }
+                logger('[event] сервер прислал список игроков: ' + userList);
 
                 updateUserList(userList);
                 break;
@@ -241,14 +246,17 @@ let GameState = {
                  *  Страницы переходят в режим введения фальшивой отмазки.
                  */
                 logger('[event] ENTER_FALSH_EXCUTE_EVENT');
-                let ev = JSON.parse(incoming.data)
-                if (ev.event != field_userName.value) {
-                    document.getElementById("false-exec-data").innerHTML = ev.event
-                    document.getElementById("false-exec-user").innerHTML = ev.user
+                let evEx = JSON.parse(incoming.data)
+                logger(`name: ${evEx.user}, event: ${evEx.event}`)
+                if (evEx.user != field_userName.value) {
+                    document.getElementById("false-exec-data").innerHTML = evEx.event
+                    document.getElementById("false-exec-user").innerHTML = evEx.user
                     this.switchFrame('ENTER_FALSH_EXCUTE')
                 } else {
                     //если это твой эвент
-
+                    logger('[info] они врут про тебя, наслаждайся')
+                    this.switchFrame('START_GAME')
+                        // setTimeout(webSocket.makeRequest, 10000, 'SET_FALSH_EXCUTE', '') //костыль!!
                 }
 
                 break;
@@ -259,15 +267,42 @@ let GameState = {
                  *  ВЕБ страница переходит в режим голосования.
                  */
                 logger('[event] VOTE_EVENT');
+
+                let evVt = JSON.parse(incoming.data)
+                    // console.log(evVt)
+
+                // вынести в отдельную функцию
+                let btnColor = 'btn-primary'
+                if (evVt.myQuestion != true) {
+                    Frames.Voter.innerHTML = `<h3>Как думаешь, как ${evVt.eventHolder} будет отмазываться от ${evVt.event}?</h3>`
+                } else {
+                    Frames.Voter.innerHTML = `<h3>По мнению других, вот так бы ты отмазывался от ${evVt.event}:</h3>`
+                    btnColor = 'btn-secondary'
+                }
+                for (let i = 0; i < evVt.rows.length; i++) {
+                    let btn = document.createElement('button');
+                    btn.innerHTML = evVt.rows[i].anser
+                    btn.className = `btn ${btnColor} btn-block btn-lg`
+                    if (evVt.rows[i].itsMe) //my variant
+                        btn.setAttribute("disabled", "disabled")
+                    else if (evVt.myQuestion != true) { //not my variant and not my question
+                        btn.setAttribute("onclick", `webSocket.makeRequest('SET_VOTE','${evVt.rows[i].anser}')`)
+                    } else { //not my variant , but my question
+                        btn.setAttribute("onclick", `showAlert('Не тыкай, это ж они тебя раскрыть пытаются!')`)
+                    }
+                    Frames.Voter.append(btn)
+                }
+                // конец функции
                 this.switchFrame('VOTE')
                 break;
 
-            case "ROUND":
+            case "ROUND": //response
                 /** Закончить раунд голосования.
                  *  ВЕБ страница сообщает о том что пользователь нажал кнопку ROUND??
                  *  это значит что раунд окончен и все насмотрелись на результтаты голосования.
                  */
                 logger('[action] ROUND action');
+                if (this.currentFrame == 'SHOW_RESULTS') this.switchFrame('START_GAME')
                 break;
 
             case "SHOW_RESULTS_EVENT":
@@ -275,17 +310,38 @@ let GameState = {
                  *  Сервер игры рассылает WEB страницам результаты голосования.
                  *  Страница при этом переходит в режим просмотра результатов голосования.
                  */
-                logger('[event] SHOW_RESULTS_EVENT action');
-                this.switchFrame('SHOW_RESULTS')
-                break;
-
             case "SHOW_FINAL_RESULTS_EVENT":
                 /** Показывает пользователю результаты всей игры.
                  *  Сервер игры рассылает WEB страницам результаты финального голосования.
                  *  Страница при этом переходит в режим просмотра результатов финального голосования.
                  */
-                logger('[event] SHOW_FINAL_RESULTS_EVENT action');
-                this.switchFrame('SHOW_RESULTS')
+                logger('[event] SHOW_RESULTS_EVENT action');
+                let evRes = JSON.parse(incoming.data)
+                    // console.log(evRes)
+
+                // вынести в отдельную функцию
+                Frames.Results.innerHTML = `<h4>Вот как вы голосовали за ${evRes.event}</h4>`
+                for (let i = 0; i < evRes.rows.length; i++) {
+                    let card = document.createElement('div');
+                    evRes.rows[i].trueTeller ? card.className = 'card border border-success' : card.className = 'card border border-secondary'
+                    card.style.width = '100%'
+                    card.innerHTML = '<div class = "card-header text-secondary"> Версия принадлежит ' + evRes.rows[i].name + '</div>' +
+                        '<div class = "card-body">' +
+                        '<h3 class="card-title">' + evRes.rows[i].excude + '</h3>' +
+                        '</div>' +
+                        '<div class = "card-footer">Заработано очков: ' + evRes.rows[i].pointsCount +
+                        ' Всего очков: ' + evRes.rows[i].totalPointsCount + '</div>'
+                    Frames.Results.append(card)
+                }
+                // конец функции
+
+                setTimeout(this.switchFrame, 200, 'SHOW_RESULTS') //костыль!!
+
+                let round = document.createElement('button');
+                round.innerHTML = 'Завершить раунд'
+                round.className = 'btn btn-primary btn-block btn-lg'
+                round.setAttribute("onclick", "webSocket.makeRequest('ROUND')")
+                Frames.Results.append(round)
                 break;
 
             case "SET_REAL_EXCUTE":
@@ -293,8 +349,8 @@ let GameState = {
                  *  ВЕБ страница сообщает серверу игры реальную отмазку которую ввел пользователь.
                  *  В поле data передается текс реальной отмазки.
                  */
-                logger('[action] SET_REAL_EXCUTE ')
-                this.switchFrame('START_GAME')
+                logger('[action] SET_REAL_EXCUTE, current frame = ', this.currentFrame)
+                if (this.currentFrame == 'ENTER_REAL_EXCUTE') this.switchFrame('START_GAME')
                 break;
 
             case "SET_FALSH_EXCUTE":
@@ -302,8 +358,8 @@ let GameState = {
                  *  ВЕБ страница сообщает серверу игры фальшивую отмазку которую ввел пользователь.
                  *  В поле data передается текс фальшивой отмазки.
                  */
-                logger('[action] SET_FALSH_EXCUTE')
-                this.switchFrame('START_GAME')
+                logger('[action] SET_FALSH_EXCUTE, current frame = ', this.currentFrame)
+                if (this.currentFrame == 'ENTER_FALSH_EXCUTE') this.switchFrame('START_GAME')
                 break
 
             case "SET_VOTE":
@@ -311,8 +367,10 @@ let GameState = {
                  *  ВЕБ страница сообщает серверу игры за какой вароиант проголосовал пользователь.
                  *  В поле data передается текс ответа, за который был отдан голос.
                  */
+
+                //отправляем такое сообщение {"userName":"SashaGrey","sessionId":14,"sessionPas":88,"command":"SET_VOTE","data":"Жирная жопа","isAnserOnRequest":false,"messageStatus":"GOOD"}
                 logger('[action] SET_VOTE')
-                this.switchFrame('START_GAME')
+                if (this.currentFrame == 'VOTE') this.switchFrame('START_GAME')
                 break
 
             default:

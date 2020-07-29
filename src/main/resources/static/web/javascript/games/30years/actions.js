@@ -8,7 +8,7 @@ $(function() {
  */
 function updateUserList(array) {
     UserTable.innerHTML = ''
-    for (let i = 0; i < array.length - 1; i++) {
+    for (let i = 0; i < array.length; i++) {
         let row = document.createElement('tr');
         row.innerHTML =
             '<td class="av p-0">' +
@@ -111,6 +111,7 @@ $('#stopGame').click(function() {
 function enterRealExcute() {
     logger('[action] отправляем реальную отмазку')
     let excute = field_realExcute.value;
+    field_realExcute.value = '';
     webSocket.makeRequest('SET_REAL_EXCUTE', excute)
     resetProgressBar()
 }
@@ -119,16 +120,17 @@ btn_realExcute.onclick = enterRealExcute
 function enterFalseExcute() {
     logger('[action] отправляем поддельную отмазку')
     let excute = field_falseExcute.value;
+    field_falseExcute.value = '';
     webSocket.makeRequest('SET_FALSH_EXCUTE', excute)
     resetProgressBar()
 }
 btn_falseExcute.onclick = enterFalseExcute
 
 function initProgressBar(ms = 30000) {
+    resetProgressBar()
     setProgressBarAttr(100, ms)
     Frames.ProgressBar.main.hidden = false //потом уйдет в стейты
     countDownProgressBar(100, ms, ~~(ms / 200))
-
 }
 
 function resetProgressBar() {
