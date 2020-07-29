@@ -115,7 +115,7 @@ function enterRealExcute() {
     webSocket.makeRequest('SET_REAL_EXCUTE', excute)
     resetProgressBar()
 }
-btn_realExcute.onclick = enterRealExcute
+// btn_realExcute.onclick = enterRealExcute
 
 function enterFalseExcute() {
     logger('[action] отправляем поддельную отмазку')
@@ -124,7 +124,7 @@ function enterFalseExcute() {
     webSocket.makeRequest('SET_FALSH_EXCUTE', excute)
     resetProgressBar()
 }
-btn_falseExcute.onclick = enterFalseExcute
+// btn_falseExcute.onclick = enterFalseExcute
 
 function initProgressBar(ms = 30000) {
     resetProgressBar()

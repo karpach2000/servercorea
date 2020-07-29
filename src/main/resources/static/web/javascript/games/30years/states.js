@@ -316,6 +316,7 @@ let GameState = {
                  *  Страница при этом переходит в режим просмотра результатов финального голосования.
                  */
                 logger('[event] SHOW_RESULTS_EVENT action');
+                resetProgressBar()
                 let evRes = JSON.parse(incoming.data)
                     // console.log(evRes)
 
