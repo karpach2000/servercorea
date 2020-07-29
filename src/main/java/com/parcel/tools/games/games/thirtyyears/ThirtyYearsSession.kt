@@ -397,7 +397,7 @@ class ThirtyYearsSession(sessionId: Long, sessionPas: Long) :
     private fun goTo_ENTER_FALSH_EXCUTE_event()
     {
         gameState = GameState.ENTER_FALSH_EXCUTE
-        users.forEach { it.falshExcute = "" }//чистим буфер с фальшивыми отмазками.
+        users.forEach { it.falshExcute = "Пользователь отправил прекрасное нихуя!" }//чистим буфер с фальшивыми отмазками.
         gameEvent.forEach {
             it.ENTER_FALSH_EXCUTE_event(users[indexThirtyYearsUserExcute].getThirtyYearsEventAndUserInformation().toJson())
         }
