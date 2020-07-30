@@ -24,8 +24,12 @@ const prefix = 'Пресвятые боеголовки! '
 const btn_startGame = document.getElementById('startGame')
 const btn_stopGame = document.getElementById('stopGame')
 const btn_invite = document.getElementById('invite')
+
 const btn_joinGame = document.getElementById('joinGame')
 const btn_createGame = document.getElementById('createGame')
+const btn_checkGame = document.getElementById('checkID')
+const btn_addMyself = document.getElementById('addMyself')
+
 const btn_realExcute = document.getElementById('real-exec-btn')
 const btn_falseExcute = document.getElementById('false-exec-btn')
 
@@ -37,7 +41,9 @@ const AlertContainer = document.getElementById("alertContainer")
      */
 const Frames = {
     /** форма входа*/
-    Login: document.getElementById('userlogin'),
+    Start: document.getElementById('startORjoin'),
+    CheckID: document.getElementById('inputID'),
+    Login: document.getElementById('inputUsername'),
     /** таблица пользователей */
     UserList: document.getElementById('userList'),
 

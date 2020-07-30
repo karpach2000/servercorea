@@ -126,11 +126,13 @@ let GameState = {
                  */
                 logger('[info] CONNECT action');
                 if (incoming.messageStatus == 'GOOD') {
-                    showAlert('Есть контакт! ', 'green')
-                    webSocket.makeRequest('ADD_USER')
+                    // showAlert('Есть контакт! ', 'green')
+                    Frames.CheckID.hidden = true
+                    Frames.Login.hidden = false
+                    document.getElementById('checkGameLoader').hidden = true
+                    Frames.Start.hidden = true //на случай автологина
                 } else {
-                    document.getElementById('joinGameLoader').hidden = true
-                    document.getElementById('createGameLoader').hidden = true
+                    document.getElementById('checkGameLoader').hidden = true
                     showAlert(incoming.messageStatus + ' ' + incoming.data, 'orange')
                 }
                 break;
@@ -147,10 +149,11 @@ let GameState = {
                  */
                 logger('[info] CREATE_SESSION action');
                 if (incoming.messageStatus == 'GOOD') {
-                    showAlert('Есть контакт! ', 'green')
-                    webSocket.makeRequest('ADD_USER')
+                    logger('[info] сессия создана')
+                    Frames.Start.hidden = true
+                    Frames.Login.hidden = false
+                    document.getElementById('createGameLoader').hidden = true
                 } else {
-                    document.getElementById('joinGameLoader').hidden = true
                     document.getElementById('createGameLoader').hidden = true
                     showAlert(incoming.messageStatus + ' ' + incoming.data, 'orange')
                 }
@@ -167,8 +170,7 @@ let GameState = {
                 } else {
                     showAlert(incoming.messageStatus + ' ' + incoming.data, 'orange')
                 }
-                document.getElementById('joinGameLoader').hidden = true
-                document.getElementById('createGameLoader').hidden = true
+                document.getElementById('addGameLoader').hidden = true
                 break;
 
             case "ADD_USER_EVENT": //request

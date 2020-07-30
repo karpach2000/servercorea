@@ -39,22 +39,19 @@ webSocket.makeRequest = function(command, data = '', isAnswer = 'false', status 
     this.send(message)
 }
 
-// /** 
-//  * Обертка для GET-запросов.
-//  */
-// function mafia_request(command) {
-//     console.log(`[request] ${command}`)
-//     let xmlHttp = new XMLHttpRequest();
+/** 
+ * Обертка для GET-запросов.
+ */
+function GET_request(command) {
+    // console.log(`[request] ${command}`)
+    let xmlHttp = new XMLHttpRequest();
 
-//     let message = "/games/" + command +
-//         "?userName=" + field_userName.value +
-//         "&sessionId=" + field_sessionId.value +
-//         "&sessionPas=" + field_sessionPas.value;
+    let message = "/games/" + command
 
-//     console.log(`[GET] ${message}`);
+    console.log(`[GET] ${message}`);
 
-//     xmlHttp.open("GET", message, false); // false for synchronous request
-//     xmlHttp.send(null);
-//     console.log(`[response] ${xmlHttp.responseText}`)
-//     return xmlHttp.responseText
-// }
+    xmlHttp.open("GET", message, false); // false for synchronous request
+    xmlHttp.send(null);
+    console.log(`[response] ${xmlHttp.responseText}`)
+    return xmlHttp.responseText
+}
