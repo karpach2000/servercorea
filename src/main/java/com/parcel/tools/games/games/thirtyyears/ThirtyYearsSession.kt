@@ -124,18 +124,16 @@ class ThirtyYearsSession(sessionId: Long, sessionPas: Long) :
     {
         logger.debug("vote($userName, $anser)")
 
-        var voteName = ""
         //аходим пользователя, которому принадлежит ответ
         users.forEach {
             if(it.falshExcute==anser || it.excute==anser)//AHTUNG BAG AND COSTILE
             {
-                voteName= it.name!!
+                super.gameSessionVote.vote(userName, it.name!!)
             }
         }
-        val ans = super.gameSessionVote.vote(userName, voteName)
         countThirtyYearsUserVote++
         updateByStateMashine()
-        return ans
+        return true
     }
 
     /**
@@ -399,7 +397,7 @@ class ThirtyYearsSession(sessionId: Long, sessionPas: Long) :
     private fun goTo_ENTER_FALSH_EXCUTE_event()
     {
         gameState = GameState.ENTER_FALSH_EXCUTE
-        users.forEach { it.falshExcute = "" }//чистим буфер с фальшивыми отмазками.
+        users.forEach { it.falshExcute = "Пользователь отправил прекрасное нихуя!" }//чистим буфер с фальшивыми отмазками.
         gameEvent.forEach {
             it.ENTER_FALSH_EXCUTE_event(users[indexThirtyYearsUserExcute].getThirtyYearsEventAndUserInformation().toJson())
         }

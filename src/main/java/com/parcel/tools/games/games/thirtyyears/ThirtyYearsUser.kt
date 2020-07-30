@@ -21,12 +21,12 @@ class ThirtyYearsUser (name:String) : GameUser(name) {
      * Отмазка которую придумал пользователь.
      */
     @Expose(serialize = false, deserialize =false)
-    var excute = ""
+    var excute = "Пользователь отправил прекрасное нихуя!"
     /**
      * Псевдоотмазка которую придумывает пользователь за место своего соперника.
      */
     @Expose(serialize = false, deserialize =false)
-    var falshExcute = ""
+    var falshExcute = "Пользователь отправил прекрасное нихуя!"
 
     /**
      * Количество очков набраное пользователем за раунд.
