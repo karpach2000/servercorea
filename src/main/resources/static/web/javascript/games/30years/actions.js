@@ -111,6 +111,7 @@ function addMyself() {
         return
     } else {
         webSocket.makeRequest('ADD_USER')
+        generateInvite()
     }
 }
 btn_addMyself.onclick = addMyself;
@@ -125,14 +126,34 @@ $('#stopGame').click(function() {
 
 function generateInvite() {
     let url = `${document.location.href}?sessionID=${field_sessionId.value}#sessionPass=${field_sessionPas.value}`
-    let message = `Камрад ${field_userName.value} приглашает поиграть в какую-то дичь.
-    Нужно будет тыкнуть ссылку: 
-    <a href = '${url}' target="_blank">${url}</a>
-    Ну и потом имя ввести и все такое.`
-    showAlert(message, 'green')
+    let ses = `Вот тебе данные для присоединения к игре - ID сессии: ${field_sessionId.value}, пароль сессии: ${field_sessionPas.value}. Можешь кому-то протелеграфировать их, но проще было бы кинуть ссылку.`
+    let inv = `Камрад ${field_userName.value} приглашает поиграть в какую-то дичь. Нужно будет тыкнуть ссылку: ${url} Ну и потом имя ввести и все такое.`
+
+    clipboard.url.innerText = url;
+    clipboard.inv.innerText = inv;
+    clipboard.ses.innerText = ses;
+    // showAlert(message, 'green')
 }
 
-btn_invite.onclick = generateInvite;
+/**
+ * функция копирует содержимое блока с переданным айди в буфер обмена
+ * @param {string} id 
+ */
+function copyToClipboard(id) {
+    let sourse = document.getElementById(id).innerText;
+    let target = document.createElement('INPUT')
+
+    target.value = sourse
+    document.body.appendChild(target)
+    target.select();
+    try {
+        document.execCommand('copy');
+        showAlert('Что-то успешно скопировалось!', 'green')
+    } catch (e) {
+        showAlert('Что-то пошло не так', 'red')
+    }
+    document.body.removeChild(target);
+}
 
 function enterRealExcute() {
     logger('[action] отправляем реальную отмазку')

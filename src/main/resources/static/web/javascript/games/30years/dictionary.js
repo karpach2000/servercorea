@@ -19,6 +19,11 @@ const field_realExcute = document.getElementById('real-excute')
 const field_falseExcute = document.getElementById('false-excute')
 
 const prefix = 'Пресвятые боеголовки! '
+const clipboard = {
+    url: document.getElementById('url'),
+    inv: document.getElementById('inv'),
+    ses: document.getElementById('ses')
+}
 
 //Buttons
 const btn_startGame = document.getElementById('startGame')

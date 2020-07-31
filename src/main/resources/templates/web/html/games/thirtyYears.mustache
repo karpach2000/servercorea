@@ -164,9 +164,24 @@
                     <button type="button" class="btn btn-danger btn-block" name="stopGame" id="stopGame">
                         Завершить игру
                     </button>
-                    <button type="button" class="btn btn-success btn-block" name="invite" id="invite">
+                    <button type="button" class="btn btn-success btn-block dropdown-toggle" name="invite" id="invite" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         Пригласить друзей
                     </button>
+                    <div class="dropdown-menu" aria-labelledby="invite" role="dialog">
+                        <button class="dropdown-item btn-lg active" data-toggle="tooltip" data-placement="right" title="Служебное - открыть новое окно с игрой" onclick="window.open(document.getElementById('url').innerHTML)">
+                            Открыть
+                        </button>
+                        <button class="dropdown-item btn-lg" data-toggle="tooltip" data-placement="right" title="Показать данные сессии" onclick="showAlert(document.getElementById('ses').innerHTML,'green')">
+                            Показать
+                        </button>
+                        <button class="dropdown-item btn-lg" data-toggle="tooltip" data-placement="right" title="Скопировать в буфер обмена ссылку" onclick="copyToClipboard('url')">
+                            Копировать
+                        </button>
+                        <button class="dropdown-item btn-lg" data-toggle="tooltip" data-placement="right" title="Скопировать в буфер обмена приглашение" onclick="copyToClipboard('inv')">
+                            Послать
+                        </button>
+                    </div>
+
                 </div>
             </div>
 
@@ -343,6 +358,11 @@
         </div>
     </div>
 
+    <div id="clip" hidden>
+        <span id="url"></span>
+        <span id="inv"></span>
+        <span id="ses"></span>
+    </div>
     {{>web/html/pattern/footer}} {{>web/html/pattern/footDepend}}
     <script src="/web/javascript/games/30years/dictionary.js"></script>
     <script src="/web/javascript/games/30years/webSocket.js"></script>
