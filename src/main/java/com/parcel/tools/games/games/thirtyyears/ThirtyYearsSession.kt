@@ -342,8 +342,10 @@ class ThirtyYearsSession(sessionId: Long, sessionPas: Long) :
      */
     fun getGameStatus(userName: String) : String
     {
+        getGameEvents(userName).addUserEvent(getAllUsers())
         when(gameState)
         {
+
             GameState.ENTER_FALSH_EXCUTE ->
             {
                 val data = getUser(userName).getThirtyYearsEventAndUserInformation().toJson()
