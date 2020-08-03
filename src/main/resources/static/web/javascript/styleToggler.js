@@ -24,7 +24,11 @@ function preloadInputs() {
         document.getElementById('sessionPas').value = ps
     }
     history.replaceState({}, 'input', location.pathname)
-
+    try {
+        joinGameSession()
+    } catch {
+        console.log('[info] не прописан обработчик автологина');
+    }
 }
 
 function toggleForAnon() {

@@ -53,52 +53,68 @@ function showAlert(message, color = 'orange') {
     AlertContainer.append(div)
 }
 
-btn_createGame.onclick = function() {
+/**
+ * при нажатии на "создать игру" запрашивается свободный айди сессии и генерируется пароль.
+ * после этого окно переключается в состояние ввода логина (отображаемого имени)
+ */
+function createGameSession() {
     logger("[action] нажата кнопка 'Создать игру'");
-    document.getElementById('createGameLoader').hidden = true
-
-    if (field_userName.value == "") {
-        logger('[warning] Пустое поле "Имя пользователя"');
-        showAlert('Заполните поле "Имя пользователя"')
-        return
-    } else if (field_sessionId.value == "") {
-        logger('[warning] Пустое поле "ID сессии"');
-        showAlert('Заполните поле "ID сессии"')
-        return
-    } else if (field_sessionPas.value == "") {
-        logger('[warning] Пустое поле "Пароль сессии"');
-        showAlert('Заполните поле "Пароль сессии"')
-        return
-    }
-
     document.getElementById('createGameLoader').hidden = false
-        //request to server
+    field_sessionId.value = GET_request('generate_game_id')
+    field_sessionPas.value = '111111' //костыль
     webSocket.makeRequest('CREATE_SESSION_IF_NOT_EXIST')
 }
+btn_createGame.onclick = createGameSession;
 
-
+/**
+ * при нажатии на "присоединиться к игре" окно переключается в состояние ввода айди и пароля сессии
+ */
 btn_joinGame.onclick = function() {
-    logger("[action] нажата кнопка 'Присоединиться к игре'");
-    document.getElementById('joinGameLoader').hidden = true
+    Frames.Start.hidden = true
+    Frames.CheckID.hidden = false
+}
 
-    if (field_userName.value == "") {
-        logger('[warning] Пустое поле "Имя пользователя"');
-        showAlert('Заполните поле "Имя пользователя"')
-        return
-    } else if (field_sessionId.value == "") {
+/**
+ * при нажатии на "подтвердить данные сессии" проверяется существование сессии
+ * после этого окно переключается в состояние ввода логина (отображаемого имени)
+ */
+function joinGameSession() {
+    logger("[action] нажата кнопка 'Подтвердить данные сессии'");
+    document.getElementById('checkGameLoader').hidden = false
+    if (field_sessionId.value == "") {
         logger('[warning] Пустое поле "ID сессии"');
         showAlert('Заполните поле "ID сессии"')
+        document.getElementById('checkGameLoader').hidden = true
         return
     } else if (field_sessionPas.value == "") {
         logger('[warning] Пустое поле "Пароль сессии"');
         showAlert('Заполните поле "Пароль сессии"')
+        document.getElementById('checkGameLoader').hidden = true
         return
+    } else {
+        //где-то здесь надо проверять, запущена ли сессия
+        webSocket.makeRequest('CONNECT_TO_SESSION')
     }
-
-    document.getElementById('joinGameLoader').hidden = false
-        //request to server
-    webSocket.makeRequest('CONNECT_TO_SESSION')
 }
+btn_checkGame.onclick = joinGameSession;
+
+/**
+ * при нажатии на "добавить себя" проверяется логин
+ * после этого окно переключается в лобби (или другой статус)
+ */
+function addMyself() {
+    document.getElementById('addGameLoader').hidden = false
+    if (field_userName.value == "") {
+        logger('[warning] Пустое поле "имя пользователя"');
+        showAlert('Заполните поле "имя пользователя"')
+        document.getElementById('addGameLoader').hidden = true
+        return
+    } else {
+        webSocket.makeRequest('ADD_USER')
+        generateInvite()
+    }
+}
+btn_addMyself.onclick = addMyself;
 
 $('#startGame').click(function() {
     webSocket.makeRequest('START_GAME')
@@ -108,6 +124,37 @@ $('#stopGame').click(function() {
     webSocket.makeRequest('STOP_GAME')
 })
 
+function generateInvite() {
+    let url = `${document.location.href}?sessionID=${field_sessionId.value}#sessionPass=${field_sessionPas.value}`
+    let ses = `Вот тебе данные для присоединения к игре - ID сессии: ${field_sessionId.value}, пароль сессии: ${field_sessionPas.value}. Можешь кому-то протелеграфировать их, но проще было бы кинуть ссылку.`
+    let inv = `Камрад ${field_userName.value} приглашает поиграть в какую-то дичь. Нужно будет тыкнуть ссылку: ${url} Ну и потом имя ввести и все такое.`
+
+    clipboard.url.innerText = url;
+    clipboard.inv.innerText = inv;
+    clipboard.ses.innerText = ses;
+    // showAlert(message, 'green')
+}
+
+/**
+ * функция копирует содержимое блока с переданным айди в буфер обмена
+ * @param {string} id 
+ */
+function copyToClipboard(id) {
+    let sourse = document.getElementById(id).innerText;
+    let target = document.createElement('INPUT')
+
+    target.value = sourse
+    document.body.appendChild(target)
+    target.select();
+    try {
+        document.execCommand('copy');
+        showAlert('Что-то успешно скопировалось!', 'green')
+    } catch (e) {
+        showAlert('Что-то пошло не так', 'red')
+    }
+    document.body.removeChild(target);
+}
+
 function enterRealExcute() {
     logger('[action] отправляем реальную отмазку')
     let excute = field_realExcute.value;
@@ -115,7 +162,7 @@ function enterRealExcute() {
     webSocket.makeRequest('SET_REAL_EXCUTE', excute)
     resetProgressBar()
 }
-btn_realExcute.onclick = enterRealExcute
+// btn_realExcute.onclick = enterRealExcute
 
 function enterFalseExcute() {
     logger('[action] отправляем поддельную отмазку')
@@ -124,7 +171,7 @@ function enterFalseExcute() {
     webSocket.makeRequest('SET_FALSH_EXCUTE', excute)
     resetProgressBar()
 }
-btn_falseExcute.onclick = enterFalseExcute
+// btn_falseExcute.onclick = enterFalseExcute
 
 function initProgressBar(ms = 30000) {
     resetProgressBar()
