@@ -24,6 +24,11 @@ enum class GameState {
     /**
      * Демонстрирует результаты голосования пользователям.
      */
-    SHOW_RESULTS
+    SHOW_RESULTS,
+
+    /**
+     * Добавляем пользователей
+     */
+    ADDING_USERS
 
 }

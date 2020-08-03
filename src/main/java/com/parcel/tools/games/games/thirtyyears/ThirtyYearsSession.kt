@@ -37,7 +37,7 @@ class ThirtyYearsSession(sessionId: Long, sessionPas: Long) :
     /**
      * Состояние игры согласно машине состояний.
      */
-    private var gameState = GameState.ENTER_REAL_EXCUTE
+    private var gameState = GameState.ADDING_USERS
 
     /**
      * Время требуемое на написание правдивой отмазки
