@@ -155,6 +155,14 @@ abstract class GamesSessionManager<U : GameUser, E:GameEvent, GS: GamesSession<U
         getSession(sessionId, sessionPas).subscribeGameEvents(event)
     }
 
+    /**
+     * Поменять имя пользователя в игровых событиях.
+     */
+    fun renameGameSessionEvent(sessionId: Long, sessionPas: Long, identeficator: String, userName: String)
+    {
+        getSession(sessionId, sessionPas).renameGameSessionEvent(identeficator, userName)
+    }
+
     fun getGameSessionEvents(sessionId: Long, sessionPas: Long, userName: String): E
     {
         return getSession(sessionId, sessionPas).getGameEvents(userName)

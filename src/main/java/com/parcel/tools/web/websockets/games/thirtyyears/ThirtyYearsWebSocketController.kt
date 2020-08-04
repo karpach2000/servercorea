@@ -123,8 +123,8 @@ class ThirtyYearsWebSocketController : TextWebSocketHandler() {
             while(timer>0 && wateAnser)
             {
                 Thread.sleep(10)
-                timer = timer-10
             }
+            //wateAnser = false
             //logger.info("inMessageCash = $inMessageCash")
             return inMessageCash
         }
@@ -247,9 +247,13 @@ class ThirtyYearsWebSocketController : TextWebSocketHandler() {
 
                 }
             } else if (inMessage.command == Commands.ADD_USER) {
-                sendMessageAnser(session, inMessage)
-                ThirtyYearsSessionManager.addUser(inMessage.sessionId, inMessage.sessionPas, inMessage.userName)
 
+                val id = inMessage.sessionId
+                val pas = inMessage.sessionPas
+                val name = inMessage.userName
+                ThirtyYearsSessionManager.renameGameSessionEvent(id, pas, getUserIdenteficator(session), name)
+                ThirtyYearsSessionManager.addUser(inMessage.sessionId, inMessage.sessionPas, inMessage.userName)
+                sendMessageAnser(session, inMessage)
 
             } else if (inMessage.command == Commands.START_GAME) {
                     ThirtyYearsSessionManager.startGame(inMessage.sessionId, inMessage.sessionPas)

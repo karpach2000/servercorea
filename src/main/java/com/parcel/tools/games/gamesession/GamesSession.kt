@@ -144,6 +144,12 @@ abstract class  GamesSession<U : GameUser, E: GameEvent>(val sessionId: Long, va
     {
         this.gameEvent.add(gameEvent)
     }
+    fun renameGameSessionEvent(identeficator: String, userName: String)
+    {
+
+        gameEvent.forEach { if(it.identeficator==identeficator) it.userName = userName }
+
+    }
 
     fun getGameEvents(name: String) : E
     {
