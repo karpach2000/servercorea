@@ -16,7 +16,7 @@ object IdGenerator {
     /**
      * Счетчик id шниколв.
      */
-    private var idCounter = 0L
+    private var idCounter = 0x99L
 
     /**
      * Сгенерировать Id игры
