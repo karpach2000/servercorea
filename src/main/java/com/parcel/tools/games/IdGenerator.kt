@@ -22,6 +22,9 @@ object IdGenerator {
      * Сгенерировать Id игры
      */
     @Synchronized
+
+    fun generate() = System.currentTimeMillis()
+    /*
     fun generate(): Long
     {
         val idInUse = getIdsInUse()
@@ -40,6 +43,7 @@ object IdGenerator {
         }
         return -1//это внештатная ситуация возможна при ddos атаке
     }
+    */
 
     /**
      * Получить список всех используемых в данный момент id.
