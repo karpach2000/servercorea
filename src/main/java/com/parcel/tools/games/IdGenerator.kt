@@ -22,28 +22,19 @@ object IdGenerator {
      * Сгенерировать Id игры
      */
     @Synchronized
-
-    fun generate() = System.currentTimeMillis()
-    /*
     fun generate(): Long
     {
+        fun generate() = System.currentTimeMillis()%100000
         val idInUse = getIdsInUse()
-        for(i in idCounter..Long.MAX_VALUE)
-        {
-            if(i==Long.MAX_VALUE)
-            {
-                idCounter = 0
-            }
+        var id = generate()
+         while(idInUse.contains(id))
+         {
+             id = generate()
+         }
 
-            if(!idInUse.contains(i))
-            {
-                idCounter = i
-                return i
-            }
-        }
-        return -1//это внештатная ситуация возможна при ddos атаке
+        return id//это внештатная ситуация возможна при ddos атаке
     }
-    */
+
 
     /**
      * Получить список всех используемых в данный момент id.
