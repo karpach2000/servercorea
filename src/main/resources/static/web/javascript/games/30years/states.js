@@ -78,9 +78,15 @@ let GameState = {
                 //another elements
                 break
 
+            case ('STOP_GAME'):
+
             case ('START_GAME'):
                 //игра стартовала, но еще никаких данных не пришло
-                //делаем ничего - остальное сделано до нас
+                Frames.Loader.hidden = true;
+                Frames.BeforeGame.hidden = false;
+                //left frame
+                Frames.Start.hidden = false;
+                Frames.UserList.hidden = true;
             default:
 
                 break
@@ -220,6 +226,11 @@ let GameState = {
                  *  Сервер игры сообщает ВЕБ страницам от том что игра закончилась.
                  */
                 logger('[event] STOP_GAME_EVENT');
+                this.switchFrame('STOP_GAME')
+
+                field_userName.value = ''
+                field_sessionId.value = ''
+                field_sessionPas.value = ''
                 break;
 
             case "START_TIMER_EVENT": //request
