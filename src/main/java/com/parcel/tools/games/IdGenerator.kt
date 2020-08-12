@@ -16,7 +16,7 @@ object IdGenerator {
     /**
      * Счетчик id шниколв.
      */
-    private var idCounter = 0L
+    private var idCounter = 0x99L
 
     /**
      * Сгенерировать Id игры
@@ -24,22 +24,17 @@ object IdGenerator {
     @Synchronized
     fun generate(): Long
     {
+        fun generate() = System.currentTimeMillis()%100000
         val idInUse = getIdsInUse()
-        for(i in idCounter..Long.MAX_VALUE)
-        {
-            if(i==Long.MAX_VALUE)
-            {
-                idCounter = 0
-            }
+        var id = generate()
+         while(idInUse.contains(id))
+         {
+             id = generate()
+         }
 
-            if(!idInUse.contains(i))
-            {
-                idCounter = i
-                return i
-            }
-        }
-        return -1//это внештатная ситуация возможна при ddos атаке
+        return id//это внештатная ситуация возможна при ddos атаке
     }
+
 
     /**
      * Получить список всех используемых в данный момент id.
