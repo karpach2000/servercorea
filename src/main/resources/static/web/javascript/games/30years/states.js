@@ -28,7 +28,7 @@ let GameState = {
                 //страница только открыта, или завершена игра
 
                 //left frame
-                Frames.Login.hidden = false;
+                Frames.Start.hidden = false;
                 Frames.UserList.hidden = true;
                 //right frame
                 Frames.BeforeGame.hidden = false;
@@ -78,15 +78,8 @@ let GameState = {
                 //another elements
                 break
 
-            case ('STOP_GAME'):
-
             case ('START_GAME'):
-                //игра стартовала, но еще никаких данных не пришло
-                Frames.Loader.hidden = true;
-                Frames.BeforeGame.hidden = false;
-                //left frame
-                Frames.Start.hidden = false;
-                Frames.UserList.hidden = true;
+
             default:
 
                 break
@@ -118,6 +111,23 @@ let GameState = {
                 /** Сообщение об ошибке */
                 logger('[error] сервер вернул ошибку: \n' + incoming.data)
                 showAlert(incoming.data, 'red')
+                break;
+
+            case 'GET_GAME_STATUS': //response
+                logger('[info] GET GAME STATUS');
+                if (incoming.messageStatus == 'GOOD') {
+                    switch (incoming.data) {
+                        case "ADDING_USERS":
+                            this.switchFrame('LOBBY')
+                            break;
+
+                        default:
+                            showAlert(incoming.data)
+                            this.switchFrame();
+                            break;
+                    }
+                }
+
                 break;
 
             case "CONNECT_TO_SESSION": //response
@@ -170,12 +180,12 @@ let GameState = {
                  *  Веб страница сообщает серверу игры о том что она добавляет пользователя.
                  */
                 logger('[action] ADD_USER action');
-                //это должно будет уехать в стейты
                 if (incoming.messageStatus == 'GOOD') {
                     this.switchFrame('LOBBY')
                 } else {
                     showAlert(incoming.messageStatus + ' ' + incoming.data, 'orange')
                 }
+                webSocket.makeRequest('GET_GAME_STATUS')
                 document.getElementById('addGameLoader').hidden = true
                 break;
 
@@ -226,7 +236,7 @@ let GameState = {
                  *  Сервер игры сообщает ВЕБ страницам от том что игра закончилась.
                  */
                 logger('[event] STOP_GAME_EVENT');
-                this.switchFrame('STOP_GAME')
+                this.switchFrame('LOGIN')
 
                 field_userName.value = ''
                 field_sessionId.value = ''
