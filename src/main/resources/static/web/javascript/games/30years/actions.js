@@ -61,7 +61,8 @@ function createGameSession() {
     logger("[action] нажата кнопка 'Создать игру'");
     document.getElementById('createGameLoader').hidden = false
     field_sessionId.value = GET_request('generate_game_id')
-    field_sessionPas.value = '111111' //костыль
+    let date = new Date();
+    field_sessionPas.value = date.getHours() * 42 + date.getMinutes() * 192 + date.getSeconds() * 2145
     webSocket.makeRequest('CREATE_SESSION_IF_NOT_EXIST')
 }
 btn_createGame.onclick = createGameSession;

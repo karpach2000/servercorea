@@ -25,9 +25,11 @@ function preloadInputs() {
     }
     history.replaceState({}, 'input', location.pathname)
     try {
+        console.log('[info] пытаюсь выполнить автовход');
         joinGameSession()
+
     } catch {
-        console.log('[info] не прописан обработчик автологина');
+        console.log('[warning] не прописан обработчик автологина');
     }
 }
 
