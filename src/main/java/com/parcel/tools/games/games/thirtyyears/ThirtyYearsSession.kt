@@ -66,12 +66,18 @@ class ThirtyYearsSession(sessionId: Long, sessionPas: Long) :
      */
     private val thirtyYearsTimerEvent = ThirtyYearsTimerEvent(this)
 
+    /**
+     * Поток в котором обновляется статус игры.
+     */
+    private val updateThread = Thread(Runnable { while(true){updateByStateMashine(); Thread.sleep(1000) }})
+
     init {
         updateEvents()
         //после всех тестов  обновление перенесем в старт программы
         ThirtyYearsSettings.update()
         //подписываемся
         gameSessionTimer.subscribeTimerEvents(thirtyYearsTimerEvent)
+
     }
 
     override fun addUser(name: String ): Boolean {
@@ -84,6 +90,7 @@ class ThirtyYearsSession(sessionId: Long, sessionPas: Long) :
 
         //logger.debug("stopGame()...")
         goTo_STOP_GAME()
+        updateThread.stop()
         return super.stopGame()
     }
 
@@ -105,6 +112,8 @@ class ThirtyYearsSession(sessionId: Long, sessionPas: Long) :
             startGameEvent()
             //преводим игру в состояние введения реальной отмазки
             goTo_ENTER_REAL_EXCUTE_event()
+            //запускаем споток обновления статусов
+            updateThread.start()
         }
         else if(users.count()<ThirtyYearsSettings.points.usersMin)
         {
