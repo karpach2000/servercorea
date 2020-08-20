@@ -61,8 +61,7 @@ function createGameSession() {
     logger("[action] нажата кнопка 'Создать игру'");
     document.getElementById('createGameLoader').hidden = false
     field_sessionId.value = GET_request('generate_game_id')
-    let date = new Date();
-    field_sessionPas.value = date.getHours() * 42 + date.getMinutes() * 192 + date.getSeconds() * 2145
+    field_sessionPas.value = sessionPassword
     webSocket.makeRequest('CREATE_SESSION_IF_NOT_EXIST')
 }
 btn_createGame.onclick = createGameSession;
@@ -85,11 +84,6 @@ function joinGameSession() {
     if (field_sessionId.value == "") {
         logger('[warning] Пустое поле "ID сессии"');
         showAlert('Заполните поле "ID сессии"')
-        document.getElementById('checkGameLoader').hidden = true
-        return
-    } else if (field_sessionPas.value == "") {
-        logger('[warning] Пустое поле "Пароль сессии"');
-        showAlert('Заполните поле "Пароль сессии"')
         document.getElementById('checkGameLoader').hidden = true
         return
     } else {
@@ -127,7 +121,7 @@ $('#stopGame').click(function() {
 
 function generateInvite() {
     let url = `${document.location.href}?sessionID=${field_sessionId.value}#sessionPass=${field_sessionPas.value}`
-    let ses = `Вот тебе данные для присоединения к игре - ID сессии: ${field_sessionId.value}, пароль сессии: ${field_sessionPas.value}. Можешь кому-то протелеграфировать их, но проще было бы кинуть ссылку.`
+    let ses = `Вот тебе данные для присоединения к игре - ID сессии: ${field_sessionId.value}. Можешь кому-то протелеграфировать их, но проще было бы кинуть ссылку.`
     let inv = `Камрад ${field_userName.value} приглашает поиграть в какую-то дичь. Нужно будет тыкнуть ссылку: ${url} Ну и потом имя ввести и все такое.`
 
     clipboard.url.innerText = url;

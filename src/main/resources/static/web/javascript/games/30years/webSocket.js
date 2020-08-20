@@ -34,7 +34,7 @@ webSocket.onclose = function(event) {
  *  @param {string} command - сама команда
  */
 webSocket.makeRequest = function(command, data = '', isAnswer = 'false', status = 'GOOD') {
-    let message = `{'userName':'${field_userName.value}','sessionId':'${field_sessionId.value==""?-1:field_sessionId.value}','sessionPas':'${field_sessionPas.value==""?-1:field_sessionPas.value}','command':'${command}','data':'${data}','isAnserOnRequest':'${isAnswer}','messageStatus':'${status}'}`
+    let message = `{'userName':'${field_userName.value}','sessionId':'${field_sessionId.value==""?-1:field_sessionId.value}','sessionPas':'${sessionPassword}','command':'${command}','data':'${data}','isAnserOnRequest':'${isAnswer}','messageStatus':'${status}'}`
     logger(`[TX] ${message}`);
     this.send(message)
 }

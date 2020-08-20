@@ -240,7 +240,7 @@ let GameState = {
 
                 field_userName.value = ''
                 field_sessionId.value = ''
-                field_sessionPas.value = ''
+                field_sessionPas.value = sessionPassword
                 break;
 
             case "START_TIMER_EVENT": //request

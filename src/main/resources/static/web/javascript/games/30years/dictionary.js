@@ -10,6 +10,8 @@ function logger(data, force = false) {
     if (debug || force) console.log(`${("0" + now.getHours()).slice(-2)}:${("0" + now.getMinutes()).slice(-2)}:${("0" + now.getSeconds()).slice(-2)}.${("00" + now.getMilliseconds()).slice(-3)} ${data}`);
 }
 
+const sessionPassword = 31415;
+
 // объекты HTML превращаем в константы, чтобы потом с ними работать как с объектами js
 //поля (значиния меняются)
 const field_userName = document.getElementById("userName")
@@ -17,6 +19,8 @@ const field_sessionId = document.getElementById("sessionId")
 const field_sessionPas = document.getElementById("sessionPas")
 const field_realExcute = document.getElementById('real-excute')
 const field_falseExcute = document.getElementById('false-excute')
+
+field_sessionPas.value = sessionPassword
 
 const prefix = 'Пресвятые боеголовки! '
 const clipboard = {
