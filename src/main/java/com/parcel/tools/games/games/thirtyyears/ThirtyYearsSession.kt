@@ -340,7 +340,7 @@ class ThirtyYearsSession(sessionId: Long, sessionPas: Long) :
     private fun updateEvents() : Boolean{
         logger.debug("updateEvents()")
         events.clear()
-        Globals.thirtyYearsEventManager.getAllEventsAsString().forEach { events.add(it) }
+        Globals.thirtyYearsEventManager.getAllEventsAsString().forEach { events.add(it.toLowerCase()) }
         return true
     }
 
